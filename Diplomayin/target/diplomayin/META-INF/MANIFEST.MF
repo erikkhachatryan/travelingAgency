@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: diplomayin Maven Webapp
-Implementation-Version: 1.0-SNAPSHOT
-Built-By: erik.khachatryan
-Implementation-Vendor-Id: com.synisys.erik
-Created-By: IntelliJ IDEA
-Build-Jdk: 1.8.0_45
-Main-Class: ${start-class}
-
