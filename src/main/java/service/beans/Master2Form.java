@@ -1,7 +1,7 @@
 package service.beans;
 
 public class Master2Form {
-    private Master1Form master1Form;
+    private TravelingLocationForm travelingLocationForm;
 
     private String systemName;
 
@@ -9,12 +9,12 @@ public class Master2Form {
         this.systemName = systemName;
     }
 
-    public Master1Form getMaster1Form() {
-        return master1Form;
+    public TravelingLocationForm getTravelingLocationForm() {
+        return travelingLocationForm;
     }
 
-    public void setMaster1Form(Master1Form master1Form) {
-        this.master1Form = master1Form;
+    public void setTravelingLocationForm(TravelingLocationForm travelingLocationForm) {
+        this.travelingLocationForm = travelingLocationForm;
     }
 
     public String getSystemName() {

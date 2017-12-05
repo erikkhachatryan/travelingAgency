@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <h:form id="loginFormId" rendered="#{not loginForm.loggedIn}">
+        <h:panelGroup id="userNamePanelGroupId" layout="block">
+            <p:outputLabel id="userNameOutputTextId" value="User Name"/>
+            <p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.name}" />
+        </h:panelGroup>
+        <h:panelGroup id="passwordPanelGroupId" layout="block">
+            <p:outputLabel id="passwordOutputTextId" value="Password"/>
+            <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.password}" />
+        </h:panelGroup>
+
+        <p:commandButton id="loginButtonId" value="Login"
+                         actionListener="#{loginForm.performLogin}"
+                         update="deFormId" />
+        <p:commandButton id="registerButtonId" value="Register"
+                         actionListener="#{registrationSubForm.prepare(newCl)}"
+                         update="deFormId:registrationDialogId"
+                         process="@this deFormId:registrationDialogId"
+                         oncomplete="PF('registrationDialog').show();"/>
+    </h:form>
+</f:view>
+</ui:composition>

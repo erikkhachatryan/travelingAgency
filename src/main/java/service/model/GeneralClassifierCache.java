@@ -12,7 +12,7 @@ public class GeneralClassifierCache {
 
     public Map<String, Classifier> loadLocations() {
         if (locations == null) {
-            locations = new HashMap<String, Classifier>();
+            locations = new HashMap<>();
             Classifier location1 = new ClassifierImpl(1);
             location1.setName("Yerevan");
             locations.put("Yerevan", location1);

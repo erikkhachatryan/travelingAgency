@@ -1,28 +1,33 @@
 package service.model;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Erik on 11/12/2017.
  */
-public class SubEntityImpl extends HashMap<String, Object> implements SubEntity {
+public class SubEntityImpl extends EditableEntityImpl implements SubEntity {
 
-    public SubEntityImpl(EditableEntity parent) {
-        this.put("parent", parent);
-    }
+    private static AtomicInteger ID_GENERATOR = new AtomicInteger(-1);
 
-    @Override
-    public void setId(Integer id) {
-        this.put("id", id);
-    }
-
-    @Override
-    public Integer getId() {
-        return (Integer) this.get("id");
+    public SubEntityImpl(@Nonnull EditableEntity parent) {
+        super(ID_GENERATOR.decrementAndGet());
+        this.put("parent", Objects.requireNonNull(parent));
     }
 
     @Override
     public EditableEntity getParent() {
         return (EditableEntity) this.get("parent");
+    }
+
+    public void updateParent(@Nonnull Entity parent) {
+        this.put("parent", Objects.requireNonNull(parent));
+    }
+
+    @Override
+    public SubEntity clone() {
+        return (SubEntity) super.clone();
     }
 }

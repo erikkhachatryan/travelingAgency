@@ -7,12 +7,21 @@ import org.primefaces.context.RequestContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Master1Form {
+public class TravelingLocationForm {
     private String systemName;
     private GeneralClassifierCache generalClassifierCache;
     private Classifier selectedLocation;
+    private boolean logined = false;
 
-    public Master1Form(String systemName) {
+    public boolean isLogined() {
+        return logined;
+    }
+
+    public void setLogined(boolean logined) {
+        this.logined = logined;
+    }
+
+    public TravelingLocationForm(String systemName) {
         this.systemName = systemName;
     }
 
@@ -40,7 +49,6 @@ public class Master1Form {
     }
 
     public List<Classifier> getLocationsList() {
-
         return new ArrayList<Classifier>(getGeneralClassifierCache().loadLocations().values());
     }
 

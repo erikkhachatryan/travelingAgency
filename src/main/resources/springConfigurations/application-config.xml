@@ -9,13 +9,33 @@
 
     <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session"/>
 
-    <bean id="master1Form" class="service.beans.Master1Form" scope="session">
-        <constructor-arg name="systemName" value="master1Form"/>
+    <bean id="travelingLocationForm" class="service.beans.TravelingLocationForm" scope="session">
+        <constructor-arg name="systemName" value="travelingLocationForm"/>
         <property name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>
 
     <bean id="master2Form" class="service.beans.Master2Form" scope="session">
         <constructor-arg name="systemName" value="master2Form"/>
-        <property name="master1Form" ref="master1Form" />
+        <property name="travelingLocationForm" ref="travelingLocationForm" />
     </bean>
+
+    <bean id="loginForm" class="service.beans.LoginForm" scope="session">
+        <constructor-arg index="0" ref="travelingLocationForm" />
+        <constructor-arg index="1" ref="newClassifier" />
+    </bean>
+
+    <bean id="registrationSubForm" class="service.beans.SubForms.RegistrationSubForm"  scope="session">
+        <constructor-arg index="0" ref="loginForm" />
+    </bean>
+
+    <bean id="newCl" class="service.model.ClassifierImpl" scope="session">
+        <constructor-arg index="0" value="#{classifierIdGenerator.id}" />
+    </bean>
+
+    <bean id="newClassifier" class="service.model.ClassifierImpl" scope="session">
+        <constructor-arg index="0" value="#{classifierIdGenerator.id}" />
+    </bean>
+
+    <bean id="classifierIdGenerator" class="service.beans.IdGenerator" />
+
 </beans>
