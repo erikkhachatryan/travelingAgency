@@ -1,16 +1,18 @@
 package service.beans;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by Erik on 03-Dec-17.
  */
 public class IdGenerator {
-    private int id;
+    private AtomicInteger ID_GENERATOR;
 
     public IdGenerator() {
-        id = -1;
+        ID_GENERATOR = new AtomicInteger(-1);
     }
 
     public int getId() {
-        return id--;
+        return ID_GENERATOR.getAndDecrement();
     }
 }

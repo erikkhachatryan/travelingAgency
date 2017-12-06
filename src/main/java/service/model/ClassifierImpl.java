@@ -19,9 +19,10 @@ public class ClassifierImpl extends EditableEntityImpl implements Classifier {
         put("name", Objects.requireNonNull(name));
     }
 
+    @Nonnull
     @Override
     public String getName() {
-        return (String) this.get("name");
+        return this.get("name") == null ? "" : this.get("name").toString();
     }
 
     @Override

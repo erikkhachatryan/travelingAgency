@@ -13,6 +13,10 @@ public class LoginForm {
 
     private static List<Classifier> users = new ArrayList<>();
 
+    public List<Classifier> getUsers() {
+        return users;
+    }
+
     private TravelingLocationForm travelingLocationForm;
 
     private boolean loggedIn;

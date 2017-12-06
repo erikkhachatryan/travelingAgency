@@ -17,12 +17,16 @@ public class RegistrationSubForm {
         this.loginForm = loginForm;
     }
 
+    public LoginForm getLoginForm() {
+        return loginForm;
+    }
+
     public Classifier getCurrentUser() {
         return currentUser;
     }
 
     public void prepare(Classifier user) {
-        currentUser = user;
+        currentUser = user.clone();
     }
 
     public void register() {
