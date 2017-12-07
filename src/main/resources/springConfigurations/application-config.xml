@@ -7,7 +7,9 @@
 
     <context:component-scan base-package="service" />
 
-    <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session"/>
+    <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
     <bean id="travelingLocationForm" class="service.beans.TravelingLocationForm" scope="session">
         <constructor-arg name="systemName" value="travelingLocationForm"/>
@@ -22,6 +24,7 @@
     <bean id="loginForm" class="service.beans.LoginForm" scope="session">
         <constructor-arg index="0" ref="travelingLocationForm" />
         <constructor-arg index="1" ref="newClassifier" />
+        <property name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>
 
     <bean id="registrationSubForm" class="service.beans.SubForms.RegistrationSubForm"  scope="session">
@@ -37,5 +40,13 @@
     </bean>
 
     <bean id="classifierIdGenerator" class="service.beans.IdGenerator" />
+
+    <bean id="dataSource" class="service.beans.dao.DataSource">
+        <!--<constructor-arg index="0" value="${db.name}}" />-->
+        <!--<constructor-arg index="1" value="${server.name}}" />-->
+        <!--<constructor-arg index="2" value="${jdbc.port}" />-->
+        <!--<constructor-arg index="3" value="${user.name}" />-->
+        <!--<constructor-arg index="4" value="${user.password}" />-->
+    </bean>
 
 </beans>

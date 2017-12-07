@@ -1,6 +1,8 @@
 package service.beans;
 
+import service.beans.dao.DataSource;
 import service.model.Classifier;
+import service.model.GeneralClassifierCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +13,18 @@ import java.util.stream.Collectors;
  */
 public class LoginForm {
 
-    private static List<Classifier> users = new ArrayList<>();
+    private GeneralClassifierCache generalClassifierCache;
+
+    public GeneralClassifierCache getGeneralClassifierCache() {
+        return generalClassifierCache;
+    }
+
+    public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
+        this.generalClassifierCache = generalClassifierCache;
+    }
 
     public List<Classifier> getUsers() {
-        return users;
+        return getGeneralClassifierCache().loadUsers();
     }
 
     private TravelingLocationForm travelingLocationForm;
@@ -38,10 +48,11 @@ public class LoginForm {
     }
 
     public boolean registerUser(Classifier user) {
-        if (users.stream().map(Classifier::getName).collect(Collectors.toList()).contains(user.getName())) {
+        if (getUsers().stream().map(Classifier::getName).collect(Collectors.toList()).contains(user.getName())) {
             return false;
         }
-        users.add(user);
+        getUsers().add(user);
+        getGeneralClassifierCache().insertUser(user);
         return true;
     }
 
@@ -50,6 +61,7 @@ public class LoginForm {
     }
 
     public void performLogin() {
+        getUsers();
         if(checkLogin()) {
             setLoggedIn(true);
             travelingLocationForm.setLogined(true);
@@ -58,7 +70,7 @@ public class LoginForm {
 
     private boolean checkLogin() {
         boolean result = false;
-        for (Classifier user : users) {
+        for (Classifier user : getUsers()) {
             if (user.getName().equals(currentUser.getName()) && user.getString("password").equals(currentUser.getString("password"))) {
                 result = true;
             }
