@@ -5,6 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="registrationDialogId" widgetVar="registrationDialog" width="500px"
               header="Registration" height="500px" dynamic="true" modal="true">
+        <p:ajax event="close" listener="#{registrationSubForm.closeAction}"/>
         <h:form id="registrationSubFormId">
             <h:panelGroup id="userNamePanelGroupId" layout="block">
                 <p:outputLabel id="userNameOutputTextId" value="User Name"/>
@@ -30,7 +31,7 @@
                 <f:attribute name="process" value="#{not empty param[registrationButtonBinding.clientId]}" />
                 <f:attribute name="message" value="User with this User Name already exists." />
                 <f:attribute name="userName" value="#{registrationSubForm.currentUser.name}" />
-                <f:attribute name="allUsers" value="#{registrationSubForm.loginForm.users}" />
+                <f:attribute name="allUsers" value="#{registrationSubForm.users}" />
             </h:inputHidden>
 
             <p:commandButton id="registrationButtonId"

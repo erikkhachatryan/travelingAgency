@@ -5,43 +5,44 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <context:component-scan base-package="service" />
+    <context:component-scan base-package="service"/>
+    <!--<context:property-placeholder location="properties/application.properties" />-->
 
     <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="travelingLocationForm" class="service.beans.TravelingLocationForm" scope="session">
         <constructor-arg name="systemName" value="travelingLocationForm"/>
-        <property name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="sessionData" ref="sessionData"/>
+        <property name="generalClassifierCache" ref="generalClassifierCache"/>
     </bean>
 
     <bean id="master2Form" class="service.beans.Master2Form" scope="session">
         <constructor-arg name="systemName" value="master2Form"/>
-        <property name="travelingLocationForm" ref="travelingLocationForm" />
+        <property name="travelingLocationForm" ref="travelingLocationForm"/>
+    </bean>
+
+    <bean id="sessionData" class="service.commons.SessionData" scope="session">
+        <constructor-arg index="0" ref="newClassifier"/>
     </bean>
 
     <bean id="loginForm" class="service.beans.LoginForm" scope="session">
-        <constructor-arg index="0" ref="travelingLocationForm" />
-        <constructor-arg index="1" ref="newClassifier" />
-        <property name="generalClassifierCache" ref="generalClassifierCache" />
+        <property name="generalClassifierCache" ref="generalClassifierCache"/>
+        <property name="sessionData" ref="sessionData"/>
     </bean>
 
-    <bean id="registrationSubForm" class="service.beans.SubForms.RegistrationSubForm"  scope="session">
-        <constructor-arg index="0" ref="loginForm" />
-    </bean>
-
-    <bean id="newCl" class="service.model.ClassifierImpl" scope="session">
-        <constructor-arg index="0" value="#{classifierIdGenerator.id}" />
+    <bean id="registrationSubForm" class="service.beans.SubForms.RegistrationSubForm" scope="session">
+        <property name="generalClassifierCache" ref="generalClassifierCache"/>
     </bean>
 
     <bean id="newClassifier" class="service.model.ClassifierImpl" scope="session">
-        <constructor-arg index="0" value="#{classifierIdGenerator.id}" />
+        <constructor-arg index="0" value="-1"/>
     </bean>
 
-    <bean id="classifierIdGenerator" class="service.beans.IdGenerator" />
+    <bean id="classifierIdGenerator" class="service.beans.IdGenerator"/>
 
-    <bean id="dataSource" class="service.beans.dao.DataSource">
+    <bean id="dataSource" class="service.dao.DataSource">
         <!--<constructor-arg index="0" value="${db.name}}" />-->
         <!--<constructor-arg index="1" value="${server.name}}" />-->
         <!--<constructor-arg index="2" value="${jdbc.port}" />-->

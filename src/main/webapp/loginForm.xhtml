@@ -4,40 +4,38 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <f:view>
-    <h:form id="loginFormId" rendered="#{not loginForm.loggedIn}">
-        <!--<h:panelGroup id="userNamePanelGroupId" layout="block">-->
-            <!--<p:outputLabel id="userNameOutputTextId" value="User Name"/>-->
-            <!--<p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.name}"-->
-                         <!--required="true" requiredMessage="User Name is required.">-->
-                <!--<p:ajax process="@this" update="@this" />-->
-            <!--</p:inputText>-->
-            <!--<p:message id="userNameRequiredMessageId" for="userNameInputTextId" />-->
-        <!--</h:panelGroup>-->
-        <!--<h:panelGroup id="passwordPanelGroupId" layout="block">-->
-            <!--<p:outputLabel id="passwordOutputTextId" value="Password"/>-->
-            <!--<p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.password}"-->
-                         <!--required="true" requiredMessage="Password is required." type="password">-->
-                <!--<p:ajax process="@this" update="@this" />-->
-            <!--</p:inputText>-->
-            <!--<p:message id="passwordRequiredMessageId" for="passwordInputTextId" />-->
-        <!--</h:panelGroup>-->
+    <h:form id="loginFormId" rendered="#{!loginForm.loggedIn}">
+        <h:panelGroup id="userNamePanelGroupId" layout="block">
+            <p:outputLabel id="userNameOutputTextId" value="User Name"/>
+            <p:inputText id="userNameInputTextId" value="#{loginForm.sessionData.applicationUser.name}"
+                         required="true" requiredMessage="User Name is required.">
+                <p:ajax process="@this" update="@this" />
+            </p:inputText>
+            <p:message id="userNameRequiredMessageId" for="userNameInputTextId" />
+        </h:panelGroup>
+        <h:panelGroup id="passwordPanelGroupId" layout="block">
+            <p:outputLabel id="passwordOutputTextId" value="Password"/>
+            <p:inputText id="passwordInputTextId" value="#{loginForm.sessionData.applicationUser.password}"
+                         required="true" requiredMessage="Password is required." type="password">
+                <p:ajax process="@this" update="@this" />
+            </p:inputText>
+            <p:message id="passwordRequiredMessageId" for="passwordInputTextId" />
+        </h:panelGroup>
 
-        <!--<p:message id="loginValidationMessageId" for="loginValidatorId" />-->
+        <p:message id="loginValidationMessageId" for="loginValidatorId" />
 
-        <!--<h:inputHidden value="true" id="loginValidatorId">-->
-            <!--<f:validator validatorId="loginValidator" for="loginValidatorId" />-->
-            <!--<f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}" />-->
-            <!--<f:attribute name="message" value="Wrong User Name and/or password." />-->
-            <!--<f:attribute name="currentUser" value="#{loginForm.currentUser}" />-->
-            <!--<f:attribute name="allUsers" value="#{loginForm.users}" />-->
-        <!--</h:inputHidden>-->
+        <h:inputHidden value="true" id="loginValidatorId">
+            <f:validator validatorId="loginValidator" for="loginValidatorId" />
+            <f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}" />
+            <f:attribute name="message" value="Wrong User Name and/or password." />
+            <f:attribute name="currentUser" value="#{loginForm.sessionData.applicationUser}" />
+            <f:attribute name="allUsers" value="#{loginForm.users}" />
+        </h:inputHidden>
 
         <p:commandButton id="loginButtonId" value="Login"
-                         actionListener="#{loginForm.performLogin}"
                          binding="#{loginButtonBinding}"
                          update="deFormId" />
         <p:commandButton id="registerButtonId" value="Register"
-                         actionListener="#{registrationSubForm.prepare(newCl)}"
                          update="deFormId:registrationDialogId"
                          process="@this deFormId:registrationDialogId"
                          oncomplete="PF('registrationDialog').show();"/>

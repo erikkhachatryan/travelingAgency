@@ -1,4 +1,4 @@
-package service.beans.dao;
+package service.dao;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,13 +19,13 @@ public class DataSource {
     private String password;
     private Properties applicationProperties;
 
-    public DataSource(String dbName, String serverName, String jdbcPort, String userName, String password) {
-        this.dbName = dbName;
-        this.serverName = serverName;
-        this.jdbcPort = jdbcPort;
-        this.userName = userName;
-        this.password = password;
-    }
+//    public DataSource(String dbName, String serverName, String jdbcPort, String userName, String password) {
+//        this.dbName = dbName;
+//        this.serverName = serverName;
+//        this.jdbcPort = jdbcPort;
+//        this.userName = userName;
+//        this.password = password;
+//    }
 
     public DataSource() {
         this.dbName = getApplicationProperties().getProperty("db.name");
@@ -38,9 +38,12 @@ public class DataSource {
     public Connection getConnection() {
         Connection connection = null;
         try {
-            String connectionUrl = "jdbc:" + serverName + "://localhost:" + jdbcPort + ";databaseName=" + dbName + ";user=" + userName + ";password=" + password;
-            connection = DriverManager.getConnection(connectionUrl);
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String connectionUrl = "jdbc:sqlserver://" + serverName + ":" + jdbcPort + ";databaseName=" + dbName;
+            connection = DriverManager.getConnection(connectionUrl, userName, password);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return connection;
@@ -50,7 +53,7 @@ public class DataSource {
         if (applicationProperties == null) {
             applicationProperties = new Properties();
             try {
-                applicationProperties.load(new FileInputStream("application.properties"));
+                applicationProperties.load(new FileInputStream("E:\\Projects\\Traveling Agency\\travelingAgency\\src\\main\\resources\\properties\\application.properties"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,12 +1,8 @@
 package service.model;
 
-import service.beans.dao.DataSource;
+import service.dao.DataSource;
+import service.dao.UserDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,47 +41,18 @@ public class GeneralClassifierCache {
 
     public List<Classifier> loadUsers() {
         if (allUsers == null) {
-            allUsers = new ArrayList<>();
-            Connection connection = null;
-            PreparedStatement preparedStatement = null;
-            ResultSet resultSet = null;
-            try {
-                connection = dataSource.getConnection();
-                preparedStatement = connection.prepareStatement("SELECT * FROM C_USER");
-                resultSet = preparedStatement.executeQuery();
-                ClassifierImpl user;
-                while (resultSet.next()) {
-                    user = new ClassifierImpl(resultSet.getInt("UserID"));
-                    user.setName(resultSet.getString("FirstName"));
-                    user.put("lastName", resultSet.getString("LastName"));
-                    user.put("dateOfBirth", resultSet.getString("DateOfBirth"));
-                    user.put("phoneNumber", resultSet.getString("PhoneNumber"));
-                    user.put("address", resultSet.getString("Address"));
-                    user.put("email", resultSet.getString("Email"));
-                    user.put("genderId", resultSet.getString("GenderID"));
-                    allUsers.add(user);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                if (resultSet != null) try {
-                    resultSet.close();
-                } catch (Exception e) {
-                }
-                if (preparedStatement != null) try {
-                    preparedStatement.close();
-                } catch (Exception e) {
-                }
-                if (connection != null) try {
-                    connection.close();
-                } catch (Exception e) {
-                }
-            }
+            allUsers = UserDao.loadUsers();
         }
         return allUsers;
     }
 
-    public void insertUser(Classifier user) {
-
+    public void saveUser(Classifier user) {
+        if (user.getId() == -1) {
+            UserDao.insertUser(user);
+        } else {
+            UserDao.updateUser(user);
+        }
+        allUsers = null;
     }
+
 }

@@ -1,5 +1,6 @@
 package service.beans;
 
+import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.GeneralClassifierCache;
 import org.primefaces.context.RequestContext;
@@ -10,27 +11,20 @@ import java.util.List;
 public class TravelingLocationForm {
     private String systemName;
     private GeneralClassifierCache generalClassifierCache;
+    private SessionData sessionData;
     private Classifier selectedLocation;
-    private boolean logined = false;
 
-    public boolean isLogined() {
-        return logined;
-    }
-
-    public void setLogined(boolean logined) {
-        this.logined = logined;
-    }
-
-    public TravelingLocationForm(String systemName) {
+    public TravelingLocationForm(String systemName, SessionData sessionData) {
         this.systemName = systemName;
+        this.sessionData = sessionData;
     }
 
     public String getSystemName() {
         return systemName;
     }
 
-    public void setSystemName(String systemName) {
-        this.systemName = systemName;
+    public SessionData getSessionData() {
+        return sessionData;
     }
 
     public GeneralClassifierCache getGeneralClassifierCache() {
@@ -55,4 +49,9 @@ public class TravelingLocationForm {
     public void save() {
         RequestContext.getCurrentInstance().execute("alert('selected location: " + selectedLocation.getId() + "')");
     }
+
+    public boolean isLoggedIn() {
+        return getSessionData().getApplicationUser().getId() != -1;
+    }
+
 }

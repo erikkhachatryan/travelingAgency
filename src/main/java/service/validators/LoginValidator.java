@@ -29,6 +29,7 @@ public class LoginValidator implements Validator {
                 List<Classifier> allUsers = ((List<Classifier>) uiComponent.getAttributes().get(ALL_USERS));
                 for (Classifier user : allUsers) {
                     if (currentUser.getName().equals(user.getName()) && currentUser.getString("password").equals(user.getString("password"))) {
+                        currentUser.setId(user.getId());
                         return;
                     }
                 }
