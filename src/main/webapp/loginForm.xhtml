@@ -7,7 +7,7 @@
     <h:form id="loginFormId" rendered="#{!loginForm.loggedIn}">
         <h:panelGroup id="userNamePanelGroupId" layout="block">
             <p:outputLabel id="userNameOutputTextId" value="User Name"/>
-            <p:inputText id="userNameInputTextId" value="#{loginForm.sessionData.applicationUser.name}"
+            <p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.name}"
                          required="true" requiredMessage="User Name is required.">
                 <p:ajax process="@this" update="@this" />
             </p:inputText>
@@ -15,7 +15,7 @@
         </h:panelGroup>
         <h:panelGroup id="passwordPanelGroupId" layout="block">
             <p:outputLabel id="passwordOutputTextId" value="Password"/>
-            <p:inputText id="passwordInputTextId" value="#{loginForm.sessionData.applicationUser.password}"
+            <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.password}"
                          required="true" requiredMessage="Password is required." type="password">
                 <p:ajax process="@this" update="@this" />
             </p:inputText>
@@ -28,7 +28,7 @@
             <f:validator validatorId="loginValidator" for="loginValidatorId" />
             <f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}" />
             <f:attribute name="message" value="Wrong User Name and/or password." />
-            <f:attribute name="currentUser" value="#{loginForm.sessionData.applicationUser}" />
+            <f:attribute name="currentUser" value="#{loginForm.currentUser}" />
             <f:attribute name="allUsers" value="#{loginForm.users}" />
         </h:inputHidden>
 

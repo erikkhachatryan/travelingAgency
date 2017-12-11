@@ -35,7 +35,11 @@ public class LoginForm {
     }
 
     public boolean isLoggedIn() {
-        return getSessionData().getApplicationUser().getId() != -1;
+        return getCurrentUser().getId() != -1;
+    }
+
+    public Classifier getCurrentUser() {
+        return getSessionData().getApplicationUser();
     }
 
 }
