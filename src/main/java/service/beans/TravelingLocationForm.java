@@ -48,6 +48,7 @@ public class TravelingLocationForm {
 
     public void save() {
         RequestContext.getCurrentInstance().execute("alert('selected location: " + selectedLocation.getId() + "')");
+        RequestContext.getCurrentInstance().execute("alert('logged in user: " + getSessionData().getApplicationUser().getName() + "')");
     }
 
     public boolean isLoggedIn() {

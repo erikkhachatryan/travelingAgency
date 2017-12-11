@@ -42,6 +42,8 @@ public class UserDao {
                 user.put("address", resultSet.getString("Address"));
                 user.put("email", resultSet.getString("Email"));
                 user.put("genderId", resultSet.getString("GenderID"));
+                user.put("password", "erik"); //todo remove after adding password column in db and uncomment the line bellow.
+//                user.put("password", resultSet.getString("password"));
                 result.add(user);
             }
         } catch (SQLException e) {

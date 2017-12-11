@@ -44,7 +44,6 @@ public class RegistrationValidator implements Validator {
     private void addMessage(UIComponent component) {
         FacesMessage message = new FacesMessage(component.getAttributes().get(MESSAGE).toString());
         message.setSeverity(FacesMessage.SEVERITY_ERROR);
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage(component.getClientId(facesContext), message);
+        throw new ValidatorException(message);
     }
 }

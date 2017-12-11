@@ -1,9 +1,11 @@
 package service.beans;
 
+import org.primefaces.context.RequestContext;
 import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.GeneralClassifierCache;
 
+import javax.faces.context.FacesContext;
 import java.util.List;
 
 /**
@@ -40,6 +42,10 @@ public class LoginForm {
 
     public Classifier getCurrentUser() {
         return getSessionData().getApplicationUser();
+    }
+
+    public void performLogin() {
+        RequestContext.getCurrentInstance().execute("window.location.href = '" + FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/mainPage.xhtml'");
     }
 
 }

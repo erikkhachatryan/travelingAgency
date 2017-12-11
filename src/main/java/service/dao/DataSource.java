@@ -53,7 +53,7 @@ public class DataSource {
         if (applicationProperties == null) {
             applicationProperties = new Properties();
             try {
-                applicationProperties.load(new FileInputStream("E:\\Projects\\Traveling Agency\\travelingAgency\\src\\main\\resources\\properties\\application.properties"));
+                applicationProperties.load(new FileInputStream("C:\\Projects\\DeCore\\Traveling Agency\\travelingAgency\\src\\main\\resources\\properties\\application.properties"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

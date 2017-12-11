@@ -4,22 +4,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Maven project with JSF</title>
     <script src="general.js" type="text/javascript"></script>
 </h:head>
 <h:body>
-    <h:form id="deFormId" >
-        <!-- Forms Start -->
-        <ui:include src="mainPage.xhtml"/>
-        <ui:include src="loginForm.xhtml"/>
-        <!--Forms End-->
+    <f:view>
+        <h:form id="deFormId">
+            <!-- Forms Start -->
+            <!--<ui:include src="mainPage.xhtml"/>-->
+            <!--<ui:include src="loginForm.xhtml"/>-->
+            <!--Forms End-->
 
-        <!-- Dialogs Start -->
-        <ui:include src="SubForms/registrationSubForm.xhtml" />
-        <!-- Dialogs End -->
+            <p:commandButton id="loginButtonId" value="Login"
+                             onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
+            <!--<p:commandButton id="registerButtonId" value="Register" onclick="window.location.href = '${request.contextPath}/SubForms/registrationSubForm.xhtml'" />-->
 
-    </h:form>
+            <!-- Dialogs Start -->
+            <ui:include src="SubForms/registrationSubForm.xhtml"/>
+            <!-- Dialogs End -->
+
+        </h:form>
+    </f:view>
 </h:body>
 </html>
