@@ -26,7 +26,15 @@
             <ui:include src="SubForms/registrationSubForm.xhtml"/>
             <!-- Dialogs End -->
 
-        </h:form>
+        <p:dataTable id="allLocationsDataTableId"
+                     value="#{portfolioForm.allTravelingLocations}"
+                     editable="true"
+                     var="travelingLocation"
+                     emptyMessage="There is no data">
+            <p:column id=""
+        </p:dataTable>
+
+    </h:form>
     </f:view>
 </h:body>
 </html>

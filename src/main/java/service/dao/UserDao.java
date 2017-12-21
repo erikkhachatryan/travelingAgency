@@ -91,6 +91,7 @@ public class UserDao {
                 preparedStatement.close();
             } catch (Exception e) {
             }
+
         }
         return user;
     }

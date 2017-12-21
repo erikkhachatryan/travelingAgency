@@ -16,18 +16,18 @@ public class ClassifierImpl extends EditableEntityImpl implements Classifier {
 
     public ClassifierImpl(@Nonnull Integer id, @Nonnull String name) {
         super(id);
-        put("name", Objects.requireNonNull(name));
+        put("Name", Objects.requireNonNull(name));
     }
 
     @Nonnull
     @Override
     public String getName() {
-        return this.get("name") == null ? "" : this.get("name").toString();
+        return this.get("Name") == null ? "" : this.get("Name").toString();
     }
 
     @Override
     public void setName(@Nonnull String name) {
-        this.put("name", Objects.requireNonNull(name));
+        this.put("Name", Objects.requireNonNull(name));
     }
 
     @Override
