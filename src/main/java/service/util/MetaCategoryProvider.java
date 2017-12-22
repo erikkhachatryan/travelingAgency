@@ -12,6 +12,7 @@ import java.util.Map;
 public class MetaCategoryProvider {
 
     private static MetaCategoryId LOCATION;
+    private static MetaCategoryId USER;
 
     public static MetaCategoryId getLocation() {
         if (LOCATION == null) {
@@ -24,5 +25,21 @@ public class MetaCategoryProvider {
             LOCATION  = new MetaCategoryId("Location", columns);
         }
         return LOCATION;
+    }
+
+    public static MetaCategoryId getUser() {
+        if (USER == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("UserID", MetaCategoryType.IDENTITY);
+            columns.put("FirstName", MetaCategoryType.STRING);
+            columns.put("LastName", MetaCategoryType.STRING);
+            columns.put("DateOfBirth", MetaCategoryType.DATE);
+            columns.put("PhoneNumber", MetaCategoryType.STRING);
+            columns.put("Address", MetaCategoryType.STRING);
+            columns.put("Email", MetaCategoryType.STRING);
+            columns.put("GenderID", MetaCategoryType.INTEGER);
+            USER  = new MetaCategoryId("User", columns);
+        }
+        return USER;
     }
 }

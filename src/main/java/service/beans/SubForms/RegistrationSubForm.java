@@ -2,6 +2,7 @@ package service.beans.SubForms;
 
 import org.primefaces.context.RequestContext;
 import service.beans.LoginForm;
+import service.dao.UserDao;
 import service.model.Classifier;
 import service.model.ClassifierImpl;
 import service.model.GeneralClassifierCache;
@@ -17,6 +18,7 @@ public class RegistrationSubForm {
     private Classifier currentUser;
 
     private GeneralClassifierCache generalClassifierCache;
+    private UserDao userDao;
 
     public GeneralClassifierCache getGeneralClassifierCache() {
         return generalClassifierCache;
@@ -24,6 +26,14 @@ public class RegistrationSubForm {
 
     public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
         this.generalClassifierCache = generalClassifierCache;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     public List<Classifier> getUsers() {
@@ -43,7 +53,7 @@ public class RegistrationSubForm {
     }
 
     public void register() {
-        getGeneralClassifierCache().saveUser(currentUser);
+        getUserDao().save(currentUser);
         closeAction();
     }
 }

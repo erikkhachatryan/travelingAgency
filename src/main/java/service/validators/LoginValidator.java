@@ -25,7 +25,7 @@ public class LoginValidator implements Validator {
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
         if (processValidation(uiComponent)) {
             Classifier currentUser = ((Classifier) uiComponent.getAttributes().get(CURRENT_USER));
-            if (currentUser != null && !"".equals(currentUser.getName()) && currentUser.getString("password") != null) {
+            if (currentUser != null && !"".equals(currentUser.getName()) && !"".equals(currentUser.getString("password"))) {
                 List<Classifier> allUsers = ((List<Classifier>) uiComponent.getAttributes().get(ALL_USERS));
                 for (Classifier user : allUsers) {
                     if (currentUser.getName().equals(user.getName()) && currentUser.getString("password").equals(user.getString("password"))) {

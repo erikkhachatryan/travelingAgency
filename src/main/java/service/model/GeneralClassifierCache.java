@@ -3,13 +3,11 @@ package service.model;
 import service.dao.DataSource;
 import service.dao.UserDao;
 import service.util.MetaCategoryId;
+import service.util.MetaCategoryProvider;
 import service.util.MetaCategoryType;
 
 import javax.annotation.Nonnull;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,18 +47,9 @@ public class GeneralClassifierCache {
 
     public List<Classifier> loadUsers() {
         if (allUsers == null) {
-            allUsers = UserDao.loadUsers();
+            allUsers = loadClassifiers(MetaCategoryProvider.getUser());
         }
         return allUsers;
-    }
-
-    public void saveUser(Classifier user) {
-        if (user.getId() == -1) {
-            UserDao.insertUser(user);
-        } else {
-            UserDao.updateUser(user);
-        }
-        allUsers = null;
     }
 
     public MainEntity loadMainEntityByInstanceId(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
@@ -241,7 +230,7 @@ public class GeneralClassifierCache {
         return classifier;
     }
 
-    public List<Classifier> loadClassifier(MetaCategoryId metaCategoryId, @Nonnull Integer id) {
+    public List<Classifier> loadClassifiers(MetaCategoryId metaCategoryId) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Classifier> classifiers = new ArrayList<>();
@@ -299,6 +288,131 @@ public class GeneralClassifierCache {
             }
         }
         return classifiers;
+    }
+
+    public void saveClassifier(MetaCategoryId metaCategoryId, @Nonnull Classifier classifier) {
+        if (classifier.getId() <= 0) {
+            insertClassifier(metaCategoryId, classifier);
+        } else {
+            updateClassifier(metaCategoryId, classifier);
+        }
+    }
+
+    private void insertClassifier(MetaCategoryId metaCategoryId, Classifier classifier) {
+        PreparedStatement preparedStatement = null;
+        try (Connection connection = getDataSource().getConnection()) {
+            StringBuilder insertIntoPart = new StringBuilder("INSERT INTO C_" + metaCategoryId.getTableName() + " (");
+            StringBuilder valuesPart = new StringBuilder(" VALUES(");
+            boolean isFirst = true;
+            for (String key : metaCategoryId.getColumns().keySet()) {
+                if (isFirst) {
+                    insertIntoPart.append(key);
+                    valuesPart.append("?");
+                    isFirst = false;
+                } else {
+                    insertIntoPart.append(", ").append(key);
+                    valuesPart.append(", ?");
+                }
+            }
+            insertIntoPart.append(") ");
+            valuesPart.append(")");
+            preparedStatement = connection.prepareStatement(insertIntoPart.toString() + valuesPart.toString());
+            int index = 1;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                switch (entry.getValue()) {
+                    case INTEGER: {
+                        preparedStatement.setInt(index++, classifier.getInt(entry.getKey()));
+                        break;
+                    }
+                    case BOOLEAN: {
+                        preparedStatement.setBoolean(index++, classifier.getBoolean(entry.getKey()));
+                        break;
+                    }
+                    case STRING: {
+                        preparedStatement.setString(index++, classifier.getString(entry.getKey()));
+                        break;
+                    }
+                    case LONG: {
+                        preparedStatement.setLong(index++, classifier.getLong(entry.getKey()));
+                        break;
+                    }
+                    case BIG_DECIMAL: {
+                        preparedStatement.setBigDecimal(index++, classifier.getBigDecimal(entry.getKey()));
+                        break;
+                    }
+                    default: { //DATE
+                        preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
+                        break;
+                    }
+                }
+            }
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) try {
+                preparedStatement.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void updateClassifier(MetaCategoryId metaCategoryId, Classifier classifier) {
+        PreparedStatement preparedStatement = null;
+        try (Connection connection = getDataSource().getConnection()) {
+            StringBuilder stringBuilder = new StringBuilder("UPDATE C_" + metaCategoryId.getTableName() + " SET ");
+            boolean isFirst = true;
+            for (String key : metaCategoryId.getColumns().keySet()) {
+                if (isFirst) {
+                    stringBuilder.append(key).append(" = ?");
+                    isFirst = false;
+                } else {
+                    stringBuilder.append(", ").append(key).append(" = ?");
+                }
+            }
+            preparedStatement = connection.prepareStatement(stringBuilder.toString());
+            int index = 1;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                switch (entry.getValue()) {
+                    case INTEGER: {
+                        preparedStatement.setInt(index++, classifier.getInt(entry.getKey()));
+                        break;
+                    }
+                    case BOOLEAN: {
+                        preparedStatement.setBoolean(index++, classifier.getBoolean(entry.getKey()));
+                        break;
+                    }
+                    case STRING: {
+                        preparedStatement.setString(index++, classifier.getString(entry.getKey()));
+                        break;
+                    }
+                    case LONG: {
+                        preparedStatement.setLong(index++, classifier.getLong(entry.getKey()));
+                        break;
+                    }
+                    case BIG_DECIMAL: {
+                        preparedStatement.setBigDecimal(index++, classifier.getBigDecimal(entry.getKey()));
+                        break;
+                    }
+                    default: { //DATE
+                        preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
+                        break;
+                    }
+                }
+            }
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) try {
+                preparedStatement.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void saveMainEntity() {
+
     }
 
 }
