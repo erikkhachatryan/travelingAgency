@@ -13,24 +13,25 @@
 <h:body>
     <f:view>
         <h:form id="deFormId">
-            <!-- Forms Start -->
-            <!--<ui:include src="mainPage.xhtml"/>-->
-            <!--<ui:include src="loginForm.xhtml"/>-->
-            <!--Forms End-->
 
-            <p:commandButton id="loginButtonId" value="Login"
-                             onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
-            <!--<p:commandButton id="registerButtonId" value="Register" onclick="window.location.href = '${request.contextPath}/SubForms/registrationSubForm.xhtml'" />-->
+            <ui:include src="subForms/travelingLocation.xhtml" />
 
-            <!-- Dialogs Start -->
-            <ui:include src="SubForms/registrationSubForm.xhtml"/>
-            <!-- Dialogs End -->
+            <p:commandButton id="loginButtonId" value="Login" onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
+            <p:commandButton id="registerButtonId" value="Register" onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'" />
 
         <p:dataTable id="allLocationsDataTableId"
-                     value="#{portfolioForm.allTravelingLocations}"
+                     value="#{generalClassifierCache.loadTravelingLocations()}"
                      editable="true"
-                     var="travelingLocation"
+                     var="country"
                      emptyMessage="There is no data">
+            <p:column id="locationNameColumnId" headerText="Country">
+                <p:commandLink id="countryNameCommandLinkId"
+                               value="#{country.Name}"
+                               actionListener="#{travelingLocationSubForm.prepareEditing(country)}"
+                               update="deFormId:travelingLocationDialogId"
+                               process="deFormId:travelingLocationDialogId"
+                               oncomplete="PF('travelingLocationDialog').show();" />
+            </p:column>
         </p:dataTable>
 
     </h:form>

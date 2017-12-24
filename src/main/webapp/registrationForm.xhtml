@@ -11,10 +11,10 @@
 </h:head>
 <h:body>
     <f:view>
-        <h:form id="loginFormId">
+        <h:form id="registrationFormId">
             <h:panelGroup id="userNamePanelGroupId" layout="block">
                 <p:outputLabel id="userNameOutputTextId" value="User Name"/>
-                <p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.Name}"
+                <p:inputText id="userNameInputTextId" value="#{registrationForm.currentUser.Name}"
                              required="true" requiredMessage="User Name is required.">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
@@ -22,34 +22,35 @@
             </h:panelGroup>
             <h:panelGroup id="passwordPanelGroupId" layout="block">
                 <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.password}"
+                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.password}"
                              required="true" requiredMessage="Password is required." type="password">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
                 <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
             </h:panelGroup>
 
-            <p:message id="loginValidationMessageId" for="loginValidatorId"/>
+            <p:message id="registrationValidationMessageId" for="registrationValidatorId"/>
 
-            <h:inputHidden value="true" id="loginValidatorId">
-                <f:validator validatorId="loginValidator" for="loginValidatorId"/>
-                <f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}"/>
-                <f:attribute name="message" value="Wrong User Name and/or password."/>
-                <f:attribute name="currentUser" value="#{loginForm.currentUser}"/>
-                <f:attribute name="allUsers" value="#{loginForm.users}"/>
+            <h:inputHidden value="true" id="registrationValidatorId">
+                <f:validator validatorId="registrationValidator" for="registrationValidatorId"/>
+                <f:attribute name="process" value="#{not empty param[registrationButtonBinding.clientId]}"/>
+                <f:attribute name="message" value="User with this User Name already exists."/>
+                <f:attribute name="userName" value="#{registrationForm.currentUser.name}"/>
+                <f:attribute name="allUsers" value="#{registrationForm.users}"/>
             </h:inputHidden>
 
             <p:commandButton id="cancelButtonId"
                              value="Cancel"
                              process="@this"
                              update="@this"
-                             onclick="window.location.href='${request.contextPath}/portfolio.xhtml'"/>
+                             actionListener="#{registrationForm.closeAction}"/>
 
-            <p:commandButton id="performLoginButtonId" value="Login"
-                             binding="#{loginButtonBinding}"
-                             actionListener="#{loginForm.performLogin}"
-                             process="loginFormId"
-                             update="loginFormId"/>
+            <p:commandButton id="registrationButtonId"
+                             value="Register"
+                             process="registrationFormId"
+                             update="registrationFormId"
+                             binding="#{registrationButtonBinding}"
+                             actionListener="#{registrationForm.register}"/>
         </h:form>
     </f:view>
 </h:body>

@@ -1,7 +1,6 @@
 package service.model;
 
 import service.dao.DataSource;
-import service.dao.UserDao;
 import service.util.MetaCategoryId;
 import service.util.MetaCategoryProvider;
 import service.util.MetaCategoryType;
@@ -9,7 +8,6 @@ import service.util.MetaCategoryType;
 import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,17 +26,11 @@ public class GeneralClassifierCache {
         this.dataSource = dataSource;
     }
 
-    private HashMap<String, Classifier> locations;
+    private List<Classifier> locations;
 
-    public Map<String, Classifier> loadLocations() {
+    public List<Classifier> loadLocations() {
         if (locations == null) {
-            locations = new HashMap<>();
-            Classifier location1 = new ClassifierImpl(1);
-            location1.setName("Yerevan");
-            locations.put("Yerevan", location1);
-            location1 = new ClassifierImpl(2);
-            location1.setName("Spitak");
-            locations.put("Spitak", location1);
+            locations = loadClassifiers(MetaCategoryProvider.getCountry());
         }
         return locations;
     }
@@ -50,6 +42,15 @@ public class GeneralClassifierCache {
             allUsers = loadClassifiers(MetaCategoryProvider.getUser());
         }
         return allUsers;
+    }
+
+    private List<MainEntity> travelingLocations;
+
+    public List<MainEntity> loadTravelingLocations() {
+        if (travelingLocations == null) {
+            travelingLocations = loadMainEntities(MetaCategoryProvider.getLocation());
+        }
+        return travelingLocations;
     }
 
     public MainEntity loadMainEntityByInstanceId(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
@@ -89,7 +90,7 @@ public class GeneralClassifierCache {
                             mainEntity.put(entry.getKey(), resultSet.getBigDecimal(entry.getKey()));
                             break;
                         }
-                        default: { //DATE
+                        case DATE: {
                             mainEntity.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
@@ -148,9 +149,12 @@ public class GeneralClassifierCache {
                             mainEntity.put(entry.getKey(), resultSet.getBigDecimal(entry.getKey()));
                             break;
                         }
-                        default: { //DATE
+                        case DATE: {
                             mainEntity.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
+                        }
+                        case CLASSIFIER: {
+                            mainEntity.put(entry.getKey(), loadClassifierById(, resultSet.getInt(entry.getKey())));
                         }
                     }
                 }
@@ -208,7 +212,7 @@ public class GeneralClassifierCache {
                             classifier.put(entry.getKey(), resultSet.getBigDecimal(entry.getKey()));
                             break;
                         }
-                        default: { //DATE
+                        case DATE: {
                             classifier.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
@@ -267,7 +271,7 @@ public class GeneralClassifierCache {
                             classifier.put(entry.getKey(), resultSet.getBigDecimal(entry.getKey()));
                             break;
                         }
-                        default: { //DATE
+                        case DATE: {
                             classifier.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
@@ -340,7 +344,7 @@ public class GeneralClassifierCache {
                         preparedStatement.setBigDecimal(index++, classifier.getBigDecimal(entry.getKey()));
                         break;
                     }
-                    default: { //DATE
+                    case DATE: {
                         preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
                         break;
                     }
@@ -394,7 +398,7 @@ public class GeneralClassifierCache {
                         preparedStatement.setBigDecimal(index++, classifier.getBigDecimal(entry.getKey()));
                         break;
                     }
-                    default: { //DATE
+                    case DATE: {
                         preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
                         break;
                     }

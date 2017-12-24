@@ -12,6 +12,7 @@
 <h:body>
     <f:view>
         <h:form id="mainFormId">
+            <p:commandLink id="logoutButtonId" value="Logout" onclick="window.location.href='${request.contextPath}/loginForm.xhtml'"/>
             <!--<h:panelGroup layout="block">-->
             <!--<p:outputLabel id="helloOutputLabelId" value="Here will be a hello word after click :D"-->
             <!--style="display: block;"/>-->
@@ -25,12 +26,12 @@
                                  required="true"
                                  requiredMessage="Location is required.">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
-                    <f:attribute name="itemsList" value="#{travelingLocationForm.locationsList}"/>
+                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadLocations()}"/>
                     <f:selectItem id="locationsEmptySelectItemId" itemLabel="--Select Location--"/>
                     <f:selectItems id="locationsSelectItemsId"
                                    var="location"
-                                   itemLabel="#{location.name}"
-                                   value="#{travelingLocationForm.locationsList}"/>
+                                   itemLabel="#{location.Name}"
+                                   value="#{generalClassifierCache.loadLocations()}"/>
                 </p:selectOneMenu>
                 <p:message id="locationrequiredMessageId" for="locationSelectOneMenuId" />
             </h:panelGroup>

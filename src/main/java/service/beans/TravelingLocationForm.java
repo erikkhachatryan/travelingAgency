@@ -42,10 +42,6 @@ public class TravelingLocationForm {
         this.selectedLocation = selectedLocation;
     }
 
-    public List<Classifier> getLocationsList() {
-        return new ArrayList<Classifier>(getGeneralClassifierCache().loadLocations().values());
-    }
-
     public void save() {
         RequestContext.getCurrentInstance().execute("alert('selected location: " + selectedLocation.getId() + "')");
         RequestContext.getCurrentInstance().execute("alert('logged in user: " + getSessionData().getApplicationUser().getName() + "')");

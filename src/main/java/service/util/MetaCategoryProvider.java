@@ -13,6 +13,7 @@ public class MetaCategoryProvider {
 
     private static MetaCategoryId LOCATION;
     private static MetaCategoryId USER;
+    private static MetaCategoryId COUNTRY;
 
     public static MetaCategoryId getLocation() {
         if (LOCATION == null) {
@@ -20,8 +21,8 @@ public class MetaCategoryProvider {
             columns.put("LocationID", MetaCategoryType.IDENTITY);
             columns.put("LocationInstanceID", MetaCategoryType.INTEGER);
             columns.put("LocationName", MetaCategoryType.STRING);
-            columns.put("CountryID", MetaCategoryType.INTEGER);
-            columns.put("StateID", MetaCategoryType.INTEGER);
+            columns.put("CountryID", MetaCategoryType.CLASSIFIER);
+            columns.put("StateID", MetaCategoryType.CLASSIFIER);
             LOCATION  = new MetaCategoryId("Location", columns);
         }
         return LOCATION;
@@ -41,5 +42,15 @@ public class MetaCategoryProvider {
             USER  = new MetaCategoryId("User", columns);
         }
         return USER;
+    }
+
+    public static MetaCategoryId getCountry() {
+        if (COUNTRY == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("CountryID", MetaCategoryType.IDENTITY);
+            columns.put("Name", MetaCategoryType.STRING);
+            COUNTRY = new MetaCategoryId("Country", columns);
+        }
+        return COUNTRY;
     }
 }

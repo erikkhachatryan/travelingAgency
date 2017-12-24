@@ -10,5 +10,6 @@ public enum MetaCategoryType {
     BIG_DECIMAL,
     LONG,
     BOOLEAN,
-    DATE
+    DATE,
+    CLASSIFIER
 }

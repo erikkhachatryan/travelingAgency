@@ -1,24 +1,22 @@
-package service.beans.SubForms;
+package service.beans;
 
 import org.primefaces.context.RequestContext;
-import service.beans.LoginForm;
-import service.dao.UserDao;
 import service.model.Classifier;
 import service.model.ClassifierImpl;
 import service.model.GeneralClassifierCache;
+import service.util.MetaCategoryProvider;
 
+import javax.faces.context.FacesContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Erik on 03-Dec-17.
  */
-public class RegistrationSubForm {
+public class RegistrationForm {
 
     private Classifier currentUser;
 
     private GeneralClassifierCache generalClassifierCache;
-    private UserDao userDao;
 
     public GeneralClassifierCache getGeneralClassifierCache() {
         return generalClassifierCache;
@@ -26,14 +24,6 @@ public class RegistrationSubForm {
 
     public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
         this.generalClassifierCache = generalClassifierCache;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
     }
 
     public List<Classifier> getUsers() {
@@ -49,11 +39,11 @@ public class RegistrationSubForm {
 
     public void closeAction() {
         currentUser = null;
-        RequestContext.getCurrentInstance().execute("PF('registrationDialog').hide();");
+        RequestContext.getCurrentInstance().execute("window.location.href='" + FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/portfolio.xhtml'");
     }
 
     public void register() {
-        getUserDao().save(currentUser);
+        getGeneralClassifierCache().saveClassifier(MetaCategoryProvider.getUser(), currentUser);
         closeAction();
     }
 }
