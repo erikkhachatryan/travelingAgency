@@ -9,7 +9,7 @@
     <!--<context:property-placeholder location="properties/application.properties" />-->
 
     <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session">
-        <property name="dataSource" ref="dataSource"/>
+        <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
 
@@ -33,10 +33,10 @@
     </bean>
 
     <bean id="newClassifier" class="service.model.ClassifierImpl" scope="session">
-        <constructor-arg index="0" value="-1"/>
+        <constructor-arg index="0" value="0"/>
     </bean>
 
-    <bean id="classifierIdGenerator" class="service.beans.IdGenerator"/>
+    <bean id="idGenerator" class="service.beans.IdGenerator"/>
 
     <bean id="dataSource" class="service.dao.DataSource">
         <!--<constructor-arg index="0" value="${db.name}}" />-->

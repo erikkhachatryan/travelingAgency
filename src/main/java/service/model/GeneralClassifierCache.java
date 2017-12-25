@@ -21,46 +21,48 @@ public class GeneralClassifierCache {
 
     private DataSource dataSource;
 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
+    private Map<MetaCategoryId, List<Classifier>> classifierCache;
+    private Map<MetaCategoryId, List<MainEntity>> mainEntitiesCache;
 
-    public void setDataSource(DataSource dataSource) {
+    public GeneralClassifierCache(DataSource dataSource) {
         this.dataSource = dataSource;
+        classifierCache = new HashMap<>();
+        mainEntitiesCache = new HashMap<>();
     }
-
-    private List<Classifier> countries;
 
     public List<Classifier> loadCountries() {
-        if (countries == null) {
-            countries = loadClassifiers(MetaCategoryProvider.getCountry());
+        if (classifierCache.get(MetaCategoryProvider.getCountry()) == null) {
+            classifierCache.put(MetaCategoryProvider.getCountry(), loadClassifiers(MetaCategoryProvider.getCountry()));
         }
-        return countries;
+        return classifierCache.get(MetaCategoryProvider.getCountry());
     }
 
-    private List<MainEntity> locations;
-
-    public List<MainEntity> loadLocations() {
-        if (locations == null) {
-            locations = loadMainEntities(MetaCategoryProvider.getLocation());
+    public List<Classifier> loadStates() {
+        if (classifierCache.get(MetaCategoryProvider.getState()) == null) {
+            classifierCache.put(MetaCategoryProvider.getState(), loadClassifiers(MetaCategoryProvider.getState()));
         }
-        return locations;
+        return classifierCache.get(MetaCategoryProvider.getState());
     }
-
-    private List<Classifier> allUsers;
 
     public List<Classifier> loadUsers() {
-        if (allUsers == null) {
-            allUsers = loadClassifiers(MetaCategoryProvider.getUser());
+        if (classifierCache.get(MetaCategoryProvider.getUser()) == null) {
+            classifierCache.put(MetaCategoryProvider.getUser(), loadClassifiers(MetaCategoryProvider.getUser()));
         }
-        return allUsers;
+        return classifierCache.get(MetaCategoryProvider.getUser());
+    }
+
+    public List<MainEntity> loadLocations() {
+        if (mainEntitiesCache.get(MetaCategoryProvider.getLocation()) == null) {
+            mainEntitiesCache.put(MetaCategoryProvider.getLocation(), loadMainEntities(MetaCategoryProvider.getLocation()));
+        }
+        return mainEntitiesCache.get(MetaCategoryProvider.getLocation());
     }
 
     public MainEntity loadMainEntityByInstanceId(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         MainEntityImpl mainEntity = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             String sql = "SELECT * FROM DE_" + metaCategoryId.getTableName() + " Where " + metaCategoryId.getTableName() + "InstanceID = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, instanceId);
@@ -99,6 +101,7 @@ public class GeneralClassifierCache {
                         }
                         case CLASSIFIER: {
                             mainEntity.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                            break;
                         }
                     }
                 }
@@ -123,7 +126,7 @@ public class GeneralClassifierCache {
         ResultSet resultSet = null;
         List<MainEntity> mainEntities = new ArrayList<>();
         MainEntityImpl mainEntity = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             String sql = "SELECT * FROM DE_" + metaCategoryId.getTableName();
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
@@ -161,6 +164,7 @@ public class GeneralClassifierCache {
                         }
                         case CLASSIFIER: {
                             mainEntity.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                            break;
                         }
                     }
                 }
@@ -185,7 +189,7 @@ public class GeneralClassifierCache {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         ClassifierImpl classifier = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             String sql = "SELECT * FROM C_" + metaCategoryId.getTableName() + " Where " + metaCategoryId.getTableName() + "ID = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -224,6 +228,7 @@ public class GeneralClassifierCache {
                         }
                         case CLASSIFIER: {
                             classifier.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                            break;
                         }
                     }
                 }
@@ -248,7 +253,7 @@ public class GeneralClassifierCache {
         ResultSet resultSet = null;
         List<Classifier> classifiers = new ArrayList<>();
         ClassifierImpl classifier = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             String sql = "SELECT * FROM C_" + metaCategoryId.getTableName();
             preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
@@ -286,6 +291,7 @@ public class GeneralClassifierCache {
                         }
                         case CLASSIFIER: {
                             classifier.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                            break;
                         }
                     }
                 }
@@ -312,30 +318,46 @@ public class GeneralClassifierCache {
         } else {
             updateClassifier(metaCategoryId, classifier);
         }
+        classifierCache.remove(metaCategoryId);
     }
 
     private void insertClassifier(MetaCategoryId metaCategoryId, Classifier classifier) {
         PreparedStatement preparedStatement = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             StringBuilder insertIntoPart = new StringBuilder("INSERT INTO C_" + metaCategoryId.getTableName() + " (");
             StringBuilder valuesPart = new StringBuilder(" VALUES(");
             boolean isFirst = true;
-            for (String key : metaCategoryId.getColumns().keySet()) {
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                if (entry.getValue().equals(MetaCategoryType.IDENTITY)) {
+                    continue;
+                }
                 if (isFirst) {
-                    insertIntoPart.append(key);
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        insertIntoPart.append(entry.getKey()).append("ID");
+                    } else {
+                        insertIntoPart.append(entry.getKey());
+                    }
                     valuesPart.append("?");
                     isFirst = false;
                 } else {
-                    insertIntoPart.append(", ").append(key);
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        insertIntoPart.append(", ").append(entry.getKey()).append("ID");
+                    } else {
+                        insertIntoPart.append(", ").append(entry.getKey());
+                    }
                     valuesPart.append(", ?");
                 }
             }
             insertIntoPart.append(") ");
             valuesPart.append(")");
-            preparedStatement = connection.prepareStatement(insertIntoPart.toString() + valuesPart.toString());
+            preparedStatement = connection.prepareStatement(insertIntoPart.toString() + valuesPart.toString(), Statement.RETURN_GENERATED_KEYS);
             int index = 1;
+            String identityFieldKey = null;
             for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
                 switch (entry.getValue()) {
+                    case IDENTITY: {
+                        identityFieldKey = entry.getKey();
+                    }
                     case INTEGER: {
                         preparedStatement.setInt(index++, classifier.getInt(entry.getKey()));
                         break;
@@ -360,10 +382,22 @@ public class GeneralClassifierCache {
                         preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
                         break;
                     }
+                    case CLASSIFIER: {
+                        MetaCategoryId classifierMetaCategoryId = (MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null);
+                        saveClassifier(classifierMetaCategoryId, classifier.getClassifier(entry.getKey()));
+                        preparedStatement.setInt(index++, classifier.getClassifier(entry.getKey()).getId());
+                        break;
+                    }
                 }
             }
             preparedStatement.execute();
-        } catch (SQLException e) {
+            if (identityFieldKey != null) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                while (generatedKeys.next()) {
+                    classifier.setId(generatedKeys.getInt(identityFieldKey));
+                }
+            }
+        } catch (SQLException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         } finally {
             if (preparedStatement != null) try {
@@ -375,17 +409,34 @@ public class GeneralClassifierCache {
 
     private void updateClassifier(MetaCategoryId metaCategoryId, Classifier classifier) {
         PreparedStatement preparedStatement = null;
-        try (Connection connection = getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             StringBuilder stringBuilder = new StringBuilder("UPDATE C_" + metaCategoryId.getTableName() + " SET ");
             boolean isFirst = true;
-            for (String key : metaCategoryId.getColumns().keySet()) {
+            String identityColumnName = null;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                if (entry.getValue().equals(MetaCategoryType.IDENTITY)) {
+                    identityColumnName = entry.getKey();
+                    continue;
+                }
                 if (isFirst) {
-                    stringBuilder.append(key).append(" = ?");
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        stringBuilder.append(entry.getKey()).append("ID").append(" = ?");
+                    } else {
+                        stringBuilder.append(entry.getKey()).append(" = ?");
+                    }
                     isFirst = false;
                 } else {
-                    stringBuilder.append(", ").append(key).append(" = ?");
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        stringBuilder.append(", ").append(entry.getKey()).append("ID").append(" = ?");
+                    } else {
+                        stringBuilder.append(", ").append(entry.getKey()).append(" = ?");
+                    }
                 }
             }
+            if (identityColumnName == null) {
+                return;
+            }
+            stringBuilder.append(" WHERE ").append(identityColumnName).append(" = ").append(classifier.getId());
             preparedStatement = connection.prepareStatement(stringBuilder.toString());
             int index = 1;
             for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
@@ -414,10 +465,16 @@ public class GeneralClassifierCache {
                         preparedStatement.setDate(index++, Date.valueOf(classifier.getDate(entry.getKey())));
                         break;
                     }
+                    case CLASSIFIER: {
+                        MetaCategoryId classifierMetaCategoryId = (MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null);
+                        saveClassifier(classifierMetaCategoryId, classifier.getClassifier(entry.getKey()));
+                        preparedStatement.setInt(index++, classifier.getClassifier(entry.getKey()).getId());
+                        break;
+                    }
                 }
             }
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         } finally {
             if (preparedStatement != null) try {
@@ -427,8 +484,176 @@ public class GeneralClassifierCache {
         }
     }
 
-    private void saveMainEntity() {
+    public void saveMainEntity(MetaCategoryId metaCategoryId, MainEntity mainEntity) {
+        if (mainEntity.getId() <= 0) {
+            insertMainEntity(metaCategoryId, mainEntity);
+        } else {
+            updateMainEntity(metaCategoryId, mainEntity);
+        }
+        mainEntitiesCache.remove(metaCategoryId);
+    }
 
+    private void insertMainEntity(MetaCategoryId metaCategoryId, MainEntity mainEntity) {
+        PreparedStatement preparedStatement = null;
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder insertIntoPart = new StringBuilder("INSERT INTO DE_" + metaCategoryId.getTableName() + " (");
+            StringBuilder valuesPart = new StringBuilder(" VALUES(");
+            boolean isFirst = true;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                if (entry.getValue().equals(MetaCategoryType.IDENTITY)) {
+                    continue;
+                }
+                if (isFirst) {
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        insertIntoPart.append(entry.getKey()).append("ID");
+                    } else {
+                        insertIntoPart.append(entry.getKey());
+                    }
+                    valuesPart.append("?");
+                    isFirst = false;
+                } else {
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        insertIntoPart.append(", ").append(entry.getKey()).append("ID");
+                    } else {
+                        insertIntoPart.append(", ").append(entry.getKey());
+                    }
+                    valuesPart.append(", ?");
+                }
+            }
+            insertIntoPart.append(") ");
+            valuesPart.append(")");
+            preparedStatement = connection.prepareStatement(insertIntoPart.toString() + valuesPart.toString(), Statement.RETURN_GENERATED_KEYS);
+            int index = 1;
+            String identityFieldKey = null;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                switch (entry.getValue()) {
+                    case IDENTITY: {
+                        identityFieldKey = entry.getKey();
+                    }
+                    case INTEGER: {
+                        preparedStatement.setInt(index++, mainEntity.getInt(entry.getKey()));
+                        break;
+                    }
+                    case BOOLEAN: {
+                        preparedStatement.setBoolean(index++, mainEntity.getBoolean(entry.getKey()));
+                        break;
+                    }
+                    case STRING: {
+                        preparedStatement.setString(index++, mainEntity.getString(entry.getKey()));
+                        break;
+                    }
+                    case LONG: {
+                        preparedStatement.setLong(index++, mainEntity.getLong(entry.getKey()));
+                        break;
+                    }
+                    case BIG_DECIMAL: {
+                        preparedStatement.setBigDecimal(index++, mainEntity.getBigDecimal(entry.getKey()));
+                        break;
+                    }
+                    case DATE: {
+                        preparedStatement.setDate(index++, Date.valueOf(mainEntity.getDate(entry.getKey())));
+                        break;
+                    }
+                    case CLASSIFIER: {
+                        MetaCategoryId classifierMetaCategoryId = (MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null);
+                        saveClassifier(classifierMetaCategoryId, mainEntity.getClassifier(entry.getKey()));
+                        preparedStatement.setInt(index++, mainEntity.getClassifier(entry.getKey()).getId());
+                        break;
+                    }
+                }
+            }
+            preparedStatement.execute();
+            if (identityFieldKey != null) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                while (generatedKeys.next()) {
+                    mainEntity.setId(generatedKeys.getInt(identityFieldKey));
+                }
+            }
+        } catch (SQLException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) try {
+                preparedStatement.close();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void updateMainEntity(MetaCategoryId metaCategoryId, MainEntity mainEntity) {
+        PreparedStatement preparedStatement = null;
+        try (Connection connection = dataSource.getConnection()) {
+            StringBuilder stringBuilder = new StringBuilder("UPDATE DE_" + metaCategoryId.getTableName() + " SET ");
+            boolean isFirst = true;
+            String identityColumnName = null;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                if (entry.getValue().equals(MetaCategoryType.IDENTITY)) {
+                    identityColumnName = entry.getKey();
+                    continue;
+                }
+                if (isFirst) {
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        stringBuilder.append(entry.getKey()).append("ID").append(" = ?");
+                    } else {
+                        stringBuilder.append(entry.getKey()).append(" = ?");
+                    }
+                    isFirst = false;
+                } else {
+                    if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                        stringBuilder.append(", ").append(entry.getKey()).append("ID").append(" = ?");
+                    } else {
+                        stringBuilder.append(", ").append(entry.getKey()).append(" = ?");
+                    }
+                }
+            }
+            if (identityColumnName == null) {
+                return;
+            }
+            stringBuilder.append(" WHERE ").append(identityColumnName).append(" = ").append(mainEntity.getId());
+            preparedStatement = connection.prepareStatement(stringBuilder.toString());
+            int index = 1;
+            for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
+                switch (entry.getValue()) {
+                    case INTEGER: {
+                        preparedStatement.setInt(index++, mainEntity.getInt(entry.getKey()));
+                        break;
+                    }
+                    case BOOLEAN: {
+                        preparedStatement.setBoolean(index++, mainEntity.getBoolean(entry.getKey()));
+                        break;
+                    }
+                    case STRING: {
+                        preparedStatement.setString(index++, mainEntity.getString(entry.getKey()));
+                        break;
+                    }
+                    case LONG: {
+                        preparedStatement.setLong(index++, mainEntity.getLong(entry.getKey()));
+                        break;
+                    }
+                    case BIG_DECIMAL: {
+                        preparedStatement.setBigDecimal(index++, mainEntity.getBigDecimal(entry.getKey()));
+                        break;
+                    }
+                    case DATE: {
+                        preparedStatement.setDate(index++, Date.valueOf(mainEntity.getDate(entry.getKey())));
+                        break;
+                    }
+                    case CLASSIFIER: {
+                        MetaCategoryId mainEntityMetaCategoryId = (MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null);
+                        saveClassifier(mainEntityMetaCategoryId, mainEntity.getClassifier(entry.getKey()));
+                        preparedStatement.setInt(index++, mainEntity.getClassifier(entry.getKey()).getId());
+                        break;
+                    }
+                }
+            }
+            preparedStatement.executeUpdate();
+        } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) try {
+                preparedStatement.close();
+            } catch (Exception e) {
+            }
+        }
     }
 
 }

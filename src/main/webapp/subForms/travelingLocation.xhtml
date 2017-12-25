@@ -7,6 +7,55 @@
               header="Traveling Location" height="600px" dynamic="true" modal="true">
         <h:form id="travelingLocationSubFormId">
 
+            <h:panelGroup id="locatioNamePanelGroupId" layout="block">
+                <p:outputLabel id="locationNameLabelId" value="Location Name: "/>
+                <p:inputText id="locationName" value="#{travelingLocationSubForm.currentEntity.LocationName}"/>
+            </h:panelGroup>
+            <h:panelGroup id="locatioCountryPanelGroupId" layout="block">
+                <p:outputLabel id="locatonCountryLabelId" value="Country: " />
+                <p:selectOneMenu id="locationCountrySelectOneMenuId"
+                                 appendTo="@this"
+                                 value="#{travelingLocationSubForm.currentEntity.Country}"
+                                 required="true"
+                                 requiredMessage="Country is required.">
+                    <f:converter converterId="baseJSFSelectItemConverter"/>
+                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadCountries()}"/>
+                    <f:selectItem id="locationCountryEmptySelectItemId" itemLabel="--Select Country--"/>
+                    <f:selectItems id="locationCountriesSelectItemsId"
+                                   var="country"
+                                   itemLabel="#{country.Name}"
+                                   value="#{generalClassifierCache.loadCountries()}"/>
+                </p:selectOneMenu>
+            </h:panelGroup>
+            
+            <h:panelGroup id="locatioStatePanelGroupId" layout="block">
+                <p:outputLabel id="locatonStateLabelId" value="State: " />
+                <p:selectOneMenu id="locationStateSelectOneMenuId"
+                                 appendTo="@this"
+                                 value="#{travelingLocationSubForm.currentEntity.State}"
+                                 required="true"
+                                 requiredMessage="State is required.">
+                    <f:converter converterId="baseJSFSelectItemConverter"/>
+                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadStates()}"/>
+                    <f:selectItem id="locationStateEmptySelectItemId" itemLabel="--Select State--"/>
+                    <f:selectItems id="locationStatesSelectItemsId"
+                                   var="state"
+                                   itemLabel="#{state.Name}"
+                                   value="#{generalClassifierCache.loadStates()}"/>
+                </p:selectOneMenu>
+            </h:panelGroup>
+
+            <p:commandButton id="cancelButtonId"
+                             value="Cancel"
+                             process="@this"
+                             update="@this"
+                             actionListener="#{travelingLocationSubForm.closeAction}"/>
+
+            <p:commandButton id="saveButtonId"
+                             value="Save"
+                             update="travelingLocationSubFormId deFormId:allLocationsDataTableId"
+                             process="travelingLocationSubFormId"
+                             actionListener="#{travelingLocationSubForm.save}"/>
         </h:form>
     </p:dialog>
 </ui:composition>

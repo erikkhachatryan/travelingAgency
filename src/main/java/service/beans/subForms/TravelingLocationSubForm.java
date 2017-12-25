@@ -1,10 +1,12 @@
 package service.beans.subForms;
 
+import org.primefaces.context.RequestContext;
 import service.beans.PortfolioForm;
 import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.GeneralClassifierCache;
 import service.model.MainEntity;
+import service.util.MetaCategoryProvider;
 
 import java.util.List;
 
@@ -17,7 +19,6 @@ public class TravelingLocationSubForm {
     private SessionData sessionData;
     private GeneralClassifierCache generalClassifierCache;
     private MainEntity currentEntity;
-    private MainEntity currentEntityBackup;
 
     public PortfolioForm getParentForm() {
         return portfolioForm;
@@ -40,15 +41,22 @@ public class TravelingLocationSubForm {
         this.sessionData = sessionData;
     }
 
-    public void prepareEditing(MainEntity location) {
-        currentEntityBackup = location;
-        currentEntity = location.clone();
+    public MainEntity getCurrentEntity() {
+        return this.currentEntity;
     }
 
-    public void update() {
-        List<MainEntity> travelingLocations = getParentForm().getTravelingLocations();
-        travelingLocations.remove(currentEntityBackup);
-        travelingLocations.add(currentEntity);
+    public void prepareEditing(MainEntity location) {
+        currentEntity = location;
+    }
+
+    public void closeAction() {
+        currentEntity = null;
+        RequestContext.getCurrentInstance().execute("PF('travelingLocationDialog').hide();");
+    }
+
+    public void save() {
+        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), currentEntity);
+        closeAction();
     }
 
 }
