@@ -6,8 +6,11 @@ import service.util.MetaCategoryProvider;
 import service.util.MetaCategoryType;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +29,20 @@ public class GeneralClassifierCache {
         this.dataSource = dataSource;
     }
 
-    private List<Classifier> locations;
+    private List<Classifier> countries;
 
-    public List<Classifier> loadLocations() {
+    public List<Classifier> loadCountries() {
+        if (countries == null) {
+            countries = loadClassifiers(MetaCategoryProvider.getCountry());
+        }
+        return countries;
+    }
+
+    private List<MainEntity> locations;
+
+    public List<MainEntity> loadLocations() {
         if (locations == null) {
-            locations = loadClassifiers(MetaCategoryProvider.getCountry());
+            locations = loadMainEntities(MetaCategoryProvider.getLocation());
         }
         return locations;
     }
@@ -42,15 +54,6 @@ public class GeneralClassifierCache {
             allUsers = loadClassifiers(MetaCategoryProvider.getUser());
         }
         return allUsers;
-    }
-
-    private List<MainEntity> travelingLocations;
-
-    public List<MainEntity> loadTravelingLocations() {
-        if (travelingLocations == null) {
-            travelingLocations = loadMainEntities(MetaCategoryProvider.getLocation());
-        }
-        return travelingLocations;
     }
 
     public MainEntity loadMainEntityByInstanceId(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
@@ -94,10 +97,13 @@ public class GeneralClassifierCache {
                             mainEntity.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
+                        case CLASSIFIER: {
+                            mainEntity.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                        }
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null) try {
@@ -154,13 +160,13 @@ public class GeneralClassifierCache {
                             break;
                         }
                         case CLASSIFIER: {
-                            mainEntity.put(entry.getKey(), loadClassifierById(, resultSet.getInt(entry.getKey())));
+                            mainEntity.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
                         }
                     }
                 }
                 mainEntities.add(mainEntity);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null) try {
@@ -216,10 +222,13 @@ public class GeneralClassifierCache {
                             classifier.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
+                        case CLASSIFIER: {
+                            classifier.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                        }
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null) try {
@@ -275,11 +284,14 @@ public class GeneralClassifierCache {
                             classifier.put(entry.getKey(), resultSet.getDate(entry.getKey()));
                             break;
                         }
+                        case CLASSIFIER: {
+                            classifier.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                        }
                     }
                 }
                 classifiers.add(classifier);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         } finally {
             if (resultSet != null) try {

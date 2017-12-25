@@ -1,5 +1,7 @@
 package service.dao;
 
+import service.util.Util;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -53,7 +55,7 @@ public class DataSource {
         if (applicationProperties == null) {
             applicationProperties = new Properties();
             try {
-                applicationProperties.load(new FileInputStream("E:\\Projects\\Traveling Agency\\travelingAgency\\src\\main\\resources\\properties\\application.properties"));
+                applicationProperties.load(new FileInputStream(Util.getApplicationPropertiesPath()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

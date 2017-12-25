@@ -3,7 +3,6 @@ package service.beans;
 import service.model.GeneralClassifierCache;
 import service.model.MainEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +20,7 @@ public class PortfolioForm {
         this.generalClassifierCache = generalClassifierCache;
     }
 
-    public List<MainEntity> getAllTravelingLocations() {
-        return new ArrayList<>();
+    public List<MainEntity> getTravelingLocations() {
+        return getGeneralClassifierCache().loadLocations();
     }
-
 }

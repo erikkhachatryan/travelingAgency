@@ -20,16 +20,16 @@
             <p:commandButton id="registerButtonId" value="Register" onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'" />
 
         <p:dataTable id="allLocationsDataTableId"
-                     value="#{generalClassifierCache.loadTravelingLocations()}"
+                     value="#{portfolioForm.travelingLocations}"
                      editable="true"
-                     var="country"
+                     var="location"
                      emptyMessage="There is no data">
-            <p:column id="locationNameColumnId" headerText="Country">
+            <p:column id="locationNameColumnId" headerText="location">
                 <p:commandLink id="countryNameCommandLinkId"
-                               value="#{country.Name}"
-                               actionListener="#{travelingLocationSubForm.prepareEditing(country)}"
-                               update="deFormId:travelingLocationDialogId"
-                               process="deFormId:travelingLocationDialogId"
+                               value="#{location.LocationName}"
+                               actionListener="#{travelingLocationSubForm.prepareEditing(location)}"
+                               update="@this deFormId:travelingLocationDialogId"
+                               process="@this deFormId:travelingLocationDialogId"
                                oncomplete="PF('travelingLocationDialog').show();" />
             </p:column>
         </p:dataTable>

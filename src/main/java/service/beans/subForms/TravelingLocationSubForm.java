@@ -40,15 +40,15 @@ public class TravelingLocationSubForm {
         this.sessionData = sessionData;
     }
 
-    public void prepareEditing(MainEntity country) {
-        currentEntityBackup = country;
-        currentEntity = country.clone();
+    public void prepareEditing(MainEntity location) {
+        currentEntityBackup = location;
+        currentEntity = location.clone();
     }
 
     public void update() {
-        List<MainEntity> allTravelingLocations = getParentForm().getAllTravelingLocations();
-        allTravelingLocations.remove(currentEntityBackup);
-        allTravelingLocations.add(currentEntity);
+        List<MainEntity> travelingLocations = getParentForm().getTravelingLocations();
+        travelingLocations.remove(currentEntityBackup);
+        travelingLocations.add(currentEntity);
     }
 
 }

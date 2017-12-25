@@ -36,10 +36,6 @@ public class LoginForm {
         return getGeneralClassifierCache().loadUsers();
     }
 
-    public boolean isLoggedIn() {
-        return getCurrentUser().getId() != -1;
-    }
-
     public Classifier getCurrentUser() {
         return getSessionData().getApplicationUser();
     }

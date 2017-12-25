@@ -26,12 +26,12 @@
                                  required="true"
                                  requiredMessage="Location is required.">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
-                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadLocations()}"/>
+                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadCountries()}"/>
                     <f:selectItem id="locationsEmptySelectItemId" itemLabel="--Select Location--"/>
                     <f:selectItems id="locationsSelectItemsId"
                                    var="location"
                                    itemLabel="#{location.Name}"
-                                   value="#{generalClassifierCache.loadLocations()}"/>
+                                   value="#{generalClassifierCache.loadCountries()}"/>
                 </p:selectOneMenu>
                 <p:message id="locationrequiredMessageId" for="locationSelectOneMenuId" />
             </h:panelGroup>

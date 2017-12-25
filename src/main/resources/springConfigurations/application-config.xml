@@ -12,10 +12,6 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="master2Form" class="service.beans.Master2Form" scope="session">
-        <constructor-arg name="systemName" value="master2Form"/>
-        <property name="travelingLocationForm" ref="travelingLocationForm"/>
-    </bean>
 
     <bean id="sessionData" class="service.commons.SessionData" scope="session">
         <constructor-arg index="0" ref="newClassifier"/>
@@ -50,8 +46,8 @@
         <!--<constructor-arg index="4" value="${user.password}" />-->
     </bean>
 
-    <bean id="portfolioForm" class="service.beans.PortfolioForm">
-
+    <bean id="portfolioForm" class="service.beans.PortfolioForm" scope="session">
+        <property name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>
 
 </beans>
