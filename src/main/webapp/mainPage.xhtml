@@ -12,7 +12,11 @@
 <h:body>
     <f:view>
         <h:form id="mainFormId">
-            <p:commandLink id="logoutButtonId" value="Logout" onclick="window.location.href='${request.contextPath}/loginForm.xhtml'"/>
+            <p:commandButton id="logoutButtonId"
+                             value="Logout"
+                             process="@this"
+                             update="@this"
+                             onclick="window.location.href='${request.contextPath}/loginForm.xhtml'"/>
             <!--<h:panelGroup layout="block">-->
             <!--<p:outputLabel id="helloOutputLabelId" value="Here will be a hello word after click :D"-->
             <!--style="display: block;"/>-->

@@ -36,13 +36,15 @@ public class MetaCategoryProvider {
         if (USER == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("UserID", MetaCategoryType.IDENTITY);
-            columns.put("FirstName", MetaCategoryType.STRING);
-            columns.put("LastName", MetaCategoryType.STRING);
-            columns.put("DateOfBirth", MetaCategoryType.DATE);
-            columns.put("PhoneNumber", MetaCategoryType.STRING);
-            columns.put("Address", MetaCategoryType.STRING);
-            columns.put("Email", MetaCategoryType.STRING);
-            columns.put("GenderID", MetaCategoryType.INTEGER);
+            columns.put("Name", MetaCategoryType.STRING);
+            columns.put("Password", MetaCategoryType.STRING);
+//            columns.put("FirstName", MetaCategoryType.STRING);
+//            columns.put("LastName", MetaCategoryType.STRING);
+//            columns.put("DateOfBirth", MetaCategoryType.DATE);
+//            columns.put("PhoneNumber", MetaCategoryType.STRING);
+//            columns.put("Address", MetaCategoryType.STRING);
+//            columns.put("Email", MetaCategoryType.STRING);
+//            columns.put("GenderID", MetaCategoryType.INTEGER);
             USER  = new MetaCategoryId("User", columns);
         }
         return USER;

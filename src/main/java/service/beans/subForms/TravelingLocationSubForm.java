@@ -46,7 +46,7 @@ public class TravelingLocationSubForm {
     }
 
     public void prepareEditing(MainEntity location) {
-        currentEntity = location;
+        currentEntity = location.clone();
     }
 
     public void closeAction() {

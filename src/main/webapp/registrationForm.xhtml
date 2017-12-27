@@ -22,7 +22,7 @@
             </h:panelGroup>
             <h:panelGroup id="passwordPanelGroupId" layout="block">
                 <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.password}"
+                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.Password}"
                              required="true" requiredMessage="Password is required." type="password">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
@@ -35,7 +35,7 @@
                 <f:validator validatorId="registrationValidator" for="registrationValidatorId"/>
                 <f:attribute name="process" value="#{not empty param[registrationButtonBinding.clientId]}"/>
                 <f:attribute name="message" value="User with this User Name already exists."/>
-                <f:attribute name="userName" value="#{registrationForm.currentUser.name}"/>
+                <f:attribute name="userName" value="#{registrationForm.currentUser.Name}"/>
                 <f:attribute name="allUsers" value="#{registrationForm.users}"/>
             </h:inputHidden>
 

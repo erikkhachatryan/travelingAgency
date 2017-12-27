@@ -26,6 +26,8 @@ IF OBJECT_ID('C_User') IS NULL
             (
               UserID INT CONSTRAINT PK_C_User PRIMARY KEY CLUSTERED
                          IDENTITY ,
+              Name NVARCHAR(100),
+			  Password NVARCHAR(100),
               FirstName NVARCHAR(250) ,
               LastName NVARCHAR(250) ,
               DateOfBirth DATETIME ,
@@ -39,6 +41,8 @@ IF OBJECT_ID('C_User') IS NULL
         SET IDENTITY_INSERT dbo.C_User ON;
         INSERT  INTO dbo.C_User
                 ( UserID ,
+				  Name ,
+				  Password ,
                   FirstName ,
                   LastName ,
                   DateOfBirth ,
@@ -47,7 +51,9 @@ IF OBJECT_ID('C_User') IS NULL
                   Email ,
                   GenderID
 		        )
-        VALUES  ( -1 ,
+        VALUES  ( 0 ,
+				  N'admin' ,
+				  N'123456' ,
                   N'System Account' ,
                   N'System Account' ,
                   GETDATE() ,

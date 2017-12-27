@@ -357,6 +357,7 @@ public class GeneralClassifierCache {
                 switch (entry.getValue()) {
                     case IDENTITY: {
                         identityFieldKey = entry.getKey();
+                        break;
                     }
                     case INTEGER: {
                         preparedStatement.setInt(index++, classifier.getInt(entry.getKey()));

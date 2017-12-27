@@ -22,7 +22,7 @@
             </h:panelGroup>
             <h:panelGroup id="passwordPanelGroupId" layout="block">
                 <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.password}"
+                <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.Password}"
                              required="true" requiredMessage="Password is required." type="password">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
