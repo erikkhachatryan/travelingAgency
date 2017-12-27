@@ -15,21 +15,20 @@ public class LoginForm {
 
     private GeneralClassifierCache generalClassifierCache;
     private SessionData sessionData;
+    private Classifier currentUser;
+
+    public LoginForm(GeneralClassifierCache generalClassifierCache, SessionData sessionData) {
+        this.generalClassifierCache = generalClassifierCache;
+        this.sessionData = sessionData;
+        this.currentUser = null;
+    }
 
     public GeneralClassifierCache getGeneralClassifierCache() {
         return generalClassifierCache;
     }
 
-    public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
-        this.generalClassifierCache = generalClassifierCache;
-    }
-
     public SessionData getSessionData() {
         return sessionData;
-    }
-
-    public void setSessionData(SessionData sessionData) {
-        this.sessionData = sessionData;
     }
 
     public List<Classifier> getUsers() {
@@ -37,11 +36,24 @@ public class LoginForm {
     }
 
     public Classifier getCurrentUser() {
-        return getSessionData().getApplicationUser();
+        if (currentUser == null) {
+            currentUser = getSessionData().getApplicationUser().clone();
+        }
+        return currentUser;
+    }
+
+    public void prepare() {
+        currentUser = null;
+    }
+
+    public void cancelAction() {
+        currentUser = null;
+        RequestContext.getCurrentInstance().execute("window.location.href = '" + FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/portfolio.xhtml'");
     }
 
     public void performLogin() {
-        RequestContext.getCurrentInstance().execute("window.location.href = '" + FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/mainPage.xhtml'");
+        getSessionData().setApplicationUser(currentUser);
+        cancelAction();
     }
 
 }

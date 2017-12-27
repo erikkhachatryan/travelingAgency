@@ -1,12 +1,15 @@
 package service.beans.subForms;
 
 import org.primefaces.context.RequestContext;
+import service.beans.IdGenerator;
 import service.beans.PortfolioForm;
 import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.GeneralClassifierCache;
 import service.model.MainEntity;
+import service.model.MainEntityImpl;
 import service.util.MetaCategoryProvider;
+import service.util.Util;
 
 import java.util.List;
 
@@ -47,6 +50,10 @@ public class TravelingLocationSubForm {
 
     public void prepareEditing(MainEntity location) {
         currentEntity = location.clone();
+    }
+
+    public void prepareAdding() {
+        currentEntity = new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true);
     }
 
     public void closeAction() {

@@ -41,9 +41,9 @@
 
             <p:commandButton id="cancelButtonId"
                              value="Cancel"
+                             actionListener="#{loginForm.cancelAction}"
                              process="@this"
-                             update="@this"
-                             onclick="window.location.href='${request.contextPath}/portfolio.xhtml'"/>
+                             update="@this"/>
 
             <p:commandButton id="performLoginButtonId" value="Login"
                              binding="#{loginButtonBinding}"

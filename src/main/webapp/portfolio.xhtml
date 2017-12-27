@@ -14,33 +14,51 @@
     <f:view>
         <h:form id="deFormId">
 
-            <ui:include src="subForms/travelingLocation.xhtml" />
+            <ui:include src="subForms/travelingLocation.xhtml"/>
 
-            <p:commandButton id="loginButtonId" value="Login" onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
-            <p:commandButton id="registerButtonId" value="Register" onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'" />
+            <h:panelGroup id="loginAndRegistrationPanelgroupId" layout="block" style="float: right">
+                <p:outputLabel id="guestUserNameId" value="GUEST" rendered="#{not portfolioForm.isLoggedIn()}" />
+                <p:outputLabel id="loggedInUserNameId" value="#{portfolioForm.sessionData.applicationUser.Name}" rendered="#{portfolioForm.isLoggedIn()}" />
+                <p:commandButton id="loginButtonId" value="Login" rendered="#{not portfolioForm.isLoggedIn()}" actionListener="#{loginForm.prepare}"
+                                 onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
+                <p:commandButton id="logoutButtonId" value="Logout" rendered="#{portfolioForm.isLoggedIn()}"
+                                 update="@this deFormId"
+                                 process="@this"
+                                 actionListener="${portfolioForm.logout()}"/>
+                <p:commandButton id="registerButtonId" value="Register" actionListener="#{registrationForm.prepare}"
+                                 onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'"/>
+            </h:panelGroup>
+            <div style="clear: both" />
+            <p:dataTable id="allLocationsDataTableId"
+                         value="#{portfolioForm.travelingLocations}"
+                         editable="true"
+                         var="location"
+                         emptyMessage="There is no data">
+                <p:column id="locationNameColumnId" headerText="Location Name">
+                    <p:commandLink id="locationNameCommandLinkId"
+                                   value="#{location.LocationName}"
+                                   actionListener="#{travelingLocationSubForm.prepareEditing(location)}"
+                                   update="@this deFormId:travelingLocationDialogId"
+                                   process="@this deFormId:travelingLocationDialogId"
+                                   oncomplete="PF('travelingLocationDialog').show();"/>
+                </p:column>
+                <p:column id="locationCountryNameCoulmnId" headerText="Country">
+                    <p:outputLabel id="locationCountryNameOutputLabelId" value="#{location.Country.Name}"/>
+                </p:column>
+                <p:column id="locationStateNameCoulmnId" headerText="Country">
+                    <p:outputLabel id="locationStateNameOutputLabelId" value="#{location.State.Name}"/>
+                </p:column>
+            </p:dataTable>
 
-        <p:dataTable id="allLocationsDataTableId"
-                     value="#{portfolioForm.travelingLocations}"
-                     editable="true"
-                     var="location"
-                     emptyMessage="There is no data">
-            <p:column id="locationNameColumnId" headerText="location">
-                <p:commandLink id="locationNameCommandLinkId"
-                               value="#{location.LocationName}"
-                               actionListener="#{travelingLocationSubForm.prepareEditing(location)}"
-                               update="@this deFormId:travelingLocationDialogId"
-                               process="@this deFormId:travelingLocationDialogId"
-                               oncomplete="PF('travelingLocationDialog').show();" />
-            </p:column>
-            <p:column id="locationCountryNameCoulmnId" headerText="Country">
-                <p:outputLabel id="locationCountryNameOutputLabelId" value="#{location.Country.Name}"/>
-            </p:column>
-            <p:column id="locationStateNameCoulmnId" headerText="Country">
-                <p:outputLabel id="locationStateNameOutputLabelId" value="#{location.State.Name}"/>
-            </p:column>
-        </p:dataTable>
+            <p:commandButton id="locationAddButtonId"
+                             value="Add"
+                             actionListener="#{travelingLocationSubForm.prepareAdding}"
+                             rendered="#{portfolioForm.isLoggedInAsAdministrator()}"
+                             update="@this deFormId:travelingLocationDialogId"
+                             process="@this deFormId:travelingLocationDialogId"
+                             oncomplete="PF('travelingLocationDialog').show();"/>
 
-    </h:form>
+        </h:form>
     </f:view>
 </h:body>
 </html>

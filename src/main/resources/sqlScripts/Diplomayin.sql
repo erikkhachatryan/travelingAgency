@@ -971,23 +971,12 @@ IF OBJECT_ID('C_State') IS NULL
 		----
     END;
 GO
-IF OBJECT_ID('DE_LocationPublishedItem') IS NULL
-    BEGIN
-        CREATE TABLE dbo.DE_LocationPublishedItem
-            (
-              LocationID INT PRIMARY KEY CLUSTERED ,
-              LocationInstanceID INT NOT NULL ,
-              CONSTRAINT FK_DE_LocationPublishedItem_DE_Location FOREIGN KEY ( LocationID ) REFERENCES DE_Location ( LocationID )
-            );
-    END;
-GO
 IF OBJECT_ID('DE_Location') IS NULL
     BEGIN
         CREATE TABLE dbo.DE_Location
             (
               LocationID INT CONSTRAINT PK_DE_Location PRIMARY KEY CLUSTERED
                              IDENTITY ,
-              LocationInstanceID INT ,
               LocationName NVARCHAR(1000) ,
               CountryID INT
                 CONSTRAINT FK_Location_C_Country

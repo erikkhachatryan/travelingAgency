@@ -1,6 +1,9 @@
 package service.commons;
 
 import service.model.Classifier;
+import service.model.GeneralClassifierCache;
+import service.util.MetaCategoryProvider;
+import service.util.Util;
 
 import javax.annotation.Nonnull;
 
@@ -11,12 +14,12 @@ public class SessionData {
 
     private Classifier applicationUser;
 
-    public SessionData(Classifier applicationUser) {
-        this.applicationUser = applicationUser;
-    }
-
     public Classifier getApplicationUser() {
         return applicationUser;
+    }
+
+    public void setApplicationUser(Classifier applicationUser) {
+        this.applicationUser = applicationUser;
     }
 
 

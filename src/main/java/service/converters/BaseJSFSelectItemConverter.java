@@ -19,7 +19,7 @@ public class BaseJSFSelectItemConverter implements Converter {
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {
         List<Classifier> items = (List<Classifier>) uiComponent.getAttributes().get("itemsList");
         for (Classifier item : items) {
-            if (Objects.equal(item.getName(), s)) {
+            if (Objects.equal(item.getId(), Integer.valueOf(s))) {
                 return item;
             }
         }
@@ -29,7 +29,7 @@ public class BaseJSFSelectItemConverter implements Converter {
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object o) {
         if(o instanceof Classifier) {
-            return ((Classifier) o).getName();
+            return ((Classifier) o).getId().toString();
         }
         return "";
     }

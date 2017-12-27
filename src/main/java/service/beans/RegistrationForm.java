@@ -37,6 +37,10 @@ public class RegistrationForm {
         return currentUser;
     }
 
+    public void prepare() {
+        currentUser = null;
+    }
+
     public void closeAction() {
         currentUser = null;
         RequestContext.getCurrentInstance().execute("window.location.href='" + FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/portfolio.xhtml'");

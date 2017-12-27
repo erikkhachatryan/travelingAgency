@@ -23,7 +23,6 @@ public class MetaCategoryProvider {
         if (LOCATION == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("LocationID", MetaCategoryType.IDENTITY);
-            columns.put("LocationInstanceID", MetaCategoryType.INTEGER);
             columns.put("LocationName", MetaCategoryType.STRING);
             columns.put("Country", MetaCategoryType.CLASSIFIER);
             columns.put("State", MetaCategoryType.CLASSIFIER);
@@ -38,13 +37,13 @@ public class MetaCategoryProvider {
             columns.put("UserID", MetaCategoryType.IDENTITY);
             columns.put("Name", MetaCategoryType.STRING);
             columns.put("Password", MetaCategoryType.STRING);
-//            columns.put("FirstName", MetaCategoryType.STRING);
-//            columns.put("LastName", MetaCategoryType.STRING);
-//            columns.put("DateOfBirth", MetaCategoryType.DATE);
-//            columns.put("PhoneNumber", MetaCategoryType.STRING);
-//            columns.put("Address", MetaCategoryType.STRING);
-//            columns.put("Email", MetaCategoryType.STRING);
-//            columns.put("GenderID", MetaCategoryType.INTEGER);
+            columns.put("FirstName", MetaCategoryType.STRING);
+            columns.put("LastName", MetaCategoryType.STRING);
+            columns.put("DateOfBirth", MetaCategoryType.DATE);
+            columns.put("PhoneNumber", MetaCategoryType.STRING);
+            columns.put("Address", MetaCategoryType.STRING);
+            columns.put("Email", MetaCategoryType.STRING);
+            columns.put("Gender", MetaCategoryType.CLASSIFIER);
             USER  = new MetaCategoryId("User", columns);
         }
         return USER;

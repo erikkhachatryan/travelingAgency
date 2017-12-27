@@ -14,12 +14,12 @@
 
 
     <bean id="sessionData" class="service.commons.SessionData" scope="session">
-        <constructor-arg index="0" ref="newClassifier"/>
+        <property name="applicationUser" ref="newClassifier"/>
     </bean>
 
     <bean id="loginForm" class="service.beans.LoginForm" scope="session">
-        <property name="generalClassifierCache" ref="generalClassifierCache"/>
-        <property name="sessionData" ref="sessionData"/>
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache"/>
+        <constructor-arg name="sessionData" ref="sessionData"/>
     </bean>
 
     <bean id="travelingLocationSubForm" class="service.beans.subForms.TravelingLocationSubForm" scope="session">
@@ -33,7 +33,7 @@
     </bean>
 
     <bean id="newClassifier" class="service.model.ClassifierImpl" scope="session">
-        <constructor-arg index="0" value="0"/>
+        <constructor-arg index="0" value="-1"/>
     </bean>
 
     <bean id="idGenerator" class="service.beans.IdGenerator"/>
@@ -48,6 +48,7 @@
 
     <bean id="portfolioForm" class="service.beans.PortfolioForm" scope="session">
         <property name="generalClassifierCache" ref="generalClassifierCache" />
+        <property name="sessionData" ref="sessionData" />
     </bean>
 
 </beans>

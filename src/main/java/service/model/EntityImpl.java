@@ -4,7 +4,9 @@ import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +62,16 @@ public class EntityImpl extends HashMap<String, Object> implements Entity {
 
     @Override
     public LocalDate getDate(String key) {
-        return (LocalDate) get(key);
+        if (get(key) == null) {
+            return null;
+        }
+        if (get(key) instanceof LocalDate) {
+            return (LocalDate) get(key);
+        } else if (get(key) instanceof java.util.Date) {
+            return ((java.util.Date) get(key)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } else {
+            return ((java.sql.Date) get(key)).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
     }
 
     @Override
