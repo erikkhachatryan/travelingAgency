@@ -22,6 +22,7 @@ public class TravelingLocationSubForm {
     private SessionData sessionData;
     private GeneralClassifierCache generalClassifierCache;
     private MainEntity currentEntity;
+    private boolean editMode = false;
 
     public PortfolioForm getParentForm() {
         return portfolioForm;
@@ -50,10 +51,18 @@ public class TravelingLocationSubForm {
 
     public void prepareEditing(MainEntity location) {
         currentEntity = location.clone();
+        editMode = true;
+
+    }
+
+    public void prepareViewing(MainEntity location) {
+        currentEntity = location.clone();
+        editMode = false;
     }
 
     public void prepareAdding() {
         currentEntity = new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true);
+        editMode = true;
     }
 
     public void closeAction() {

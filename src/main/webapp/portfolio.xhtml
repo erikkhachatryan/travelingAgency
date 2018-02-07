@@ -35,12 +35,23 @@
                          var="location"
                          emptyMessage="There is no data">
                 <p:column id="locationNameColumnId" headerText="Location Name">
-                    <p:commandLink id="locationNameCommandLinkId"
+                    <p:commandLink id="locationNameEditCommandLinkId"
                                    value="#{location.LocationName}"
+                                   rendered="#{portfolioForm.loggedInAsAdministrator}"
                                    actionListener="#{travelingLocationSubForm.prepareEditing(location)}"
                                    update="@this deFormId:travelingLocationDialogId"
                                    process="@this deFormId:travelingLocationDialogId"
                                    oncomplete="PF('travelingLocationDialog').show();"/>
+                    <p:commandLink id="locationNameViewCommandLinkId"
+                                   value="#{location.LocationName}"
+                                   rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
+                                   actionListener="#{travelingLocationSubForm.prepareViewing(location)}"
+                                   update="@this deFormId:travelingLocationDialogId"
+                                   process="@this deFormId:travelingLocationDialogId"
+                                   oncomplete="PF('travelingLocationDialog').show();"/>
+                    <p:outputLabel id="locationNameViewOutputLabelId"
+                                   value="#{location.LocationName}"
+                                   rendered="#{not portfolioForm.loggedIn}"/>
                 </p:column>
                 <p:column id="locationCountryNameCoulmnId" headerText="Country">
                     <p:outputLabel id="locationCountryNameOutputLabelId" value="#{location.Country.Name}"/>
@@ -53,7 +64,7 @@
             <p:commandButton id="locationAddButtonId"
                              value="Add"
                              actionListener="#{travelingLocationSubForm.prepareAdding}"
-                             rendered="#{portfolioForm.isLoggedInAsAdministrator()}"
+                             rendered="#{portfolioForm.loggedInAsAdministrator}"
                              update="@this deFormId:travelingLocationDialogId"
                              process="@this deFormId:travelingLocationDialogId"
                              oncomplete="PF('travelingLocationDialog').show();"/>
