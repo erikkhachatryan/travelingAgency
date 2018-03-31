@@ -9,67 +9,50 @@
 <h:head>
     <title>Maven project with JSF</title>
     <script src="general.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
 </h:head>
 <h:body>
     <f:view>
         <h:form id="deFormId">
+            <ui:include src="deFormHeader.xhtml" />
 
-            <ui:include src="subForms/travelingLocation.xhtml"/>
-
-            <h:panelGroup id="loginAndRegistrationPanelgroupId" layout="block" style="float: right">
-                <p:outputLabel id="guestUserNameId" value="GUEST" rendered="#{not portfolioForm.isLoggedIn()}" />
-                <p:outputLabel id="loggedInUserNameId" value="#{portfolioForm.sessionData.applicationUser.Name}" rendered="#{portfolioForm.isLoggedIn()}" />
-                <p:commandButton id="loginButtonId" value="Login" rendered="#{not portfolioForm.isLoggedIn()}" actionListener="#{loginForm.prepare}"
-                                 onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
-                <p:commandButton id="logoutButtonId" value="Logout" rendered="#{portfolioForm.isLoggedIn()}"
-                                 update="@this deFormId"
-                                 process="@this"
-                                 actionListener="${portfolioForm.logout()}"/>
-                <p:commandButton id="registerButtonId" value="Register" actionListener="#{registrationForm.prepare}"
-                                 onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'"/>
+            <h:panelGroup id="allLocationsPanelGroupId" layout="block" styleClass="content">
+                <ui:repeat value="#{portfolioForm.travelingLocations}" var="travelingLocation">
+                    <h:panelGroup style="display: inline-block">
+                        <p:commandLink id="#{travelingLocation.LocationName}EditCommandLinkId"
+                                       rendered="#{portfolioForm.loggedInAsAdministrator}"
+                                       actionListener="#{travelingLocationSubForm.prepareEditing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" />
+                        </p:commandLink>
+                        <p:commandLink id="#{travelingLocation.LocationName}ViewCommandLinkId"
+                                       rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
+                                       actionListener="#{travelingLocationSubForm.prepareViewing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" />
+                        </p:commandLink>
+                        <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" rendered="#{not portfolioForm.loggedIn}" />
+                    </h:panelGroup>
+                </ui:repeat>
             </h:panelGroup>
-            <div style="clear: both" />
-            <p:dataTable id="allLocationsDataTableId"
-                         value="#{portfolioForm.travelingLocations}"
-                         editable="true"
-                         var="location"
-                         emptyMessage="There is no data">
-                <p:column id="locationNameColumnId" headerText="Location Name">
-                    <p:commandLink id="locationNameEditCommandLinkId"
-                                   value="#{location.LocationName}"
-                                   rendered="#{portfolioForm.loggedInAsAdministrator}"
-                                   actionListener="#{travelingLocationSubForm.prepareEditing(location)}"
-                                   update="@this deFormId:travelingLocationDialogId"
-                                   process="@this deFormId:travelingLocationDialogId"
-                                   oncomplete="PF('travelingLocationDialog').show();"/>
-                    <p:commandLink id="locationNameViewCommandLinkId"
-                                   value="#{location.LocationName}"
-                                   rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
-                                   actionListener="#{travelingLocationSubForm.prepareViewing(location)}"
-                                   update="@this deFormId:travelingLocationDialogId"
-                                   process="@this deFormId:travelingLocationDialogId"
-                                   oncomplete="PF('travelingLocationDialog').show();"/>
-                    <p:outputLabel id="locationNameViewOutputLabelId"
-                                   value="#{location.LocationName}"
-                                   rendered="#{not portfolioForm.loggedIn}"/>
-                </p:column>
-                <p:column id="locationCountryNameCoulmnId" headerText="Country">
-                    <p:outputLabel id="locationCountryNameOutputLabelId" value="#{location.Country.Name}"/>
-                </p:column>
-                <p:column id="locationStateNameCoulmnId" headerText="Country">
-                    <p:outputLabel id="locationStateNameOutputLabelId" value="#{location.State.Name}"/>
-                </p:column>
-            </p:dataTable>
 
             <p:commandButton id="locationAddButtonId"
                              value="Add"
                              actionListener="#{travelingLocationSubForm.prepareAdding}"
                              rendered="#{portfolioForm.loggedInAsAdministrator}"
-                             update="@this deFormId:travelingLocationDialogId"
-                             process="@this deFormId:travelingLocationDialogId"
+                             styleClass="saveButton"
+                             update="@this travelingLocationDialogId"
+                             process="@this travelingLocationDialogId"
                              oncomplete="PF('travelingLocationDialog').show();"/>
 
         </h:form>
+        <ui:include src="subForms/travelingLocation.xhtml"/>
     </f:view>
 </h:body>
 </html>

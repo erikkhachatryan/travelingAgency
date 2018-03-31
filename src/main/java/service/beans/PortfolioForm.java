@@ -4,6 +4,7 @@ import service.commons.SessionData;
 import service.model.ClassifierImpl;
 import service.model.GeneralClassifierCache;
 import service.model.MainEntity;
+import service.util.MetaCategoryProvider;
 import service.util.Util;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class PortfolioForm {
     }
 
     public List<MainEntity> getTravelingLocations() {
-        return getGeneralClassifierCache().loadLocations();
+        return getGeneralClassifierCache().loadMainEntities(MetaCategoryProvider.getLocation());
     }
 
     public boolean isLoggedIn() {
@@ -46,5 +47,9 @@ public class PortfolioForm {
 
     public void logout() {
         getSessionData().setApplicationUser(new ClassifierImpl(-1));
+    }
+
+    public String getPhotoUrl(MainEntity location) {
+        return location.getString("Photo") == null ? "images/noImageUploaded.png" : "images/uploads/" + location.getString("Photo");
     }
 }

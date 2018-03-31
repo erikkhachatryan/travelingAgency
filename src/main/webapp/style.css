@@ -1,0 +1,38 @@
+.locationImage {
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+}
+body {
+    background-image: url("images/TravelingAgencyMainPicture.jpg");
+    margin: 0px 150px;
+}
+
+label {
+    color: #8d0d00;
+}
+
+.content {
+    margin: 80px 0px;
+}
+
+.content-without-header {
+    margin: 120px 0px;
+}
+
+.inline-grid {
+    display: inline-grid;
+    margin-right: 10px;
+}
+
+.right {
+    float: right;
+}
+
+.cancelButton {
+    background-color: #cf0c00;
+}
+
+.saveButton {
+    background-color: #1d9e04;
+}

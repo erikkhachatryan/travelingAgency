@@ -8,11 +8,12 @@
 <h:head>
     <title>Login Page</title>
     <script src="general.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
 </h:head>
 <h:body>
     <f:view>
-        <h:form id="loginFormId">
-            <h:panelGroup id="userNamePanelGroupId" layout="block">
+        <h:form id="loginFormId" styleClass="content-without-header">
+            <h:panelGroup id="userNamePanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="userNameOutputTextId" value="User Name"/>
                 <p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.Name}"
                              required="true" requiredMessage="User Name is required.">
@@ -20,7 +21,7 @@
                 </p:inputText>
                 <p:message id="userNameRequiredMessageId" for="userNameInputTextId"/>
             </h:panelGroup>
-            <h:panelGroup id="passwordPanelGroupId" layout="block">
+            <h:panelGroup id="passwordPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="passwordOutputTextId" value="Password"/>
                 <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.Password}"
                              required="true" requiredMessage="Password is required." type="password">
@@ -42,12 +43,15 @@
             <p:commandButton id="cancelButtonId"
                              value="Cancel"
                              actionListener="#{loginForm.cancelAction}"
+                             style="margin-left: 283px"
+                             styleClass="cancelButton"
                              process="@this"
                              update="@this"/>
 
             <p:commandButton id="performLoginButtonId" value="Login"
                              binding="#{loginButtonBinding}"
                              actionListener="#{loginForm.performLogin}"
+                             styleClass="saveButton"
                              process="loginFormId"
                              update="loginFormId"/>
         </h:form>

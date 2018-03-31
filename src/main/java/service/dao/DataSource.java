@@ -19,22 +19,13 @@ public class DataSource {
     private String jdbcPort;
     private String userName;
     private String password;
-    private Properties applicationProperties;
 
-//    public DataSource(String dbName, String serverName, String jdbcPort, String userName, String password) {
-//        this.dbName = dbName;
-//        this.serverName = serverName;
-//        this.jdbcPort = jdbcPort;
-//        this.userName = userName;
-//        this.password = password;
-//    }
-
-    public DataSource() {
-        this.dbName = getApplicationProperties().getProperty("db.name");
-        this.serverName = getApplicationProperties().getProperty("server.name");
-        this.jdbcPort = getApplicationProperties().getProperty("jdbc.port");
-        this.userName = getApplicationProperties().getProperty("user.name");
-        this.password = getApplicationProperties().getProperty("user.password");
+    public DataSource(String dbName, String serverName, String jdbcPort, String userName, String password) {
+        this.dbName = dbName;
+        this.serverName = serverName;
+        this.jdbcPort = jdbcPort;
+        this.userName = userName;
+        this.password = password;
     }
 
     public Connection getConnection() {
@@ -43,23 +34,10 @@ public class DataSource {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String connectionUrl = "jdbc:sqlserver://" + serverName + ":" + jdbcPort + ";databaseName=" + dbName;
             connection = DriverManager.getConnection(connectionUrl, userName, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return connection;
     }
 
-    public Properties getApplicationProperties() {
-        if (applicationProperties == null) {
-            applicationProperties = new Properties();
-            try {
-                applicationProperties.load(new FileInputStream(Util.getApplicationPropertiesPath()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return applicationProperties;
-    }
 }

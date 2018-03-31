@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <f:view>
+        <h:panelGroup id="loginAndRegistrationPanelgroupId" layout="block" style="float: right">
+            <p:outputLabel id="guestUserNameId" value="GUEST" rendered="#{not portfolioForm.loggedIn}"/>
+            <p:outputLabel id="loggedInUserNameId" value="#{portfolioForm.sessionData.applicationUser.Name}"
+                           rendered="#{portfolioForm.loggedIn}"/>
+            <p:commandButton id="loginButtonId" value="Login" rendered="#{not portfolioForm.loggedIn}"
+                             actionListener="#{loginForm.prepare}"
+                             onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
+            <p:commandButton id="logoutButtonId" value="Logout" rendered="#{portfolioForm.loggedIn}"
+                             update="@this deFormId"
+                             process="@this"
+                             actionListener="${portfolioForm.logout()}"/>
+            <p:commandButton id="registerButtonId" value="Register"
+                             actionListener="#{registrationForm.prepare}"
+                             rendered="#{not portfolioForm.loggedIn}"
+                             onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'"/>
+        </h:panelGroup>
+        <div style="clear: both"/>
+        <p:growl id="messages" showDetail="true" />
+        <div style="clear: both"/>
+    </f:view>
+</ui:composition>

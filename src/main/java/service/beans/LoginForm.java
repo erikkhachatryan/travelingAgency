@@ -4,6 +4,7 @@ import org.primefaces.context.RequestContext;
 import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.GeneralClassifierCache;
+import service.util.MetaCategoryProvider;
 
 import javax.faces.context.FacesContext;
 import java.util.List;
@@ -32,7 +33,7 @@ public class LoginForm {
     }
 
     public List<Classifier> getUsers() {
-        return getGeneralClassifierCache().loadUsers();
+        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getUser());
     }
 
     public Classifier getCurrentUser() {

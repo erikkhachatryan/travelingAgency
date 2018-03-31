@@ -26,6 +26,7 @@ public class MetaCategoryProvider {
             columns.put("LocationName", MetaCategoryType.STRING);
             columns.put("Country", MetaCategoryType.CLASSIFIER);
             columns.put("State", MetaCategoryType.CLASSIFIER);
+            columns.put("Photo", MetaCategoryType.STRING);
             LOCATION  = new MetaCategoryId("Location", columns);
         }
         return LOCATION;

@@ -8,17 +8,27 @@
 <h:head>
     <title>Registration Page</title>
     <script src="general.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
 </h:head>
 <h:body>
     <f:view>
-        <h:form id="registrationFormId">
-            <h:panelGroup id="userNamePanelGroupId" layout="block">
+        <h:form id="registrationFormId" styleClass="content-without-header">
+            <h:panelGroup id="userNamePanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="userNameOutputTextId" value="User Name"/>
                 <p:inputText id="userNameInputTextId" value="#{registrationForm.currentUser.Name}"
                              required="true" requiredMessage="User Name is required.">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
                 <p:message id="userNameRequiredMessageId" for="userNameInputTextId"/>
+            </h:panelGroup>
+
+            <h:panelGroup id="passwordPanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="passwordOutputTextId" value="Password"/>
+                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.Password}"
+                             required="true" requiredMessage="Password is required." type="password">
+                    <p:ajax process="@this" update="@this"/>
+                </p:inputText>
+                <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
             </h:panelGroup>
 
             <p:message id="registrationValidationMessageId" for="registrationValidatorId"/>
@@ -31,36 +41,31 @@
                 <f:attribute name="allUsers" value="#{registrationForm.users}"/>
             </h:inputHidden>
 
-            <h:panelGroup id="passwordPanelGroupId" layout="block">
-                <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.Password}"
-                             required="true" requiredMessage="Password is required." type="password">
-                    <p:ajax process="@this" update="@this"/>
-                </p:inputText>
-                <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
-            </h:panelGroup>
+            <div style="clear: both" />
 
-            <h:panelGroup id="firstNamePanelGroupId" layout="block">
+            <h:panelGroup id="firstNamePanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="firstNameOutputTextId" value="First Name"/>
                 <p:inputText id="firstNameInputTextId" value="#{registrationForm.currentUser.FirstName}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
 
-            <h:panelGroup id="lastNamePanelGroupId" layout="block">
+            <h:panelGroup id="lastNamePanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="lastNameOutputTextId" value="Last Name"/>
                 <p:inputText id="lastNameInputTextId" value="#{registrationForm.currentUser.LastName}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
 
-            <h:panelGroup id="phoneNumberPanelGroupId" layout="block">
+            <div style="clear: both" />
+
+            <h:panelGroup id="phoneNumberPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="phoneNumberOutputTextId" value="Phone Number"/>
                 <p:inputText id="phoneNumberInputTextId" value="#{registrationForm.currentUser.PhoneNumber}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
+                <p:message id="phoneNumberMessageId" for="phoneNumberValidatorId"/>
             </h:panelGroup>
-            <p:message id="phoneNumberMessageId" for="phoneNumberValidatorId"/>
 
             <h:inputHidden value="true" id="phoneNumberValidatorId">
                 <f:validator validatorId="phoneNumberValidator" for="phoneNumberValidatorId"/>
@@ -69,20 +74,22 @@
                 <f:attribute name="phoneNumber" value="#{registrationForm.currentUser.PhoneNumber}"/>
             </h:inputHidden>
 
-            <h:panelGroup id="addressPanelGroupId" layout="block">
+            <h:panelGroup id="addressPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="addressOutputTextId" value="Address"/>
                 <p:inputText id="addressInputTextId" value="#{registrationForm.currentUser.Address}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
 
-            <h:panelGroup id="emailPanelGroupId" layout="block">
+            <div style="clear: both" />
+
+            <h:panelGroup id="emailPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="emailOutputTextId" value="Email"/>
                 <p:inputText id="emailInputTextId" value="#{registrationForm.currentUser.Email}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
+                <p:message id="emailMessageId" for="emailValidatorId"/>
             </h:panelGroup>
-            <p:message id="emailMessageId" for="emailValidatorId"/>
 
             <h:inputHidden value="true" id="emailValidatorId">
                 <f:validator validatorId="emailValidator" for="emailValidatorId"/>
@@ -91,33 +98,40 @@
                 <f:attribute name="email" value="#{registrationForm.currentUser.Email}"/>
             </h:inputHidden>
 
-            <h:panelGroup id="dateOfBirthPanelGroupId" layout="block">
+            <h:panelGroup id="dateOfBirthPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="dateOfBirthOutputTextId" value="Date Of Birth"/>
                 <p:calendar id="dateOfBirthCalendarId" value="#{registrationForm.currentUser.DateOfBirth}"
                             navigator="true" mode="popup" readonlyInput="true" />
             </h:panelGroup>
 
-            <h:panelGroup id="genderPanelGroupId" layout="block">
+            <div style="clear: both" />
+
+            <h:panelGroup id="genderPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="genderOutputTextId" value="Gender"/>
                 <p:selectOneRadio id="genderRadioId"
                                   value="#{registrationForm.currentUser.Gender}">
                     <f:converter converterId="baseJSFSelectItemConverter" />
-                    <f:attribute name="itemsList" value="#{generalClassifierCache.loadGenders()}"/>
+                    <f:attribute name="itemsList" value="#{registrationForm.loadGenders()}"/>
                     <f:selectItems id="genderSelectItems" var="gender"
                                    itemLabel="#{gender.Name}" itemValue="#{gender}"
-                                   value="#{generalClassifierCache.loadGenders()}" />
+                                   value="#{registrationForm.loadGenders()}" />
                 </p:selectOneRadio>
             </h:panelGroup>
+
+            <div style="clear: both" />
 
             <p:commandButton id="cancelButtonId"
                              value="Cancel"
                              process="@this"
+                             style="margin-left: 260px;"
+                             styleClass="cancelButton"
                              update="@this"
                              actionListener="#{registrationForm.closeAction}"/>
 
             <p:commandButton id="registrationButtonId"
                              value="Register"
                              process="registrationFormId"
+                             styleClass="saveButton"
                              update="registrationFormId"
                              binding="#{registrationButtonBinding}"
                              actionListener="#{registrationForm.register}"/>

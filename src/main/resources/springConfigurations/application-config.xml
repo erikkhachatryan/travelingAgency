@@ -6,7 +6,10 @@
                             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
     <context:component-scan base-package="service"/>
-    <!--<context:property-placeholder location="properties/application.properties" />-->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:properties/application.properties"/>
+    </bean>
 
     <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session">
         <constructor-arg name="dataSource" ref="dataSource"/>
@@ -39,11 +42,11 @@
     <bean id="idGenerator" class="service.beans.IdGenerator"/>
 
     <bean id="dataSource" class="service.dao.DataSource">
-        <!--<constructor-arg index="0" value="${db.name}}" />-->
-        <!--<constructor-arg index="1" value="${server.name}}" />-->
-        <!--<constructor-arg index="2" value="${jdbc.port}" />-->
-        <!--<constructor-arg index="3" value="${user.name}" />-->
-        <!--<constructor-arg index="4" value="${user.password}" />-->
+        <constructor-arg index="0" value="${db.name}" />
+        <constructor-arg index="1" value="${server.name}" />
+        <constructor-arg index="2" value="${jdbc.port}" />
+        <constructor-arg index="3" value="${user.name}" />
+        <constructor-arg index="4" value="${user.password}" />
     </bean>
 
     <bean id="portfolioForm" class="service.beans.PortfolioForm" scope="session">

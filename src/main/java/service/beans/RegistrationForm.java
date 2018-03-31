@@ -27,7 +27,7 @@ public class RegistrationForm {
     }
 
     public List<Classifier> getUsers() {
-        return getGeneralClassifierCache().loadUsers();
+        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getUser());
     }
 
     public Classifier getCurrentUser() {
@@ -49,5 +49,9 @@ public class RegistrationForm {
     public void register() {
         getGeneralClassifierCache().saveClassifier(MetaCategoryProvider.getUser(), currentUser);
         closeAction();
+    }
+
+    public List<Classifier> loadGenders() {
+        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getGender());
     }
 }

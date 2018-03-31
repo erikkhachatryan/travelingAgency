@@ -11,5 +11,6 @@ public enum MetaCategoryType {
     LONG,
     BOOLEAN,
     DATE,
-    CLASSIFIER
+    CLASSIFIER,
+    IMAGE
 }
