@@ -101,6 +101,9 @@
             <h:panelGroup id="dateOfBirthPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="dateOfBirthOutputTextId" value="Date Of Birth"/>
                 <p:calendar id="dateOfBirthCalendarId" value="#{registrationForm.currentUser.DateOfBirth}"
+                            pattern="dd/MMM/yyyy"
+                            yearRange="c-120:c"
+                            readonly="true"
                             navigator="true" mode="popup" readonlyInput="true" />
             </h:panelGroup>
 

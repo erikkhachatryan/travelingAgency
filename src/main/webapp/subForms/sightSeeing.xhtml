@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="sightSeeingDialogId" widgetVar="sightSeeingDialog" width="1000px"
+              header="Add / Edit Sightseeing" height="500px" dynamic="true" modal="true" resizable="false">
+        <h:form id="sightSeeingSubFormId">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="#{sightSeeingSubForm.editMode? 'Cancel' : 'Close'}"
+                                 process="@this"
+                                 styleClass="cancelButton"
+                                 update="@this"
+                                 actionListener="#{sightSeeingSubForm.closeAction}"/>
+                <p:commandButton id="deleteButtonId"
+                                 value="Delete"
+                                 rendered="#{sightSeeingSubForm.editMode and not sightSeeingSubForm.newMode}"
+                                 styleClass="deleteButton"
+                                 update="sightSeeingSubFormId travelingLocationSubFormId"
+                                 process="sightSeeingSubFormId"
+                                 actionListener="#{sightSeeingSubForm.deleteAction}"/>
+                <p:commandButton id="saveButtonId"
+                                 value="Save"
+                                 rendered="#{sightSeeingSubForm.editMode}"
+                                 styleClass="saveButton"
+                                 update="sightSeeingSubFormId travelingLocationSubFormId"
+                                 process="sightSeeingSubFormId"
+                                 actionListener="#{sightSeeingSubForm.saveAction}"/>
+            </h:panelGroup>
+            <div style="clear: both"/>
+
+            <h:panelGroup id="sightSeeingNamePanelGroupId" lstyleClass="inline-grid">
+                <p:outputLabel id="sightSeeingNameLabelId" value="Sightseeing Name: "/>
+                <p:inputText id="sightSeeingNameInputTextId"
+                             value="#{sightSeeingSubForm.currentEntity.SightSeeingName}"
+                             rendered="#{sightSeeingSubForm.editMode}"/>
+                <p:outputLabel id="sightSeeingNameOutputTextId"
+                               value="#{sightSeeingSubForm.currentEntity.SightSeeingName}"
+                               rendered="#{not sightSeeingSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="sightSeeingDetailsPanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="sightSeeingDetailsLabelId" value="Details: "/>
+                <p:inputTextarea id="sightSeeingDetailsInputTextAreaId"
+                                 value="#{sightSeeingSubForm.currentEntity.Details}"
+                                 readonly="#{not sightSeeingSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="sightSeeingCommentPanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="sightSeeingCommentLabelId" value="Comment: "/>
+                <p:inputTextarea id="sightSeeingCommentInputTextAreaId"
+                                 value="#{sightSeeingSubForm.currentEntity.Comment}"
+                                 readonly="#{not sightSeeingSubForm.editMode}"/>
+            </h:panelGroup>
+        </h:form>
+    </p:dialog>
+</ui:composition>

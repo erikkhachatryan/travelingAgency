@@ -50,6 +50,7 @@ public class PortfolioForm {
     }
 
     public String getPhotoUrl(MainEntity location) {
-        return location.getString("Photo") == null ? "images/noImageUploaded.png" : "images/uploads/" + location.getString("Photo");
+        return Util.isPhotoUploaded(location) ? "images/uploads/" + location.getString("Photo") : "images/noImageUploaded.png";
     }
+
 }

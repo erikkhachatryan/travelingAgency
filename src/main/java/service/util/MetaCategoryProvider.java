@@ -1,9 +1,6 @@
 package service.util;
 
-import service.model.SubEntity;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +15,7 @@ public class MetaCategoryProvider {
     private static MetaCategoryId GENDER;
     private static MetaCategoryId ROLE;
     private static MetaCategoryId BOOKING;
+    private static MetaCategoryId LOCATION_SIGHT_SEEING;
 
     public static MetaCategoryId getLocation() {
         if (LOCATION == null) {
@@ -27,9 +25,25 @@ public class MetaCategoryProvider {
             columns.put("Country", MetaCategoryType.CLASSIFIER);
             columns.put("State", MetaCategoryType.CLASSIFIER);
             columns.put("Photo", MetaCategoryType.STRING);
-            LOCATION  = new MetaCategoryId("Location", columns);
+            Map<String, MetaCategoryId> subEntities = new HashMap<>();
+            subEntities.put("locationSightSeeings", getLocationSightSeeing());
+            LOCATION  = new MetaCategoryId("Location", columns, subEntities);
         }
         return LOCATION;
+    }
+
+    public static MetaCategoryId getLocationSightSeeing() {
+        if (LOCATION_SIGHT_SEEING == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("LocationSightSeeingID", MetaCategoryType.IDENTITY);
+            columns.put("LocationID", MetaCategoryType.INTEGER);
+            columns.put("SightSeeingName", MetaCategoryType.STRING);
+            columns.put("Details", MetaCategoryType.STRING);
+            columns.put("Comment", MetaCategoryType.STRING);
+            columns.put("Photo", MetaCategoryType.STRING);
+            LOCATION_SIGHT_SEEING = new MetaCategoryId("LocationSightSeeing", columns);
+        }
+        return LOCATION_SIGHT_SEEING;
     }
 
     public static MetaCategoryId getUser() {

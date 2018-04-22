@@ -13,6 +13,11 @@
 </h:head>
 <h:body>
     <f:view>
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage url="images/loading.gif" alt="Loading..." />
+        </p:dialog>
         <h:form id="deFormId">
             <ui:include src="deFormHeader.xhtml" />
 
@@ -26,7 +31,7 @@
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
-                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" />
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
                         </p:commandLink>
                         <p:commandLink id="#{travelingLocation.LocationName}ViewCommandLinkId"
                                        rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
@@ -35,15 +40,18 @@
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
-                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" />
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
                         </p:commandLink>
-                        <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" styleClass="locationImage" rendered="#{not portfolioForm.loggedIn}" />
+                        <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                        title="#{travelingLocation.LocationName}"
+                                        styleClass="locationImage"
+                                        alt="#{travelingLocation.LocationName}"  rendered="#{not portfolioForm.loggedIn}" />
                     </h:panelGroup>
                 </ui:repeat>
             </h:panelGroup>
 
             <p:commandButton id="locationAddButtonId"
-                             value="Add"
+                             value="Add Location"
                              actionListener="#{travelingLocationSubForm.prepareAdding}"
                              rendered="#{portfolioForm.loggedInAsAdministrator}"
                              styleClass="saveButton"
@@ -53,6 +61,7 @@
 
         </h:form>
         <ui:include src="subForms/travelingLocation.xhtml"/>
+        <ui:include src="subForms/sightSeeing.xhtml"/>
     </f:view>
 </h:body>
 </html>

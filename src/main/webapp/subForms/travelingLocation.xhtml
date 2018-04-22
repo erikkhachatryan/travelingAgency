@@ -3,11 +3,36 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
-    <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1000px"
-              header="Add / Edit Traveling Location" height="500px" dynamic="true" modal="true" resizable="false">
+    <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1200px"
+              header="Add / Edit Traveling Location" height="700px" dynamic="true" modal="true" resizable="false">
         <h:form id="travelingLocationSubFormId">
 
-            <h:panelGroup id="locatioNamePanelGroupId" layout="block">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="#{travelingLocationSubForm.editMode? 'Cancel' : 'Close'}"
+                                 process="@this"
+                                 styleClass="cancelButton"
+                                 update="@this"
+                                 actionListener="#{travelingLocationSubForm.closeAction}"/>
+                <p:commandButton id="deleteButtonId"
+                                 value="Delete"
+                                 rendered="#{travelingLocationSubForm.editMode and not travelingLocationSubForm.newMode}"
+                                 styleClass="deleteButton"
+                                 update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
+                                 process="travelingLocationSubFormId"
+                                 actionListener="#{travelingLocationSubForm.deleteAction}"/>
+                <p:commandButton id="saveButtonId"
+                                 value="Save"
+                                 rendered="#{travelingLocationSubForm.editMode}"
+                                 styleClass="saveButton"
+                                 update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
+                                 process="travelingLocationSubFormId"
+                                 actionListener="#{travelingLocationSubForm.saveAction}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="locatioNamePanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="locationNameLabelId" value="Location Name: "/>
                 <p:inputText id="locationNameInputTextId"
                              value="#{travelingLocationSubForm.currentEntity.LocationName}"
@@ -16,6 +41,9 @@
                                value="#{travelingLocationSubForm.currentEntity.LocationName}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
             </h:panelGroup>
+
+            <div style="clear: both"/>
+
             <h:panelGroup id="locatioCountryPanelGroupId" styleClass="inline-grid">
                 <p:outputLabel id="locatonCountryLabelId" value="Country: "/>
                 <p:selectOneMenu id="locationCountrySelectOneMenuId"
@@ -31,6 +59,8 @@
                                    var="country"
                                    itemLabel="#{country.Name}"
                                    value="#{travelingLocationSubForm.loadCountries()}"/>
+                    <p:ajax process="@this" update="@this locatioStatePanelGroupId"
+                            listener="#{travelingLocationSubForm.resetState}"/>
                 </p:selectOneMenu>
                 <p:outputLabel id="locationCountryOutputLabelId"
                                value="#{travelingLocationSubForm.currentEntity.Country.Name}"
@@ -60,33 +90,59 @@
                 <p:message id="locationStateMessageId" for="locationStateSelectOneMenuId"/>
             </h:panelGroup>
 
-            <div style="clear: both" />
+            <div style="clear: both"/>
 
-            <h:panelGroup id="flieUploadPanelGroupId">
-                <p:outputLabel id="locationImageLabelId" value="Location Image: "/>
-                <p:fileUpload fileUploadListener="#{travelingLocationSubForm.handleFileUpload}"
-                              mode="advanced" dragDropSupport="false"
-                              update="travelingLocationSubFormId deFormId " allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+            <h:panelGroup id="locationPhotoPanelGroupId">
+                <h:panelGroup id="locationPhotoPreviewId" rendered="#{travelingLocationSubForm.locationPhotoUploaded}">
+                    <p:graphicImage url="#{travelingLocationSubForm.locationPhotoUrl}"
+                                    title="#{travelingLocationSubForm.currentEntity.LocationName}"
+                                    styleClass="locationImage"
+                                    alt="#{travelingLocationSubForm.currentEntity.LocationName}"/>
+                </h:panelGroup>
+
+                <h:panelGroup id="flieUploadPanelGroupId"
+                              rendered="#{not travelingLocationSubForm.locationPhotoUploaded}">
+                    <p:outputLabel id="locationImageLabelId" value="Location Image: "/>
+                    <p:fileUpload fileUploadListener="#{travelingLocationSubForm.handleFileUpload}"
+                                  mode="advanced" dragDropSupport="true" process="@this"
+                                  update="@this deFormId:messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                </h:panelGroup>
             </h:panelGroup>
 
-            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
-                <p:commandButton id="cancelButtonId"
-                                 value="#{travelingLocationSubForm.editMode? 'Cancel' : 'Close'}"
-                                 process="@this"
-                                 style="background-color: #cf0c00"
-                                 styleClass="cancelButton"
-                                 update="@this"
-                                 actionListener="#{travelingLocationSubForm.closeAction}"/>
-
-                <p:commandButton id="saveButtonId"
-                                 value="Save"
-                                 rendered="#{travelingLocationSubForm.editMode}"
-                                 style="background-color: #1d9e04"
-                                 styleClass="saveButton"
-                                 update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
-                                 process="travelingLocationSubFormId"
-                                 actionListener="#{travelingLocationSubForm.save}"/>
+            <h:panelGroup id="locationSightSeeingsPanelGroupId" layout="block" styleClass="content">
+                <ui:repeat value="#{travelingLocationSubForm.currentEntity.locationSightSeeings}"
+                           var="locationSightSeeing">
+                    <h:panelGroup style="display: inline-block">
+                        <p:commandLink id="#{locationSightSeeing.SightSeeingName}EditCommandLinkId"
+                                       rendered="#{travelingLocationSubForm.editMode}"
+                                       actionListener="#{sightSeeingSubForm.prepareEditing(locationSightSeeing)}"
+                                       update="@this sightSeeingDialogId"
+                                       process="@this sightSeeingDialogId"
+                                       title="#{locationSightSeeing.SightSeeingName}"
+                                       value="Edit"
+                                       oncomplete="PF('sightSeeingDialog').show();">
+                        </p:commandLink>
+                        <p:commandLink id="#{locationSightSeeing.SightSeeingName}ViewCommandLinkId"
+                                       rendered="#{not travelingLocationSubForm.editMode}"
+                                       actionListener="#{sightSeeingSubForm.prepareViewing(locationSightSeeing)}"
+                                       update="@this sightSeeingDialogId"
+                                       process="@this sightSeeingDialogId"
+                                       title="#{locationSightSeeing.SightSeeingName}"
+                                       value="View"
+                                       oncomplete="PF('sightSeeingDialog').show();">
+                        </p:commandLink>
+                    </h:panelGroup>
+                </ui:repeat>
             </h:panelGroup>
+
+            <p:commandButton id="sightSeeingAddButtonId"
+                             value="Add Sightseeing"
+                             actionListener="#{sightSeeingSubForm.prepareAdding}"
+                             rendered="#{travelingLocationSubForm.editMode}"
+                             styleClass="saveButton"
+                             update="@this sightSeeingDialogId"
+                             process="@this sightSeeingDialogId"
+                             oncomplete="PF('sightSeeingDialog').show();"/>
         </h:form>
     </p:dialog>
 </ui:composition>

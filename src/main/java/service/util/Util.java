@@ -1,5 +1,7 @@
 package service.util;
 
+import service.model.Entity;
+
 import javax.el.ELContext;
 import javax.faces.context.FacesContext;
 import java.io.FileInputStream;
@@ -31,5 +33,9 @@ public class Util {
 
     public static String getApplicationProperty(String key) {
         return getApplicationProperties().getProperty(key);
+    }
+
+    public static boolean isPhotoUploaded(Entity entity) {
+        return entity != null && entity.getString("Photo") != null;
     }
 }

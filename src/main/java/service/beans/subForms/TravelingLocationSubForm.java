@@ -1,5 +1,6 @@
 package service.beans.subForms;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import service.beans.IdGenerator;
@@ -14,11 +15,11 @@ import service.util.Util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Erik on 25-Dec-17.
@@ -30,6 +31,7 @@ public class TravelingLocationSubForm {
     private GeneralClassifierCache generalClassifierCache;
     private MainEntity currentEntity;
     private boolean editMode = false;
+    private boolean newMode = false;
 
     public PortfolioForm getParentForm() {
         return portfolioForm;
@@ -43,17 +45,18 @@ public class TravelingLocationSubForm {
         return generalClassifierCache;
     }
 
-    public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
-        this.generalClassifierCache = generalClassifierCache;
-    }
-
     public boolean isEditMode() {
         return editMode;
     }
 
-    public TravelingLocationSubForm(PortfolioForm portfolioForm, SessionData sessionData) {
+    public boolean isNewMode() {
+        return newMode;
+    }
+
+    public TravelingLocationSubForm(PortfolioForm portfolioForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         this.portfolioForm = portfolioForm;
         this.sessionData = sessionData;
+        this.generalClassifierCache = generalClassifierCache;
     }
 
     public MainEntity getCurrentEntity() {
@@ -63,17 +66,19 @@ public class TravelingLocationSubForm {
     public void prepareEditing(MainEntity location) {
         currentEntity = location.clone();
         editMode = true;
-
+        newMode = false;
     }
 
     public void prepareViewing(MainEntity location) {
-        currentEntity = location.clone();
+        currentEntity = location;
         editMode = false;
+        newMode = false;
     }
 
     public void prepareAdding() {
         currentEntity = new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true);
         editMode = true;
+        newMode = true;
     }
 
     public void closeAction() {
@@ -81,33 +86,62 @@ public class TravelingLocationSubForm {
         RequestContext.getCurrentInstance().execute("PF('travelingLocationDialog').hide();");
     }
 
-    public void save() {
-        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), currentEntity);
+    public void deleteAction() {
+        generalClassifierCache.deleteMainEntity(MetaCategoryProvider.getLocation(), currentEntity);
+        closeAction();
+    }
+
+    public void saveAction() {
+        generalClassifierCache.saveMainEntity(MetaCategoryProvider.getLocation(), currentEntity);
         closeAction();
     }
 
     public List<Classifier> loadCountries() {
-        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getCountry());
+        return generalClassifierCache.loadClassifiers(MetaCategoryProvider.getCountry());
     }
 
     public List<Classifier> loadStates() {
-        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getState());
+        List<Classifier> states = new ArrayList<>();
+        if (currentEntity != null && currentEntity.getClassifier("Country") != null) {
+            for (Classifier state : generalClassifierCache.loadClassifiers(MetaCategoryProvider.getState())) {
+                if (Objects.equals(state.getClassifier("Country").getId(), currentEntity.getClassifier("Country").getId())) {
+                    states.add(state);
+                }
+            }
+        }
+        return states;
     }
 
     public void handleFileUpload(FileUploadEvent event) {
         String fileName = event.getFile().getFileName();
         try {
-            byte[] buffer = new byte[event.getFile().getInputstream().available()];
-            event.getFile().getInputstream().read(buffer);
-            File image = new File(Util.getApplicationProperty("file.upload.folder") + "/" + fileName);
-            OutputStream outStream = new FileOutputStream(image);
-            outStream.write(buffer);
+            InputStream initialStream = event.getFile().getInputstream();
+            File targetFile = new File(Util.getApplicationProperty("file.upload.folder") + "/" + fileName);
+            java.nio.file.Files.copy(
+                    initialStream,
+                    targetFile.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+            IOUtils.closeQuietly(initialStream);
             ((MainEntityImpl) currentEntity).put("Photo", fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
         FacesMessage message = new FacesMessage("Succesful", fileName + " is uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void resetState() {
+        if (currentEntity != null) {
+            ((MainEntityImpl) currentEntity).put("State", null);
+        }
+    }
+
+    public boolean isLocationPhotoUploaded() {
+        return Util.isPhotoUploaded(currentEntity);
+    }
+
+    public String getLocationPhotoUrl() {
+        return portfolioForm.getPhotoUrl(currentEntity);
     }
 
 }

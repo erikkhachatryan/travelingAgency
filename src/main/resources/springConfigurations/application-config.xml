@@ -28,7 +28,11 @@
     <bean id="travelingLocationSubForm" class="service.beans.subForms.TravelingLocationSubForm" scope="session">
         <constructor-arg name="portfolioForm" ref="portfolioForm"/>
         <constructor-arg name="sessionData" ref="sessionData"/>
-        <property name="generalClassifierCache" ref="generalClassifierCache"/>
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+    </bean>
+
+    <bean id="sightSeeingSubForm" class="service.beans.subForms.SightSeeingSubForm" scope="session">
+        <constructor-arg name="travelingLocationSubForm" ref="travelingLocationSubForm" />
     </bean>
 
     <bean id="registrationForm" class="service.beans.RegistrationForm" scope="session">

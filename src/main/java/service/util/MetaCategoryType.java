@@ -12,5 +12,4 @@ public enum MetaCategoryType {
     BOOLEAN,
     DATE,
     CLASSIFIER,
-    IMAGE
 }
