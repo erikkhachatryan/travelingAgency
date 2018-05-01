@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="bookingDialogId" widgetVar="bookingDialog" width="1000px"
+              header="Book" height="500px" dynamic="true" modal="true" resizable="false">
+        <p:ajax event="close" listener="#{bookingSubForm.closeAction}"/>
+        <h:form id="bookingSubFormId">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="Cancel"
+                                 process="@this"
+                                 styleClass="cancelButton"
+                                 style="background-color: #cfa402;"
+                                 update="@this"
+                                 actionListener="#{bookingSubForm.closeAction}"/>
+                <p:commandButton id="bookingButtonId"
+                                 binding="#{bookingButtonBinding}"
+                                 value="Book"
+                                 styleClass="saveButton"
+                                 style="background-color: #1d9e04;"
+                                 update="bookingSubFormId"
+                                 process="bookingSubFormId"
+                                 actionListener="#{bookingSubForm.saveAction}"/>
+            </h:panelGroup>
+            <div style="clear: both"/>
+
+            <h:panelGroup id="locatioFromPanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="locatonFromLabelId" value="From Location: "/>
+                <p:selectOneMenu id="locationFromSelectOneMenuId"
+                                 appendTo="@this"
+                                 rendered="#{bookingSubForm.editMode}"
+                                 value="#{bookingSubForm.currentEntity.LocationFrom}"
+                                 required="#{not empty param[bookingButtonBinding.clientId]}"
+                                 requiredMessage="Location From is required.">
+                    <f:converter converterId="baseJSFSelectItemConverter"/>
+                    <f:attribute name="itemsList" value="#{bookingSubForm.loadTravelingLocation()}"/>
+                    <f:selectItem id="locationFromEmptySelectItemId" itemLabel="--Select From Location--"/>
+                    <f:selectItems id="locationCountriesSelectItemsId"
+                                   var="locationFrom"
+                                   itemLabel="#{locationFrom.Name}"
+                                   value="#{bookingSubForm.loadTravelingLocation()}"/>
+                </p:selectOneMenu>
+                <p:message id="locationFromMessageId" for="locationFromSelectOneMenuId"/>
+            </h:panelGroup>
+
+            <h:panelGroup id="locatioToPanelGroupId">
+                <p:outputLabel id="locatonToLabelId" value="To Location: "/>
+                <p:outputLabel id="locationToOutputLabelId"
+                               value="#{bookingSubForm.currentEntity.LocationTo.LocationName}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="sightSeeingsPanelGroupId" layout="block">
+                <ui:repeat value="#{bookingSubForm.currentEntity.LocationTo.locationSightSeeings}"
+                           var="locationSightSeeing">
+                    <h:panelGroup style="display: inline-block">
+                        <p:selectBooleanCheckbox id="visitSightSeeingCheckboxId" value="#{locationSightSeeing.visit}"/>
+                        <p:graphicImage
+                                url="#{bookingSubForm.getPhotoUrl(locationSightSeeing)}"
+                                title="#{locationSightSeeing.SightSeeingName}"
+                                styleClass="locationImage"
+                                alt="#{locationSightSeeing.SightSeeingName}"/>
+                    </h:panelGroup>
+                </ui:repeat>
+            </h:panelGroup>
+
+        </h:form>
+    </p:dialog>
+</ui:composition>

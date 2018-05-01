@@ -6,17 +6,20 @@
     <f:view>
         <h:panelGroup id="loginAndRegistrationPanelgroupId" layout="block" style="float: right">
             <p:outputLabel id="guestUserNameId" value="GUEST" rendered="#{not portfolioForm.loggedIn}"/>
-            <p:outputLabel id="loggedInUserNameId" value="#{portfolioForm.sessionData.applicationUser.Name}"
+            <p:outputLabel id="loggedInUserNameId" value="#{sessionData.applicationUser.Name}"
                            rendered="#{portfolioForm.loggedIn}"/>
             <p:commandButton id="loginButtonId" value="Login" rendered="#{not portfolioForm.loggedIn}"
                              actionListener="#{loginForm.prepare}"
+                             styleClass="saveButton"
                              onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
             <p:commandButton id="logoutButtonId" value="Logout" rendered="#{portfolioForm.loggedIn}"
+                             styleClass="deleteButton"
                              update="@this deFormId"
                              process="@this"
                              actionListener="${portfolioForm.logout()}"/>
             <p:commandButton id="registerButtonId" value="Register"
                              actionListener="#{registrationForm.prepare}"
+                             styleClass="cancelButton"
                              rendered="#{not portfolioForm.loggedIn}"
                              onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'"/>
         </h:panelGroup>

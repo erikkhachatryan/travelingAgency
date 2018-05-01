@@ -5,6 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1200px"
               header="Add / Edit Traveling Location" height="700px" dynamic="true" modal="true" resizable="false">
+        <p:ajax event="close" listener="#{travelingLocationSubForm.closeAction}" />
         <h:form id="travelingLocationSubFormId">
 
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
@@ -12,19 +13,23 @@
                                  value="#{travelingLocationSubForm.editMode? 'Cancel' : 'Close'}"
                                  process="@this"
                                  styleClass="cancelButton"
+                                 style="background-color: #cfa402;"
                                  update="@this"
                                  actionListener="#{travelingLocationSubForm.closeAction}"/>
                 <p:commandButton id="deleteButtonId"
                                  value="Delete"
                                  rendered="#{travelingLocationSubForm.editMode and not travelingLocationSubForm.newMode}"
                                  styleClass="deleteButton"
+                                 style="background-color: #cf0c00;"
                                  update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
                                  process="travelingLocationSubFormId"
                                  actionListener="#{travelingLocationSubForm.deleteAction}"/>
                 <p:commandButton id="saveButtonId"
+                                 binding="#{saveButtonBinding}"
                                  value="Save"
                                  rendered="#{travelingLocationSubForm.editMode}"
                                  styleClass="saveButton"
+                                 style="background-color: #1d9e04;"
                                  update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
                                  process="travelingLocationSubFormId"
                                  actionListener="#{travelingLocationSubForm.saveAction}"/>
@@ -50,7 +55,7 @@
                                  appendTo="@this"
                                  rendered="#{travelingLocationSubForm.editMode}"
                                  value="#{travelingLocationSubForm.currentEntity.Country}"
-                                 required="true"
+                                 required="#{not empty param[saveButtonBinding.clientId]}"
                                  requiredMessage="Country is required.">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
                     <f:attribute name="itemsList" value="#{travelingLocationSubForm.loadCountries()}"/>
@@ -74,7 +79,7 @@
                                  appendTo="@this"
                                  value="#{travelingLocationSubForm.currentEntity.State}"
                                  rendered="#{travelingLocationSubForm.editMode}"
-                                 required="true"
+                                 required="#{not empty param[saveButtonBinding.clientId]}"
                                  requiredMessage="State is required.">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
                     <f:attribute name="itemsList" value="#{travelingLocationSubForm.loadStates()}"/>
@@ -92,22 +97,11 @@
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="locationPhotoPanelGroupId">
-                <h:panelGroup id="locationPhotoPreviewId" rendered="#{travelingLocationSubForm.locationPhotoUploaded}">
-                    <p:graphicImage url="#{travelingLocationSubForm.locationPhotoUrl}"
-                                    title="#{travelingLocationSubForm.currentEntity.LocationName}"
-                                    styleClass="locationImage"
-                                    alt="#{travelingLocationSubForm.currentEntity.LocationName}"/>
-                </h:panelGroup>
-
-                <h:panelGroup id="flieUploadPanelGroupId"
-                              rendered="#{not travelingLocationSubForm.locationPhotoUploaded}">
-                    <p:outputLabel id="locationImageLabelId" value="Location Image: "/>
-                    <p:fileUpload fileUploadListener="#{travelingLocationSubForm.handleFileUpload}"
-                                  mode="advanced" dragDropSupport="true" process="@this"
-                                  update="@this deFormId:messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                </h:panelGroup>
+            <h:panelGroup layout="block">
+                <p:outputLabel value="Location Sightseeings:"/>
             </h:panelGroup>
+
+            <div style="clear: both"/>
 
             <h:panelGroup id="locationSightSeeingsPanelGroupId" layout="block" styleClass="content">
                 <ui:repeat value="#{travelingLocationSubForm.currentEntity.locationSightSeeings}"
@@ -119,8 +113,12 @@
                                        update="@this sightSeeingDialogId"
                                        process="@this sightSeeingDialogId"
                                        title="#{locationSightSeeing.SightSeeingName}"
-                                       value="Edit"
                                        oncomplete="PF('sightSeeingDialog').show();">
+                            <p:graphicImage
+                                    url="#{travelingLocationSubForm.parentForm.getPhotoUrl(locationSightSeeing)}"
+                                    title="#{locationSightSeeing.SightSeeingName}"
+                                    styleClass="locationImage"
+                                    alt="#{locationSightSeeing.SightSeeingName}"/>
                         </p:commandLink>
                         <p:commandLink id="#{locationSightSeeing.SightSeeingName}ViewCommandLinkId"
                                        rendered="#{not travelingLocationSubForm.editMode}"
@@ -128,8 +126,12 @@
                                        update="@this sightSeeingDialogId"
                                        process="@this sightSeeingDialogId"
                                        title="#{locationSightSeeing.SightSeeingName}"
-                                       value="View"
                                        oncomplete="PF('sightSeeingDialog').show();">
+                            <p:graphicImage
+                                    url="#{travelingLocationSubForm.parentForm.getPhotoUrl(locationSightSeeing)}"
+                                    title="#{locationSightSeeing.SightSeeingName}"
+                                    styleClass="locationImage"
+                                    alt="#{locationSightSeeing.SightSeeingName}"/>
                         </p:commandLink>
                     </h:panelGroup>
                 </ui:repeat>
@@ -140,9 +142,19 @@
                              actionListener="#{sightSeeingSubForm.prepareAdding}"
                              rendered="#{travelingLocationSubForm.editMode}"
                              styleClass="saveButton"
+                             style="background-color: #1d9e04;"
                              update="@this sightSeeingDialogId"
                              process="@this sightSeeingDialogId"
                              oncomplete="PF('sightSeeingDialog').show();"/>
+            <p:commandButton id="bookingButtonId"
+                             value="Book"
+                             actionListener="#{bookingSubForm.prepareAdding(travelingLocationSubForm.currentEntity.id)}"
+                             rendered="#{travelingLocationSubForm.newMode and (not travelingLocationSubForm.newMode)}"
+                             styleClass="saveButton"
+                             style="background-color: #1d9e04;"
+                             update="@this bookingDialogId"
+                             process="@this bookingDialogId"
+                             oncomplete="PF('bookingDialog').show();"/>
         </h:form>
     </p:dialog>
 </ui:composition>

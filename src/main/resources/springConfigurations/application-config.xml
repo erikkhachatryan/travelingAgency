@@ -33,6 +33,18 @@
 
     <bean id="sightSeeingSubForm" class="service.beans.subForms.SightSeeingSubForm" scope="session">
         <constructor-arg name="travelingLocationSubForm" ref="travelingLocationSubForm" />
+        <constructor-arg name="sessionData" ref="sessionData" />
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+    </bean>
+
+    <bean id="viewBookingsSubForm" class="service.beans.subForms.ViewBookingsSubForm" scope="session">
+        <constructor-arg name="sessionData" ref="sessionData" />
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+    </bean>
+
+    <bean id="bookingSubForm" class="service.beans.subForms.BookingSubForm" scope="session">
+        <constructor-arg name="sessionData" ref="sessionData" />
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>
 
     <bean id="registrationForm" class="service.beans.RegistrationForm" scope="session">

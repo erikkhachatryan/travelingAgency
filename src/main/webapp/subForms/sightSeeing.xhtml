@@ -5,18 +5,21 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="sightSeeingDialogId" widgetVar="sightSeeingDialog" width="1000px"
               header="Add / Edit Sightseeing" height="500px" dynamic="true" modal="true" resizable="false">
+        <p:ajax event="close" listener="#{sightSeeingSubForm.closeAction}" />
         <h:form id="sightSeeingSubFormId">
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
                 <p:commandButton id="cancelButtonId"
                                  value="#{sightSeeingSubForm.editMode? 'Cancel' : 'Close'}"
                                  process="@this"
                                  styleClass="cancelButton"
+                                 style="background-color: #cfa402;"
                                  update="@this"
                                  actionListener="#{sightSeeingSubForm.closeAction}"/>
                 <p:commandButton id="deleteButtonId"
                                  value="Delete"
                                  rendered="#{sightSeeingSubForm.editMode and not sightSeeingSubForm.newMode}"
                                  styleClass="deleteButton"
+                                 style="background-color: #cf0c00;"
                                  update="sightSeeingSubFormId travelingLocationSubFormId"
                                  process="sightSeeingSubFormId"
                                  actionListener="#{sightSeeingSubForm.deleteAction}"/>
@@ -24,6 +27,7 @@
                                  value="Save"
                                  rendered="#{sightSeeingSubForm.editMode}"
                                  styleClass="saveButton"
+                                 style="background-color: #1d9e04;"
                                  update="sightSeeingSubFormId travelingLocationSubFormId"
                                  process="sightSeeingSubFormId"
                                  actionListener="#{sightSeeingSubForm.saveAction}"/>
@@ -56,6 +60,40 @@
                 <p:inputTextarea id="sightSeeingCommentInputTextAreaId"
                                  value="#{sightSeeingSubForm.currentEntity.Comment}"
                                  readonly="#{not sightSeeingSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="locationPhotoPanelGroupId">
+                <h:panelGroup id="flieUploadPanelGroupId" rendered="#{sightSeeingSubForm.editMode}">
+                    <p:outputLabel id="locationImageLabelId" value="Location Image: "/>
+                    <p:fileUpload fileUploadListener="#{sightSeeingSubForm.handleFileUpload}"
+                                  mode="advanced" dragDropSupport="true" process="@this"
+                                  update="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId deFormId:messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                </h:panelGroup>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="locationSightSeeingPhotosPanelGroupId" layout="block" styleClass="content">
+                <ui:repeat value="#{sightSeeingSubForm.currentEntity.locationSightSeeingPhotos}"
+                           var="locationSightSeeingPhoto">
+                    <h:panelGroup style="display: inline-block">
+                        <p:commandLink id="sightSeeingPhotoRemoveCommandLinkId"
+                                       rendered="#{sightSeeingSubForm.editMode}"
+                                       actionListener="#{sightSeeingSubForm.removeSightSeeingPhoto(locationSightSeeingPhoto)}"
+                                       process="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId"
+                                       update="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId"
+                                       title="Remove">
+                            <p:graphicImage url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"
+                                    styleClass="locationImage"/>
+                        </p:commandLink>
+                        <p:graphicImage
+                                url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"
+                                rendered="#{not sightSeeingSubForm.editMode}"
+                                styleClass="locationImage"/>
+                    </h:panelGroup>
+                </ui:repeat>
             </h:panelGroup>
         </h:form>
     </p:dialog>

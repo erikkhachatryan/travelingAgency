@@ -1,9 +1,7 @@
 package service.beans;
 
 import service.commons.SessionData;
-import service.model.ClassifierImpl;
-import service.model.GeneralClassifierCache;
-import service.model.MainEntity;
+import service.model.*;
 import service.util.MetaCategoryProvider;
 import service.util.Util;
 
@@ -49,8 +47,8 @@ public class PortfolioForm {
         getSessionData().setApplicationUser(new ClassifierImpl(-1));
     }
 
-    public String getPhotoUrl(MainEntity location) {
-        return Util.isPhotoUploaded(location) ? "images/uploads/" + location.getString("Photo") : "images/noImageUploaded.png";
+    public String getPhotoUrl(EditableEntity editableEntity) {
+        return Util.isPhotoUploaded(editableEntity) ? "images/uploads/" + editableEntity.getString("Photo") : "images/noImageUploaded.png";
     }
 
 }

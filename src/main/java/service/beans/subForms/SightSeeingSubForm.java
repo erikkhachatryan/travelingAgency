@@ -5,7 +5,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import service.commons.SessionData;
 import service.model.GeneralClassifierCache;
-import service.model.MainEntityImpl;
 import service.model.SubEntity;
 import service.model.SubEntityImpl;
 import service.util.Util;
@@ -16,19 +15,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.StandardCopyOption;
-import java.util.ListIterator;
 
 /**
- * Created by erikk on 22-Apr-18.
+ * Created by erik.khachatryan on 22-Apr-18.
  */
-public class SightSeeingSubForm {
+public class SightSeeingSubForm extends BaseSubForm {
 
     private TravelingLocationSubForm travelingLocationSubForm;
-    private SubEntity currentEntity;
-    private boolean editMode = false;
-    private boolean newMode = false;
 
-    public SightSeeingSubForm(TravelingLocationSubForm travelingLocationSubForm) {
+    public SightSeeingSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
+        super(sessionData, generalClassifierCache, "sightSeeingDialog");
         this.travelingLocationSubForm = travelingLocationSubForm;
     }
 
@@ -36,53 +32,28 @@ public class SightSeeingSubForm {
         return travelingLocationSubForm;
     }
 
-    public boolean isEditMode() {
-        return editMode;
-    }
-
-    public boolean isNewMode() {
-        return newMode;
-    }
-
-    public SubEntity getCurrentEntity() {
-        return this.currentEntity;
-    }
-
-    public void prepareEditing(SubEntity sightSeeing) {
-        currentEntity = sightSeeing.clone();
-        newMode = false;
-        editMode = true;
-
-    }
-
-    public void prepareViewing(SubEntity sightSeeing) {
-        currentEntity = sightSeeing;
-        newMode = false;
-        editMode = false;
-    }
-
+    @Override
     public void prepareAdding() {
-        currentEntity = new SubEntityImpl(getParentForm().getCurrentEntity());
-        newMode= true;
-        editMode = true;
+        setCurrentEntity(new SubEntityImpl(getParentForm().getCurrentEntity()));
+        super.prepareAdding();
     }
 
-    public void closeAction() {
-        currentEntity = null;
-        RequestContext.getCurrentInstance().execute("PF('sightSeeingDialog').hide();");
-    }
-
+    @Override
     public void deleteAction() {
-        getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(currentEntity.getId()));
-        closeAction();
+        getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
+        super.deleteAction();
     }
 
+    @Override
     public void saveAction() {
-        if (!newMode) {
-            getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(currentEntity.getId()));
+        if (!getCurrentEntity().getSubEntities("locationSightSeeingPhotos").isEmpty()) {
+            ((SubEntityImpl) getCurrentEntity()).put("Photo", getCurrentEntity().getSubEntities("locationSightSeeingPhotos").get(0).getString("Photo"));
         }
-        getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").add(currentEntity);
-        closeAction();
+        if (!isNewMode()) {
+            getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
+        }
+        getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").add(((SubEntity) getCurrentEntity()));
+        super.saveAction();
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -95,7 +66,9 @@ public class SightSeeingSubForm {
                     targetFile.toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
             IOUtils.closeQuietly(initialStream);
-            ((SubEntityImpl) currentEntity).put("Photo", fileName);
+            SubEntity locationSightSeeingPhoto = new SubEntityImpl(getCurrentEntity());
+            ((SubEntityImpl) locationSightSeeingPhoto).put("Photo", fileName);
+            getCurrentEntity().getSubEntities("locationSightSeeingPhotos").add(locationSightSeeingPhoto);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,4 +76,7 @@ public class SightSeeingSubForm {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
+    public void removeSightSeeingPhoto(SubEntity sightSeeingPhoto) {
+        getCurrentEntity().getSubEntities("locationSightSeeingPhotos").removeIf(subEntity -> subEntity.getId().equals(sightSeeingPhoto.getId()));
+    }
 }

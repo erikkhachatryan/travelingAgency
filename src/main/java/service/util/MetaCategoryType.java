@@ -12,4 +12,5 @@ public enum MetaCategoryType {
     BOOLEAN,
     DATE,
     CLASSIFIER,
+    MAIN_ENTITY
 }

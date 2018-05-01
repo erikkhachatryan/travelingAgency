@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="viewBookingsDialogId" widgetVar="viewBookingsDialog" width="1000px"
+              header="View Bookings" height="500px" dynamic="true" modal="true" resizable="false">
+        <h:form id="viewBookingSubFormId">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="Close"
+                                 process="@this"
+                                 styleClass="cancelButton"
+                                 style="background-color: #cfa402;"
+                                 update="@this"
+                                 oncomplete="PF('viewBookingsDialog').hide();" />
+            </h:panelGroup>
+            <div style="clear: both"/>
+
+            <p:dataTable id="bookingsTableId" value="#{viewBookingsSubForm.loadCurrentUserBookings()}" var="booking">
+                <p:column id="locationFromColumnId" headerText="From Location">
+                    <p:commandLink id="locationFromViewCommandLinkId"
+                                   actionListener="#{travelingLocationSubForm.prepareViewing(booking.LocationFrom)}"
+                                   update="@this travelingLocationDialogId"
+                                   process="@this travelingLocationDialogId"
+                                   value="#{booking.LocationFrom.LocationName}"
+                                   oncomplete="PF('travelingLocationDialog').show();">
+                    </p:commandLink>
+                </p:column>
+                <p:column id="locationToColumnId" headerText="To Location">
+                    <p:commandLink id="locationToViewCommandLinkId"
+                                   actionListener="#{travelingLocationSubForm.prepareViewing(booking.LocationTo)}"
+                                   update="@this travelingLocationDialogId"
+                                   process="@this travelingLocationDialogId"
+                                   value="#{booking.LocationTo.LocationName}"
+                                   oncomplete="PF('travelingLocationDialog').show();">
+                    </p:commandLink>
+                </p:column>
+                <p:column id="removeBookingColumnId" headerText="">
+                    <p:commandLink id="removeBookingCommandLinkId"
+                                   update="@this bookingsTableId"
+                                   process="@this bookingsTableId"
+                                   value="remove" actionListener="#{viewBookingsSubForm.removeBooking(booking)}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </p:dialog>
+</ui:composition>

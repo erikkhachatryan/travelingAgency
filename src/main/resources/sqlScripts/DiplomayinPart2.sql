@@ -22,7 +22,8 @@ CREATE TABLE DE_LocationSightSeeingPhoto
 GO
 ALTER TABLE DE_Booking
 ADD LocationFromID INT CONSTRAINT FK_DE_BookingFrom_DE_Location FOREIGN KEY REFERENCES DE_Location(LocationID),
-LocationToID INT CONSTRAINT FK_DE_BookingTo_DE_Location FOREIGN KEY REFERENCES DE_Location(LocationID);
+LocationToID INT CONSTRAINT FK_DE_BookingTo_DE_Location FOREIGN KEY REFERENCES DE_Location(LocationID),
+UserID INT CONSTRAINT FK_DE_BookingUser_De_User FOREIGN KEY REFERENCES C_User(UserID);
 GO
 CREATE TABLE DE_BookingSightSeeing
     (

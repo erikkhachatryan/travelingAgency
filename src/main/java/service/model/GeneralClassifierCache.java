@@ -29,7 +29,7 @@ public class GeneralClassifierCache {
 
     public MainEntity loadMainEntityById(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
         ResultSet resultSet = null;
-        MainEntityImpl mainEntity = null;
+        MainEntity mainEntity = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(prepareLoadByIdQuery(metaCategoryId, false))) {
             preparedStatement.setInt(1, instanceId);
@@ -48,6 +48,29 @@ public class GeneralClassifierCache {
             }
         }
         return mainEntity;
+    }
+
+    public Classifier loadMainEntityAsClassifierById(MetaCategoryId metaCategoryId, @Nonnull Integer instanceId) {
+        ResultSet resultSet = null;
+        Classifier classifier = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(prepareLoadByIdQuery(metaCategoryId, false))) {
+            preparedStatement.setInt(1, instanceId);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                classifier = new ClassifierImpl(-1);
+                setEntityFieldsFromResultSet(metaCategoryId, classifier, resultSet);
+                loadAllSubEntities(metaCategoryId, classifier);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) try {
+                resultSet.close();
+            } catch (Exception e) {
+            }
+        }
+        return classifier;
     }
 
     public List<MainEntity> loadMainEntities(MetaCategoryId metaCategoryId) {
@@ -217,7 +240,7 @@ public class GeneralClassifierCache {
     }
 
     private void deleteSubEntities(MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection() ;
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM DE_" + metaCategoryId.getTableName() +
                      " WHERE " + parentIdentityFieldKey + " = " + parentId)) {
             preparedStatement.execute();
@@ -281,7 +304,7 @@ public class GeneralClassifierCache {
                 continue;
             }
             if (isFirst) {
-                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER) || entry.getValue().equals(MetaCategoryType.MAIN_ENTITY)) {
                     insertIntoPart.append(entry.getKey()).append("ID");
                 } else {
                     insertIntoPart.append(entry.getKey());
@@ -289,7 +312,7 @@ public class GeneralClassifierCache {
                 valuesPart.append("?");
                 isFirst = false;
             } else {
-                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER) || entry.getValue().equals(MetaCategoryType.MAIN_ENTITY)) {
                     insertIntoPart.append(", ").append(entry.getKey()).append("ID");
                 } else {
                     insertIntoPart.append(", ").append(entry.getKey());
@@ -310,14 +333,14 @@ public class GeneralClassifierCache {
                 continue;
             }
             if (isFirst) {
-                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER) || entry.getValue().equals(MetaCategoryType.MAIN_ENTITY)) {
                     stringBuilder.append(entry.getKey()).append("ID").append(" = ?");
                 } else {
                     stringBuilder.append(entry.getKey()).append(" = ?");
                 }
                 isFirst = false;
             } else {
-                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER)) {
+                if (entry.getValue().equals(MetaCategoryType.CLASSIFIER) || entry.getValue().equals(MetaCategoryType.MAIN_ENTITY)) {
                     stringBuilder.append(", ").append(entry.getKey()).append("ID").append(" = ?");
                 } else {
                     stringBuilder.append(", ").append(entry.getKey()).append(" = ?");
@@ -370,6 +393,14 @@ public class GeneralClassifierCache {
                         }
                         break;
                     }
+                    case MAIN_ENTITY: {
+                        if (entity.getClassifier(entry.getKey()) != null) {
+                            preparedStatement.setInt(index++, entity.getClassifier(entry.getKey()).getId());
+                        } else {
+                            preparedStatement.setNull(index++, Types.INTEGER);
+                        }
+                        break;
+                    }
                 }
             }
         } catch (SQLException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -397,6 +428,12 @@ public class GeneralClassifierCache {
                     case CLASSIFIER: {
                         if (resultSet.getObject(entry.getKey() + "ID") != null) {
                             ((Map<String, Object>) editableEntity).put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                        }
+                        break;
+                    }
+                    case MAIN_ENTITY: {
+                        if (resultSet.getObject(entry.getKey() + "ID") != null) {
+                            ((Map<String, Object>) editableEntity).put(entry.getKey(), loadMainEntityAsClassifierById(MetaCategoryProvider.getLocation(), resultSet.getInt(entry.getKey() + "ID")));
                         }
                         break;
                     }
