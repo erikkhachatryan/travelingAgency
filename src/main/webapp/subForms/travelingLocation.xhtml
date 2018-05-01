@@ -149,7 +149,7 @@
             <p:commandButton id="bookingButtonId"
                              value="Book"
                              actionListener="#{bookingSubForm.prepareAdding(travelingLocationSubForm.currentEntity.id)}"
-                             rendered="#{travelingLocationSubForm.newMode and (not travelingLocationSubForm.newMode)}"
+                             rendered="#{not travelingLocationSubForm.newMode}"
                              styleClass="saveButton"
                              style="background-color: #1d9e04;"
                              update="@this bookingDialogId"
