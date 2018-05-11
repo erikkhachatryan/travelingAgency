@@ -46,18 +46,18 @@
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="sightSeeingDetailsPanelGroupId" styleClass="inline-grid">
+            <h:panelGroup id="sightSeeingDetailsPanelGroupId" layout="block">
                 <p:outputLabel id="sightSeeingDetailsLabelId" value="Details: "/>
-                <p:inputTextarea id="sightSeeingDetailsInputTextAreaId"
+                <p:inputTextarea id="sightSeeingDetailsInputTextAreaId" style="width: 100%;"
                                  value="#{sightSeeingSubForm.currentEntity.Details}"
                                  readonly="#{not sightSeeingSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="sightSeeingCommentPanelGroupId" styleClass="inline-grid">
+            <h:panelGroup id="sightSeeingCommentPanelGroupId" layout="block">
                 <p:outputLabel id="sightSeeingCommentLabelId" value="Comment: "/>
-                <p:inputTextarea id="sightSeeingCommentInputTextAreaId"
+                <p:inputTextarea id="sightSeeingCommentInputTextAreaId" style="width: 100%;"
                                  value="#{sightSeeingSubForm.currentEntity.Comment}"
                                  readonly="#{not sightSeeingSubForm.editMode}"/>
             </h:panelGroup>

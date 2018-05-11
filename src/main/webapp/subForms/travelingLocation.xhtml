@@ -50,7 +50,7 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="locatioCountryPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="locatonCountryLabelId" value="Country: "/>
+                <p:outputLabel id="locationCountryLabelId" value="Country: "/>
                 <p:selectOneMenu id="locationCountrySelectOneMenuId"
                                  appendTo="@this"
                                  rendered="#{travelingLocationSubForm.editMode}"
@@ -78,9 +78,7 @@
                 <p:selectOneMenu id="locationStateSelectOneMenuId"
                                  appendTo="@this"
                                  value="#{travelingLocationSubForm.currentEntity.State}"
-                                 rendered="#{travelingLocationSubForm.editMode}"
-                                 required="#{not empty param[saveButtonBinding.clientId]}"
-                                 requiredMessage="State is required.">
+                                 rendered="#{travelingLocationSubForm.editMode}">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
                     <f:attribute name="itemsList" value="#{travelingLocationSubForm.loadStates()}"/>
                     <f:selectItem id="locationStateEmptySelectItemId" itemLabel="--Select State--"/>
@@ -92,7 +90,6 @@
                 <p:outputLabel id="locationStateOutputLabelId"
                                value="#{travelingLocationSubForm.currentEntity.State.Name}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
-                <p:message id="locationStateMessageId" for="locationStateSelectOneMenuId"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -107,7 +104,7 @@
                 <ui:repeat value="#{travelingLocationSubForm.currentEntity.locationSightSeeings}"
                            var="locationSightSeeing">
                     <h:panelGroup style="display: inline-block">
-                        <p:commandLink id="#{locationSightSeeing.SightSeeingName}EditCommandLinkId"
+                        <p:commandLink id="locationSightSeeingEditCommandLinkId"
                                        rendered="#{travelingLocationSubForm.editMode}"
                                        actionListener="#{sightSeeingSubForm.prepareEditing(locationSightSeeing)}"
                                        update="@this sightSeeingDialogId"
@@ -120,7 +117,7 @@
                                     styleClass="locationImage"
                                     alt="#{locationSightSeeing.SightSeeingName}"/>
                         </p:commandLink>
-                        <p:commandLink id="#{locationSightSeeing.SightSeeingName}ViewCommandLinkId"
+                        <p:commandLink id="locationSightSeeingViewCommandLinkId"
                                        rendered="#{not travelingLocationSubForm.editMode}"
                                        actionListener="#{sightSeeingSubForm.prepareViewing(locationSightSeeing)}"
                                        update="@this sightSeeingDialogId"
@@ -146,6 +143,15 @@
                              update="@this sightSeeingDialogId"
                              process="@this sightSeeingDialogId"
                              oncomplete="PF('sightSeeingDialog').show();"/>
+            <p:commandButton id="tripAddButtonId"
+                             value="Add Trip"
+                             actionListener="#{tripSubForm.prepareAdding}"
+                             rendered="#{travelingLocationSubForm.editMode}"
+                             styleClass="saveButton"
+                             style="background-color: #1d9e04;"
+                             update="@this tripDialogId"
+                             process="@this tripDialogId"
+                             oncomplete="PF('tripDialog').show();"/>
             <p:commandButton id="bookingButtonId"
                              value="Book"
                              actionListener="#{bookingSubForm.prepareAdding(travelingLocationSubForm.currentEntity.id)}"

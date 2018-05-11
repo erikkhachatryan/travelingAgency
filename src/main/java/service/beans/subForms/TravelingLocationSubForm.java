@@ -52,7 +52,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
     @Override
     public void saveAction() {
         if (!getCurrentEntity().getSubEntities("locationSightSeeings").isEmpty()) {
-            ((MainEntityImpl) getCurrentEntity()).put("Photo", getCurrentEntity().getSubEntities("locationSightSeeings").get(0).getString("Photo"));
+            getCurrentEntity().put("Photo", getCurrentEntity().getSubEntities("locationSightSeeings").get(0).getString("Photo"));
         }
         getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
         super.saveAction();
@@ -84,7 +84,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
                     targetFile.toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
             IOUtils.closeQuietly(initialStream);
-            ((MainEntityImpl) getCurrentEntity()).put("Photo", fileName);
+            getCurrentEntity().put("Photo", fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
 
     public void resetState() {
         if (getCurrentEntity() != null) {
-            ((MainEntityImpl) getCurrentEntity()).put("State", null);
+            getCurrentEntity().put("State", null);
         }
     }
 

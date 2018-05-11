@@ -17,7 +17,8 @@ public class MetaCategoryProvider {
     private static MetaCategoryId LOCATION_SIGHT_SEEING;
     private static MetaCategoryId LOCATION_SIGHT_SEEING_PHOTO;
     private static MetaCategoryId BOOKING;
-    private static MetaCategoryId BOOKING_SIGHT_SEEING;
+    private static MetaCategoryId Location_Trip;
+    private static MetaCategoryId Location_Trip_Checkpoint;
 
     public static MetaCategoryId getLocation() {
         if (LOCATION == null) {
@@ -28,6 +29,7 @@ public class MetaCategoryProvider {
             columns.put("State", MetaCategoryType.CLASSIFIER);
             columns.put("Photo", MetaCategoryType.STRING);
             Map<String, MetaCategoryId> subEntities = new HashMap<>();
+            subEntities.put("locationTrips", getLocationTrip());
             subEntities.put("locationSightSeeings", getLocationSightSeeing());
             LOCATION  = new MetaCategoryId("Location", columns, subEntities);
         }
@@ -124,24 +126,40 @@ public class MetaCategoryProvider {
         if (BOOKING == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("BookingID", MetaCategoryType.IDENTITY);
-            columns.put("LocationFrom", MetaCategoryType.MAIN_ENTITY);
-            columns.put("LocationTo", MetaCategoryType.MAIN_ENTITY);
+            columns.put("LocationTripID", MetaCategoryType.INTEGER);
             columns.put("UserID", MetaCategoryType.INTEGER);
-            Map<String, MetaCategoryId> subEntities = new HashMap<>();
-            subEntities.put("bookingSightSeeings", getBookingSightSeeing());
-            BOOKING = new MetaCategoryId("Booking", columns, subEntities);
+            BOOKING = new MetaCategoryId("Booking", columns);
         }
         return BOOKING;
     }
 
-    public static MetaCategoryId getBookingSightSeeing() {
-        if (BOOKING_SIGHT_SEEING == null) {
+    public static MetaCategoryId getLocationTrip() {
+        if (Location_Trip == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
-            columns.put("BookingSightSeeingID", MetaCategoryType.IDENTITY);
-            columns.put("BookingID", MetaCategoryType.INTEGER);
-            columns.put("LocationSightSeeingID", MetaCategoryType.INTEGER);
-            BOOKING_SIGHT_SEEING = new MetaCategoryId("BookingSightSeeing", columns);
+            columns.put("LocationTripID", MetaCategoryType.IDENTITY);
+            columns.put("LocationID", MetaCategoryType.INTEGER);
+            columns.put("Title", MetaCategoryType.STRING);
+            columns.put("Details", MetaCategoryType.STRING);
+            columns.put("StartDate", MetaCategoryType.DATE);
+            columns.put("TicketsCount", MetaCategoryType.INTEGER);
+            Map<String, MetaCategoryId> subEntities = new HashMap<>();
+            subEntities.put("locationTripCheckpoints", getLocationTripCheckpoint());
+            Location_Trip = new MetaCategoryId("LocationTrip", columns, subEntities);
         }
-        return BOOKING_SIGHT_SEEING;
+        return Location_Trip;
     }
+
+    public static MetaCategoryId getLocationTripCheckpoint() {
+        if (Location_Trip_Checkpoint == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("LocationTripCheckPointID", MetaCategoryType.IDENTITY);
+            columns.put("LocationTripID", MetaCategoryType.INTEGER);
+            columns.put("LocationSightSeeingID", MetaCategoryType.INTEGER);
+            columns.put("VisitOrder", MetaCategoryType.INTEGER);
+            Location_Trip_Checkpoint = new MetaCategoryId("LocationTripCheckpoint", columns);
+        }
+        return Location_Trip_Checkpoint;
+    }
+
+
 }

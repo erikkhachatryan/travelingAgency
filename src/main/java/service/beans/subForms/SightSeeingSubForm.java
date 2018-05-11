@@ -47,7 +47,7 @@ public class SightSeeingSubForm extends BaseSubForm {
     @Override
     public void saveAction() {
         if (!getCurrentEntity().getSubEntities("locationSightSeeingPhotos").isEmpty()) {
-            ((SubEntityImpl) getCurrentEntity()).put("Photo", getCurrentEntity().getSubEntities("locationSightSeeingPhotos").get(0).getString("Photo"));
+            getCurrentEntity().put("Photo", getCurrentEntity().getSubEntities("locationSightSeeingPhotos").get(0).getString("Photo"));
         }
         if (!isNewMode()) {
             getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
@@ -67,7 +67,7 @@ public class SightSeeingSubForm extends BaseSubForm {
                     StandardCopyOption.REPLACE_EXISTING);
             IOUtils.closeQuietly(initialStream);
             SubEntity locationSightSeeingPhoto = new SubEntityImpl(getCurrentEntity());
-            ((SubEntityImpl) locationSightSeeingPhoto).put("Photo", fileName);
+            locationSightSeeingPhoto.put("Photo", fileName);
             getCurrentEntity().getSubEntities("locationSightSeeingPhotos").add(locationSightSeeingPhoto);
         } catch (IOException e) {
             e.printStackTrace();

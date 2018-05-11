@@ -15,14 +15,20 @@ import java.util.List;
  */
 public class BookingSubForm extends BaseSubForm {
 
+    private MainEntity location;
+
+    public MainEntity getLocation() {
+        return location;
+    }
+
     public BookingSubForm(SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "bookingDialog");
     }
 
     public void prepareAdding(Integer locationToId) {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getBooking()), true));
-        ((MainEntityImpl) getCurrentEntity()).put("LocationTo", getGeneralClassifierCache().loadMainEntityAsClassifierById(MetaCategoryProvider.getLocation(), locationToId));
-        ((MainEntityImpl) getCurrentEntity()).put("UserID", getSessionData().getApplicationUser().getId());
+        location = getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(), locationToId);
+        getCurrentEntity().put("UserID", getSessionData().getApplicationUser().getId());
         super.prepareAdding();
     }
 
@@ -31,9 +37,9 @@ public class BookingSubForm extends BaseSubForm {
         SubEntity subEntity;
         for (SubEntity sightseeing : getCurrentEntity().getClassifier("LocationTo").getSubEntities("locationSightSeeings")) {
             if (sightseeing.getBoolean("visit")) {
-                ((SubEntityImpl) sightseeing).remove("visit");
+                sightseeing.remove("visit");
                 subEntity = new SubEntityImpl(getCurrentEntity());
-                ((SubEntityImpl) subEntity).put("LocationSightSeeingID", sightseeing.getId());
+                subEntity.put("LocationSightSeeingID", sightseeing.getId());
                 getCurrentEntity().getSubEntities("bookingSightSeeings").add(subEntity);
             }
         }

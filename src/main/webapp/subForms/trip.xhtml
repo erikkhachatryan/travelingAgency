@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="tripDialogId" widgetVar="tripDialog" width="1000px"
+              header="Add / Edit Trip" height="500px" dynamic="true" modal="true" resizable="false">
+        <p:ajax event="close" listener="#{tripSubForm.closeAction}" />
+        <h:form id="tripSubFormId">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="#{tripSubForm.editMode? 'Cancel' : 'Close'}"
+                                 process="@this"
+                                 styleClass="cancelButton"
+                                 style="background-color: #cfa402;"
+                                 update="@this"
+                                 actionListener="#{tripSubForm.closeAction}"/>
+                <p:commandButton id="deleteButtonId"
+                                 value="Delete"
+                                 rendered="#{tripSubForm.editMode and not tripSubForm.newMode}"
+                                 styleClass="deleteButton"
+                                 style="background-color: #cf0c00;"
+                                 update="tripSubFormId travelingLocationSubFormId"
+                                 process="tripSubFormId"
+                                 actionListener="#{tripSubForm.deleteAction}"/>
+                <p:commandButton id="saveButtonId"
+                                 value="Save"
+                                 rendered="#{tripSubForm.editMode}"
+                                 styleClass="saveButton"
+                                 style="background-color: #1d9e04;"
+                                 update="tripSubFormId travelingLocationSubFormId"
+                                 process="tripSubFormId"
+                                 actionListener="#{tripSubForm.saveAction}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="tripTitlePanelGroupId" lstyleClass="inline-grid">
+                <p:outputLabel id="tripTitleLabelId" value="Trip Title: "/>
+                <p:inputText id="tripTitleInputTextId"
+                             value="#{tripSubForm.currentEntity.Title}"
+                             rendered="#{tripSubForm.editMode}"/>
+                <p:outputLabel id="tripTitleOutputTextId"
+                               value="#{tripSubForm.currentEntity.Title}"
+                               rendered="#{not tripSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="tripDetailsPanelGroupId" layout="block">
+                <p:outputLabel id="tripDetailsLabelId" value="Trip Details: "/>
+                <p:inputTextarea id="tripDetailsInputTextAreaId" style="width: 100%;"
+                                 value="#{tripSubForm.currentEntity.Details}"
+                                 readonly="#{not tripSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="startDatePanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="startDateOutputTextId" value="Start Date"/>
+                <p:calendar id="startDateCalendarId" value="#{tripSubForm.currentEntity.StartDate}"
+                            pattern="dd/MMM/yyyy/hh/mm"
+                            yearRange="c:c+10"
+                            readonly="true"
+                            navigator="true" mode="popup" readonlyInput="true" />
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
+                <p:outputLabel id="ticketsCountLabelId" value="Tickets Count: "/>
+                <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}" converter="javax.faces.Integer" />
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="tripCheckpointsPanelGroupId" layout="block">
+                <p:outputLabel id="tripCheckpointLabelId" value="Trip Checkpoints: "/>
+                <p:selectOneMenu id="tripCheckpointSelectOneMenuId"
+                                 appendTo="@this"
+                                 rendered="#{travelingLocationSubForm.editMode}"
+                                 value="#{tripSubForm.selectedCheckpointId}">
+                    <f:selectItem id="tripCheckpointEmptySelectItemId" itemLabel="--Select Checkpoint--"/>
+                    <f:selectItems id="tripCheckpointsSelectItemsId"
+                                   var="checkpoint"
+                                   itemLabel="#{checkpoint.SightSeeingName}"
+                                   itemValue="#{checkpoint.getId()}"
+                                   value="#{tripSubForm.availableTripCheckpoints}"/>
+                    <p:ajax process="@this" update="@this addCheckpointButtonId" />
+                </p:selectOneMenu>
+                <p:commandButton id="addCheckpointButtonId"
+                                 value="Add Checkpoint"
+                                 rendered="#{tripSubForm.editMode}"
+                                 disabled="#{tripSubForm.selectedCheckpointId eq null}"
+                                 styleClass="saveButton"
+                                 style="background-color: #1d9e04;"
+                                 update="@this tripDiagramPanelGroupId"
+                                 process="@this"
+                                 actionListener="#{tripSubForm.addTripCheckpoint()}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="tripDiagramPanelGroupId" layout="block">
+                <p:diagram value="#{tripSubForm.diagram}" style="height:400px" styleClass="ui-widget-content" />
+            </h:panelGroup>
+
+            <style type="text/css">
+                .ui-diagram-element {
+                    border:0.1em dotted #d4e06b;
+                    width:14em;
+                    height:4em;
+                    line-height:4em;
+                    text-align: center;
+                }
+            </style>
+
+        </h:form>
+    </p:dialog>
+</ui:composition>

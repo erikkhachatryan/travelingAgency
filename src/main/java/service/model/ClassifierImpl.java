@@ -42,5 +42,5 @@ public class ClassifierImpl extends EditableEntityImpl implements Classifier {
     }
 
     @Override
-    public Classifier clone() {return (ClassifierImpl) super.clone();}
+    public Classifier clone() {return (Classifier) super.clone();}
 }
