@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1200px"
               header="Add / Edit Traveling Location" height="700px" dynamic="true" modal="true" resizable="false">
-        <p:ajax event="close" listener="#{travelingLocationSubForm.closeAction}" />
+        <p:ajax event="close" listener="#{travelingLocationSubForm.closeAction}"/>
         <h:form id="travelingLocationSubFormId">
 
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
@@ -143,6 +143,37 @@
                              update="@this sightSeeingDialogId"
                              process="@this sightSeeingDialogId"
                              oncomplete="PF('sightSeeingDialog').show();"/>
+
+            <h:panelGroup id="locationTripsPanelGroupId" layout="block" styleClass="content">
+                <p:outputLabel value="Available Trips:"/>
+                <p:dataTable id="locationTripsTableId" value="#{travelingLocationSubForm.currentEntity.locationTrips}" var="trip">
+                    <p:column id="tripTitleColumnId" headerText="Title">
+                        <p:commandLink id="tripTitleViewCommandLinkId"
+                                       actionListener="#{tripSubForm.prepareViewing(trip)}"
+                                       update="@this tripDialogId"
+                                       process="@this tripDialogId"
+                                       rendered="#{not travelingLocationSubForm.editMode}"
+                                       value="#{trip.Title}"
+                                       oncomplete="PF('tripDialog').show();">
+                        </p:commandLink>
+                        <p:commandLink id="tripTitleEditCommandLinkId"
+                                       actionListener="#{tripSubForm.prepareEditing(trip)}"
+                                       update="@this tripDialogId"
+                                       process="@this tripDialogId"
+                                       rendered="#{travelingLocationSubForm.editMode}"
+                                       value="#{trip.Title}"
+                                       oncomplete="PF('tripDialog').show();">
+                        </p:commandLink>
+                    </p:column>
+                    <p:column id="startDateColumnId" headerText="Start Date">
+                        <p:outputLabel id="startDateOutputLabelId" value="#{trip.StartDate}" />
+                    </p:column>
+                    <p:column id="availableTicketsColumnId" headerText="AvailableTickets">
+                        <p:outputLabel id="availableTicketsOutputLabelId" value="#{trip.TicketsCount}" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+
             <p:commandButton id="tripAddButtonId"
                              value="Add Trip"
                              actionListener="#{tripSubForm.prepareAdding}"
@@ -152,15 +183,6 @@
                              update="@this tripDialogId"
                              process="@this tripDialogId"
                              oncomplete="PF('tripDialog').show();"/>
-            <p:commandButton id="bookingButtonId"
-                             value="Book"
-                             actionListener="#{bookingSubForm.prepareAdding(travelingLocationSubForm.currentEntity.id)}"
-                             rendered="#{not travelingLocationSubForm.newMode}"
-                             styleClass="saveButton"
-                             style="background-color: #1d9e04;"
-                             update="@this bookingDialogId"
-                             process="@this bookingDialogId"
-                             oncomplete="PF('bookingDialog').show();"/>
         </h:form>
     </p:dialog>
 </ui:composition>

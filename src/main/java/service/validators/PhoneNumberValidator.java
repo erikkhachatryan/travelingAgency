@@ -27,7 +27,7 @@ public class PhoneNumberValidator implements Validator {
         if (processValidation(uiComponent)) {
             String phoneNumber = (String) uiComponent.getAttributes().get(PHONE_NUMBER);
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
-                Pattern pattern = Pattern.compile("[+]{1}[0-9]{11}");
+                Pattern pattern = Pattern.compile("([+]){0,1}([0-9]){0,}");
                 Matcher matcher = pattern.matcher(phoneNumber);
                 if (!matcher.matches()) {
                     addMessage(uiComponent);

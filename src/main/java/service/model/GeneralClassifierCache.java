@@ -96,7 +96,7 @@ public class GeneralClassifierCache {
 
     public void loadAllSubEntities(MetaCategoryId metaCategoryId, EditableEntity editableEntity) {
         for (Map.Entry<String, MetaCategoryId> subEntityEntry : metaCategoryId.getSubEntities().entrySet()) {
-            ((EditableEntityImpl) editableEntity).put(subEntityEntry.getKey(), loadSubEntities(subEntityEntry.getValue(), getIdentityFieldKey(metaCategoryId), editableEntity));
+            editableEntity.put(subEntityEntry.getKey(), loadSubEntities(subEntityEntry.getValue(), getIdentityFieldKey(metaCategoryId), editableEntity));
         }
     }
 
@@ -111,7 +111,7 @@ public class GeneralClassifierCache {
             while (resultSet.next()) {
                 SubEntity subEntity = new SubEntityImpl(parent);
                 setEntityFieldsFromResultSet(metaCategoryId, subEntity, resultSet);
-                loadAllSubEntities(metaCategoryId,subEntity);
+                loadAllSubEntities(metaCategoryId, subEntity);
                 subEntities.add(subEntity);
             }
         } catch (SQLException e) {
@@ -233,24 +233,22 @@ public class GeneralClassifierCache {
     }
 
     private void saveSubEntities(List<SubEntity> subEntities, MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
-        deleteSubEntities(metaCategoryId, parentIdentityFieldKey, parentId);
         for (SubEntity subEntity : subEntities) {
             saveSubEntity(subEntity, metaCategoryId, parentIdentityFieldKey, parentId);
         }
     }
 
-    private void deleteSubEntities(MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
-        try (Connection connection = dataSource.getConnection() ;
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM DE_" + metaCategoryId.getTableName() +
-                     " WHERE " + parentIdentityFieldKey + " = " + parentId)) {
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void saveSubEntity(SubEntity subEntity, MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
+        Objects.requireNonNull(subEntity);
+        if (subEntity.getId() < 0) {
+            insertSubEntity(subEntity, metaCategoryId, parentIdentityFieldKey, parentId);
+        } else {
+            updateSubEntity(subEntity, metaCategoryId, parentIdentityFieldKey, parentId);
         }
     }
 
-    private void saveSubEntity(SubEntity subEntity, MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
-        ((Map<String, Object>) subEntity).put(parentIdentityFieldKey, parentId);
+    private void insertSubEntity(SubEntity subEntity, MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
+        subEntity.put(parentIdentityFieldKey, parentId);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(prepareInsertQuery(metaCategoryId, false), Statement.RETURN_GENERATED_KEYS)) {
             String identityFieldKey = getIdentityFieldKey(metaCategoryId);
@@ -262,6 +260,36 @@ public class GeneralClassifierCache {
             }
             for (Map.Entry<String, MetaCategoryId> subEntitiesEntry : metaCategoryId.getSubEntities().entrySet()) {
                 saveSubEntities(subEntity.getSubEntities(subEntitiesEntry.getKey()), subEntitiesEntry.getValue(), identityFieldKey, subEntity.getId());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateSubEntity(SubEntity subEntity, MetaCategoryId metaCategoryId, String parentIdentityFieldKey, Integer parentId) {
+        subEntity.put(parentIdentityFieldKey, parentId);
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(prepareUpdateQuery(metaCategoryId, subEntity.getId(), false))) {
+            String identityFieldKey = getIdentityFieldKey(metaCategoryId);
+            setQueryParams(preparedStatement, metaCategoryId, subEntity);
+            preparedStatement.executeUpdate();
+            for (Map.Entry<String, MetaCategoryId> subEntitiesEntry : metaCategoryId.getSubEntities().entrySet()) {
+                saveSubEntities(subEntity.getSubEntities(subEntitiesEntry.getKey()), subEntitiesEntry.getValue(), identityFieldKey, subEntity.getId());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSubEntityById(MetaCategoryId metaCategoryId, Integer id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM DE_" + metaCategoryId.getTableName() +
+                     " WHERE " + getIdentityFieldKey(metaCategoryId) + " = " + id);
+             PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM DE_" + metaCategoryId.getTableName() +
+                     " WHERE " + getIdentityFieldKey(metaCategoryId) + " = " + id);
+             ResultSet resultSet = selectStatement.executeQuery()) {
+            if (resultSet.next()) {
+                deleteStatement.execute();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -408,7 +436,7 @@ public class GeneralClassifierCache {
         }
     }
 
-    private String getIdentityFieldKey(MetaCategoryId metaCategoryId) {
+    public String getIdentityFieldKey(MetaCategoryId metaCategoryId) {
         for (Map.Entry<String, MetaCategoryType> entry : metaCategoryId.getColumns().entrySet()) {
             if (entry.getValue().equals(MetaCategoryType.IDENTITY)) {
                 return entry.getKey();
@@ -427,18 +455,18 @@ public class GeneralClassifierCache {
                     }
                     case CLASSIFIER: {
                         if (resultSet.getObject(entry.getKey() + "ID") != null) {
-                            ((Map<String, Object>) editableEntity).put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
+                            editableEntity.put(entry.getKey(), loadClassifierById((MetaCategoryId) MetaCategoryProvider.class.getMethod("get" + entry.getKey()).invoke(null), resultSet.getInt(entry.getKey() + "ID")));
                         }
                         break;
                     }
                     case MAIN_ENTITY: {
                         if (resultSet.getObject(entry.getKey() + "ID") != null) {
-                            ((Map<String, Object>) editableEntity).put(entry.getKey(), loadMainEntityAsClassifierById(MetaCategoryProvider.getLocation(), resultSet.getInt(entry.getKey() + "ID")));
+                            editableEntity.put(entry.getKey(), loadMainEntityAsClassifierById(MetaCategoryProvider.getLocation(), resultSet.getInt(entry.getKey() + "ID")));
                         }
                         break;
                     }
                     default: {
-                        ((Map<String, Object>) editableEntity).put(entry.getKey(), resultSet.getObject(entry.getKey()));
+                        editableEntity.put(entry.getKey(), resultSet.getObject(entry.getKey()));
                         break;
                     }
                 }

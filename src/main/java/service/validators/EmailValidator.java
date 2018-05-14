@@ -27,7 +27,7 @@ public class EmailValidator implements Validator {
         if (processValidation(uiComponent)) {
             String email = (String) uiComponent.getAttributes().get(EMAIL);
             if (email != null && !email.isEmpty()) {
-                Pattern pattern = Pattern.compile("[a-zA-Z.1-9]{1,}[@]{1}[a-zA-Z]{1,}[.]{1}[a-zA-Z]{1,}");
+                Pattern pattern = Pattern.compile("[a-zA-Z.1-9]{1,}@[a-zA-Z]{1,}[.]{1}[a-zA-Z]{1,}");
                 Matcher matcher = pattern.matcher(email);
                 if (!matcher.matches()) {
                     addMessage(uiComponent);

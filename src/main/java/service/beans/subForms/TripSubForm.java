@@ -10,6 +10,7 @@ import service.model.EditableEntity;
 import service.model.GeneralClassifierCache;
 import service.model.SubEntity;
 import service.model.SubEntityImpl;
+import service.util.MetaCategoryProvider;
 
 import java.util.*;
 
@@ -71,15 +72,17 @@ public class TripSubForm extends BaseSubForm {
 
     @Override
     public void prepareEditing(EditableEntity editableEntity) {
+        super.prepareEditing(editableEntity);
         visitOrder = 0;
         getCurrentEntity().getSubEntities("locationTripCheckpoints").forEach(checkpoint -> visitOrder++);
         initDiagram();
-        super.prepareEditing(editableEntity);
     }
 
     @Override
     public void deleteAction() {
         getParentForm().getCurrentEntity().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
+        getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationTrip(), new HashSet<>());
+        getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationTrip()).add(getCurrentEntity().getId());
         super.deleteAction();
     }
 
@@ -88,6 +91,7 @@ public class TripSubForm extends BaseSubForm {
         if (!isNewMode()) {
             getParentForm().getCurrentEntity().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
         }
+        getCurrentEntity().put("AvailableTickets", getCurrentEntity().getInt("TicketsCount"));
         getParentForm().getCurrentEntity().getSubEntities("locationTrips").add(((SubEntity) getCurrentEntity()));
         super.saveAction();
     }
@@ -99,8 +103,9 @@ public class TripSubForm extends BaseSubForm {
         Map<Integer, Element> elements = new HashMap<>();
         Element element;
         for (SubEntity locationTripCheckpoints : getCurrentEntity().getSubEntities("locationTripCheckpoints")) {
-            element = new Element(getLocationSightseeingNameById(locationTripCheckpoints.getInt("LocationSightSeeingID")));
-            element.addEndPoint(new DotEndPoint(EndPointAnchor.AUTO_DEFAULT));
+            element = new Element(getLocationSightseeingNameById(locationTripCheckpoints.getInt("LocationSightSeeingID")),
+                    (locationTripCheckpoints.getInt("VisitOrder") * 11 + 3) + "em", "2em");
+            element.addEndPoint(new DotEndPoint(EndPointAnchor.BOTTOM));
             diagram.addElement(element);
             elements.put(locationTripCheckpoints.getInt("VisitOrder"), element);
         }
@@ -117,5 +122,8 @@ public class TripSubForm extends BaseSubForm {
             }
         }
         return "";
+    }
+    public Date getCurrentDate() {
+        return new Date();
     }
 }

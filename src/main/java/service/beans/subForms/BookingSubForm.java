@@ -15,54 +15,49 @@ import java.util.List;
  */
 public class BookingSubForm extends BaseSubForm {
 
-    private MainEntity location;
+    private TripSubForm tripSubForm;
+    private Integer oldBookedTicketsCount = null;
 
-    public MainEntity getLocation() {
-        return location;
-    }
-
-    public BookingSubForm(SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
+    public BookingSubForm(TripSubForm tripSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "bookingDialog");
+        this.tripSubForm = tripSubForm;
     }
 
-    public void prepareAdding(Integer locationToId) {
+    @Override
+    public void prepareAdding() {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getBooking()), true));
-        location = getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(), locationToId);
+        getCurrentEntity().put("LocationTripID", getParentForm().getCurrentEntity().getId());
         getCurrentEntity().put("UserID", getSessionData().getApplicationUser().getId());
         super.prepareAdding();
     }
 
     @Override
+    public void prepareEditing(EditableEntity editableEntity) {
+        super.prepareEditing(editableEntity);
+        oldBookedTicketsCount = getCurrentEntity().getInt("TicketsCount");
+    }
+
+    @Override
     public void saveAction() {
-        SubEntity subEntity;
-        for (SubEntity sightseeing : getCurrentEntity().getClassifier("LocationTo").getSubEntities("locationSightSeeings")) {
-            if (sightseeing.getBoolean("visit")) {
-                sightseeing.remove("visit");
-                subEntity = new SubEntityImpl(getCurrentEntity());
-                subEntity.put("LocationSightSeeingID", sightseeing.getId());
-                getCurrentEntity().getSubEntities("bookingSightSeeings").add(subEntity);
-            }
-        }
+        getCurrentEntity().put("TotalCost", getTotalCost());
+        getParentForm().getParentForm().getCurrentEntity().put("AvailableTickets", getParentForm().getParentForm().getCurrentEntity()
+                .getInt("AvailableTickets") - getCurrentEntity().getInt("TicketsCount") + (isNewMode() ? 0 : oldBookedTicketsCount));
+        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getParentForm().getParentForm().getCurrentEntity()));
+        getParentForm().getParentForm().setCurrentEntity(getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
+                getParentForm().getParentForm().getCurrentEntity().getId()));
         getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getBooking(), ((MainEntity) getCurrentEntity()));
         super.saveAction();
     }
 
-    public List<Classifier> loadTravelingLocation() {
-        List<Classifier> result = new ArrayList<>();
-        ClassifierImpl classifier;
-        List<MainEntity> mainEntities = getGeneralClassifierCache().loadMainEntities(MetaCategoryProvider.getLocation());
-        for (MainEntity location : mainEntities) {
-            classifier = new ClassifierImpl(location.getId());
-            classifier.setName(location.getString("LocationName"));
-            classifier.put("Photo", location.getString("Photo"));
-            classifier.put("locationSightSeeings", location.getSubEntities("locationSightSeeings"));
-            result.add(classifier);
+    public Integer getTotalCost() {
+        if (getCurrentEntity() == null || getCurrentEntity().getInt("TicketsCount") == null) {
+            return null;
         }
-        return result;
-    }
+        return getCurrentEntity().getInt("TicketsCount") * getParentForm().getCurrentEntity().getInt("TicketCost");
 
-    public String getPhotoUrl(EditableEntity editableEntity) {
-        return Util.isPhotoUploaded(editableEntity) ? "images/uploads/" + editableEntity.getString("Photo") : "images/noImageUploaded.png";
+    }
+    public TripSubForm getParentForm() {
+        return tripSubForm;
     }
 
 }

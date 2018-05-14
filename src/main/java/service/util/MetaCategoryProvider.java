@@ -127,6 +127,8 @@ public class MetaCategoryProvider {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("BookingID", MetaCategoryType.IDENTITY);
             columns.put("LocationTripID", MetaCategoryType.INTEGER);
+            columns.put("TicketsCount", MetaCategoryType.INTEGER);
+            columns.put("TotalCost", MetaCategoryType.INTEGER);
             columns.put("UserID", MetaCategoryType.INTEGER);
             BOOKING = new MetaCategoryId("Booking", columns);
         }
@@ -142,6 +144,8 @@ public class MetaCategoryProvider {
             columns.put("Details", MetaCategoryType.STRING);
             columns.put("StartDate", MetaCategoryType.DATE);
             columns.put("TicketsCount", MetaCategoryType.INTEGER);
+            columns.put("AvailableTickets", MetaCategoryType.INTEGER);
+            columns.put("TicketCost", MetaCategoryType.INTEGER);
             Map<String, MetaCategoryId> subEntities = new HashMap<>();
             subEntities.put("locationTripCheckpoints", getLocationTripCheckpoint());
             Location_Trip = new MetaCategoryId("LocationTrip", columns, subEntities);

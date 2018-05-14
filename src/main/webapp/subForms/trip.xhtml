@@ -29,7 +29,7 @@
                                  styleClass="saveButton"
                                  style="background-color: #1d9e04;"
                                  update="tripSubFormId travelingLocationSubFormId"
-                                 process="tripSubFormId"
+                                 process="tripSubFormId startDateCalendarId"
                                  actionListener="#{tripSubForm.saveAction}"/>
             </h:panelGroup>
 
@@ -45,6 +45,16 @@
                                rendered="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
+            <p:commandButton id="bookingButtonId"
+                             value="Book"
+                             actionListener="#{bookingSubForm.prepareAdding}"
+                             rendered="#{not tripSubForm.newMode}"
+                             styleClass="saveButton"
+                             style="background-color: #1d9e04;"
+                             update="@this bookingDialogId"
+                             process="@this bookingDialogId"
+                             oncomplete="PF('bookingDialog').show();"/>
+
             <div style="clear: both"/>
 
             <h:panelGroup id="tripDetailsPanelGroupId" layout="block">
@@ -57,19 +67,31 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="startDatePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="startDateOutputTextId" value="Start Date"/>
+                <p:outputLabel id="startDateOutputLabelId" value="Start Date: "/>
                 <p:calendar id="startDateCalendarId" value="#{tripSubForm.currentEntity.StartDate}"
-                            pattern="dd/MMM/yyyy/hh/mm"
+                            pattern="dd/MMM/yyyy HH:mm"
+                            mindate="#{tripSubForm.currentDate}"
                             yearRange="c:c+10"
                             readonly="true"
+                            rendered="#{tripSubForm.editMode}"
                             navigator="true" mode="popup" readonlyInput="true" />
+                <p:outputLabel id="startDateOutputTextId" value="#{tripSubForm.currentEntity.StartDate}" rendered="#{not travelingLocationSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
             <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
                 <p:outputLabel id="ticketsCountLabelId" value="Tickets Count: "/>
-                <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}" converter="javax.faces.Integer" />
+                <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}"
+                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="ticketCostPanelGroupId" layout="block">
+                <p:outputLabel id="ticketCostLabelId" value="Ticket Cost: "/>
+                <p:inputText id="ticketCostInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketCost}"
+                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -102,16 +124,24 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="tripDiagramPanelGroupId" layout="block">
-                <p:diagram value="#{tripSubForm.diagram}" style="height:400px" styleClass="ui-widget-content" />
+                <p:diagram value="#{tripSubForm.diagram}" style="height:300px" styleClass="ui-widget-content" />
             </h:panelGroup>
 
             <style type="text/css">
                 .ui-diagram-element {
-                    border:0.1em dotted #d4e06b;
-                    width:14em;
-                    height:4em;
-                    line-height:4em;
+                    width:10em;
+                    height:6em;
+                    line-height:5em;
                     text-align: center;
+                    box-shadow: 0 5px 10px rgba(207, 101, 37, 0.8);
+                    border-radius: 1em;
+                    border: 1px solid #cf0c00;
+                    background-color: #cfa402;
+                    color: #ffffff;
+                }
+
+                .ui-diagram-element:hover {
+                    background-color: #cf0c00;
                 }
             </style>
 

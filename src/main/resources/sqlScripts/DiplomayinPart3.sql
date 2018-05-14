@@ -10,6 +10,7 @@ CREATE TABLE DE_LocationTrip
 		StartDate DateTime,
 		Details NVARCHAR(MAX),
 		TicketsCount INT,
+		AvailableTickets INT
     );
 GO
 Create Table DE_LocationTripCheckpoint

@@ -49,6 +49,7 @@
     </bean>
 
     <bean id="bookingSubForm" class="service.beans.subForms.BookingSubForm" scope="session">
+        <constructor-arg name="tripSubForm" ref="tripSubForm" />
         <constructor-arg name="sessionData" ref="sessionData" />
         <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>

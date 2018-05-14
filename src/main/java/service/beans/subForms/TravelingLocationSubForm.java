@@ -6,10 +6,8 @@ import org.primefaces.event.FileUploadEvent;
 import service.beans.IdGenerator;
 import service.beans.PortfolioForm;
 import service.commons.SessionData;
-import service.model.Classifier;
-import service.model.GeneralClassifierCache;
-import service.model.MainEntity;
-import service.model.MainEntityImpl;
+import service.model.*;
+import service.util.MetaCategoryId;
 import service.util.MetaCategoryProvider;
 import service.util.Util;
 
@@ -17,9 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import java.io.*;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Erik on 25-Dec-17.
@@ -27,6 +23,7 @@ import java.util.Objects;
 public class TravelingLocationSubForm extends BaseSubForm {
 
     private PortfolioForm portfolioForm;
+    private Map<MetaCategoryId, Set<Integer>> deletedSubEntities;
 
     public PortfolioForm getParentForm() {
         return portfolioForm;
@@ -35,12 +32,20 @@ public class TravelingLocationSubForm extends BaseSubForm {
     public TravelingLocationSubForm(PortfolioForm portfolioForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "travelingLocationDialog");
         this.portfolioForm = portfolioForm;
+        deletedSubEntities = new HashMap<>();
     }
 
     @Override
     public void prepareAdding() {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true));
+        resetDeletedSubEntities();
         super.prepareAdding();
+    }
+
+    @Override
+    public void prepareEditing(EditableEntity editableEntity) {
+        resetDeletedSubEntities();
+        super.prepareEditing(editableEntity);
     }
 
     @Override
@@ -53,6 +58,13 @@ public class TravelingLocationSubForm extends BaseSubForm {
     public void saveAction() {
         if (!getCurrentEntity().getSubEntities("locationSightSeeings").isEmpty()) {
             getCurrentEntity().put("Photo", getCurrentEntity().getSubEntities("locationSightSeeings").get(0).getString("Photo"));
+        } else {
+            getCurrentEntity().put("Photo", null);
+        }
+        for (Map.Entry<MetaCategoryId, Set<Integer>> deletedEntityEntry : deletedSubEntities.entrySet()) {
+            for (Integer subEntityId : deletedEntityEntry.getValue()) {
+                getGeneralClassifierCache().deleteSubEntityById(deletedEntityEntry.getKey(), subEntityId);
+            }
         }
         getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
         super.saveAction();
@@ -106,4 +118,11 @@ public class TravelingLocationSubForm extends BaseSubForm {
         return portfolioForm.getPhotoUrl(getCurrentEntity());
     }
 
+    public Map<MetaCategoryId, Set<Integer>> getDeletedSubEntities() {
+        return deletedSubEntities;
+    }
+
+    private void resetDeletedSubEntities() {
+        deletedSubEntities = new HashMap<>();
+    }
 }
