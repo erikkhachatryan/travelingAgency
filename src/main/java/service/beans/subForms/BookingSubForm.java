@@ -26,6 +26,7 @@ public class BookingSubForm extends BaseSubForm {
     @Override
     public void prepareAdding() {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getBooking()), true));
+        getCurrentEntity().put("LocationID", getParentForm().getCurrentEntity().getInt("LocationID"));
         getCurrentEntity().put("LocationTripID", getParentForm().getCurrentEntity().getId());
         getCurrentEntity().put("UserID", getSessionData().getApplicationUser().getId());
         super.prepareAdding();
@@ -40,12 +41,13 @@ public class BookingSubForm extends BaseSubForm {
     @Override
     public void saveAction() {
         getCurrentEntity().put("TotalCost", getTotalCost());
-        getParentForm().getParentForm().getCurrentEntity().put("AvailableTickets", getParentForm().getParentForm().getCurrentEntity()
-                .getInt("AvailableTickets") - getCurrentEntity().getInt("TicketsCount") + (isNewMode() ? 0 : oldBookedTicketsCount));
+        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getBooking(), ((MainEntity) getCurrentEntity()));
+        getParentForm().getCurrentEntity().put("AvailableTickets", getParentForm().getCurrentEntity().getInt("AvailableTickets")
+                - getCurrentEntity().getInt("TicketsCount") + (isNewMode() ? 0 : oldBookedTicketsCount));
+        getParentForm().saveStayAction();
         getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getParentForm().getParentForm().getCurrentEntity()));
         getParentForm().getParentForm().setCurrentEntity(getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
                 getParentForm().getParentForm().getCurrentEntity().getId()));
-        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getBooking(), ((MainEntity) getCurrentEntity()));
         super.saveAction();
     }
 

@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class Util {
 
-    private static final String APPLICATION_PROPERTIES_PATH = "E:/Projects/Traveling Agency/travelingAgency/src/main/resources/properties/application.properties";
+    private static final String APPLICATION_PROPERTIES_PATH = "C:/Projects/DeCore/Traveling Agency/travelingAgency/src/main/resources/properties/application.properties";
     public static final Integer ADMINISTRATOR_USER_ID = 0;
     private static Properties applicationProperties;
 

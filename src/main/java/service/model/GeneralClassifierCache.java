@@ -100,7 +100,7 @@ public class GeneralClassifierCache {
         }
     }
 
-    private List<SubEntity> loadSubEntities(MetaCategoryId metaCategoryId, String parentIdentityFieldKey, EditableEntity parent) {
+    public List<SubEntity> loadSubEntities(MetaCategoryId metaCategoryId, String parentIdentityFieldKey, EditableEntity parent) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<SubEntity> subEntities = new ArrayList<>();
@@ -127,6 +127,29 @@ public class GeneralClassifierCache {
             }
         }
         return subEntities;
+    }
+
+    public SubEntity loadSubEntityById(MetaCategoryId metaCategoryId, Integer id, MetaCategoryId parentMetaCategoryId, Integer parentId) {
+        SubEntity subEntity = null;
+        ResultSet resultSet = null;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(prepareLoadByIdQuery(metaCategoryId, false))) {
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                subEntity = new SubEntityImpl(loadMainEntityById(parentMetaCategoryId, parentId));
+                setEntityFieldsFromResultSet(metaCategoryId, subEntity, resultSet);
+            }
+            loadAllSubEntities(metaCategoryId, subEntity);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) try {
+                resultSet.close();
+            } catch (Exception e) {
+            }
+        }
+        return subEntity;
     }
 
     public Classifier loadClassifierById(MetaCategoryId metaCategoryId, @Nonnull Integer id) {

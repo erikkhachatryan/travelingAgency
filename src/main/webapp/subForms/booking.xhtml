@@ -20,7 +20,7 @@
                                  value="Book"
                                  styleClass="saveButton"
                                  style="background-color: #1d9e04;"
-                                 update="bookingSubFormId tripSubFormId"
+                                 update="bookingSubFormId tripSubFormId travelingLocationSubFormId:locationTripsTableId"
                                  process="bookingSubFormId"
                                  actionListener="#{bookingSubForm.saveAction}"/>
             </h:panelGroup>
@@ -40,6 +40,16 @@
                     </p:inputText>
                     <p:message id="ticketsCountRequiredMessageId" for="ticketsCountInputNumberId" />
                 </h:panelGroup>
+
+                <p:message id="ticketsCountAvailabilityValidationMessageId" for="ticketsCountAvailabilityValidatorId"/>
+
+                <h:inputHidden value="true" id="ticketsCountAvailabilityValidatorId">
+                    <f:validator validatorId="ticketsAvailableValidator" for="ticketsCountAvailabilityValidatorId"/>
+                    <f:attribute name="process" value="#{not empty param[bookingButtonBinding.clientId]}"/>
+                    <f:attribute name="message" value="Only #{bookingSubForm.parentForm.currentEntity.AvailableTickets} tickets are available."/>
+                    <f:attribute name="availableTicketsCount" value="#{bookingSubForm.parentForm.currentEntity.AvailableTickets}"/>
+                    <f:attribute name="orderedTicketsCount" value="#{bookingSubForm.currentEntity.TicketsCount}"/>
+                </h:inputHidden>
 
                 <div style="clear: both"/>
 

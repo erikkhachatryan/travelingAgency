@@ -42,7 +42,7 @@
                 <p:inputText id="locationNameInputTextId"
                              value="#{travelingLocationSubForm.currentEntity.LocationName}"
                              rendered="#{travelingLocationSubForm.editMode}"/>
-                <p:outputLabel id="locationNameOutputTextId"
+                <h:outputText id="locationNameOutputTextId"
                                value="#{travelingLocationSubForm.currentEntity.LocationName}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
             </h:panelGroup>
@@ -67,7 +67,7 @@
                     <p:ajax process="@this" update="@this locatioStatePanelGroupId"
                             listener="#{travelingLocationSubForm.resetState}"/>
                 </p:selectOneMenu>
-                <p:outputLabel id="locationCountryOutputLabelId"
+                <h:outputText id="locationCountryOutputLabelId"
                                value="#{travelingLocationSubForm.currentEntity.Country.Name}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
                 <p:message id="locationCountryMessageId" for="locationCountrySelectOneMenuId"/>
@@ -87,7 +87,7 @@
                                    itemLabel="#{state.Name}"
                                    value="#{travelingLocationSubForm.loadStates()}"/>
                 </p:selectOneMenu>
-                <p:outputLabel id="locationStateOutputLabelId"
+                <h:outputText id="locationStateOutputLabelId"
                                value="#{travelingLocationSubForm.currentEntity.State.Name}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
             </h:panelGroup>
@@ -149,7 +149,7 @@
                 <p:dataTable id="locationTripsTableId" value="#{travelingLocationSubForm.currentEntity.locationTrips}" var="trip">
                     <p:column id="tripTitleColumnId" headerText="Title">
                         <p:commandLink id="tripTitleViewCommandLinkId"
-                                       actionListener="#{tripSubForm.prepareViewing(trip)}"
+                                       actionListener="#{tripSubForm.prepareViewing(trip, true)}"
                                        update="@this tripDialogId"
                                        process="@this tripDialogId"
                                        rendered="#{not travelingLocationSubForm.editMode}"
@@ -166,10 +166,12 @@
                         </p:commandLink>
                     </p:column>
                     <p:column id="startDateColumnId" headerText="Start Date">
-                        <p:outputLabel id="startDateOutputLabelId" value="#{trip.StartDate}" />
+                        <h:outputText id="startDateOutputLabelId" value="#{trip.StartDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
+                        </h:outputText>
                     </p:column>
                     <p:column id="availableTicketsColumnId" headerText="AvailableTickets">
-                        <p:outputLabel id="availableTicketsOutputLabelId" value="#{trip.TicketsCount}" />
+                        <h:outputText id="availableTicketsOutputLabelId" value="#{trip.AvailableTickets}" />
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>

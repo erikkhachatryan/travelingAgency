@@ -12,7 +12,13 @@ import service.model.SubEntity;
 import service.model.SubEntityImpl;
 import service.util.MetaCategoryProvider;
 
-import java.util.*;
+import javax.faces.event.ValueChangeEvent;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by erik.khachatryan on 22-Apr-18.
@@ -23,6 +29,8 @@ public class TripSubForm extends BaseSubForm {
     private Integer selectedCheckpointId;
     private Integer visitOrder;
     private DefaultDiagramModel diagram;
+    private boolean openFromLocationForm;
+    private List<SubEntity> availableTripCheckpoints;
 
     public TripSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "tripDialog");
@@ -46,7 +54,15 @@ public class TripSubForm extends BaseSubForm {
     }
 
     public List<SubEntity> getAvailableTripCheckpoints() {
-        return travelingLocationSubForm.getCurrentEntity().getSubEntities("locationSightSeeings");
+        if (availableTripCheckpoints == null) {
+            if (travelingLocationSubForm != null && travelingLocationSubForm.getCurrentEntity() != null) {
+                availableTripCheckpoints = travelingLocationSubForm.getCurrentEntity().getSubEntities("locationSightSeeings");
+            } else {
+                availableTripCheckpoints = getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
+                        getCurrentEntity().getInt("LocationID")).getSubEntities("locationSightSeeings");
+            }
+        }
+        return availableTripCheckpoints;
     }
 
     public void addTripCheckpoint() {
@@ -61,6 +77,7 @@ public class TripSubForm extends BaseSubForm {
         visitOrder = 0;
         diagram = null;
         selectedCheckpointId = null;
+        availableTripCheckpoints = null;
     }
 
     @Override
@@ -70,9 +87,17 @@ public class TripSubForm extends BaseSubForm {
         super.prepareAdding();
     }
 
+    public void prepareViewing(EditableEntity editableEntity, boolean isOpenFromLocationForm) {
+        resetFields();
+        openFromLocationForm = isOpenFromLocationForm;
+        super.prepareViewing(editableEntity);
+        initDiagram();
+    }
+
     @Override
     public void prepareEditing(EditableEntity editableEntity) {
         super.prepareEditing(editableEntity);
+        resetFields();
         visitOrder = 0;
         getCurrentEntity().getSubEntities("locationTripCheckpoints").forEach(checkpoint -> visitOrder++);
         initDiagram();
@@ -86,13 +111,16 @@ public class TripSubForm extends BaseSubForm {
         super.deleteAction();
     }
 
-    @Override
-    public void saveAction() {
+    public void saveStayAction() {
         if (!isNewMode()) {
             getParentForm().getCurrentEntity().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
         }
-        getCurrentEntity().put("AvailableTickets", getCurrentEntity().getInt("TicketsCount"));
         getParentForm().getCurrentEntity().getSubEntities("locationTrips").add(((SubEntity) getCurrentEntity()));
+    }
+
+    @Override
+    public void saveAction() {
+        saveStayAction();
         super.saveAction();
     }
 
@@ -123,7 +151,20 @@ public class TripSubForm extends BaseSubForm {
         }
         return "";
     }
+
     public Date getCurrentDate() {
         return new Date();
+    }
+
+    public boolean isOpenFromLocationForm() {
+        return openFromLocationForm;
+    }
+
+    public void onTicketsCountChange(ValueChangeEvent event) {
+        if (getCurrentEntity().getInt("AvailableTickets") == null) {
+            getCurrentEntity().put("AvailableTickets", event.getNewValue());
+            return;
+        }
+        getCurrentEntity().put("AvailableTickets", getCurrentEntity().getInt("AvailableTickets") + ((Integer) event.getNewValue() - (Integer) event.getOldValue()));
     }
 }

@@ -61,8 +61,9 @@
 
             <p:commandButton id="viewBookingsButtonId"
                              value="View Bookings"
-                             rendered="#{portfolioForm.loggedIn}"
+                             rendered="#{portfolioForm.loggedIn and (not portfolioForm.loggedInAsAdministrator)}"
                              styleClass="saveButton"
+                             actionListener="#{viewBookingsSubForm.prepareForm}"
                              update="@this viewBookingsDialogId"
                              process="@this viewBookingsDialogId"
                              oncomplete="PF('viewBookingsDialog').show();"/>

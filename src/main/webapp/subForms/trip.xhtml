@@ -7,6 +7,15 @@
               header="Add / Edit Trip" height="500px" dynamic="true" modal="true" resizable="false">
         <p:ajax event="close" listener="#{tripSubForm.closeAction}" />
         <h:form id="tripSubFormId">
+            <p:commandButton id="bookingButtonId"
+                             value="Book"
+                             actionListener="#{bookingSubForm.prepareAdding}"
+                             rendered="#{(not tripSubForm.editMode) and tripSubForm.openFromLocationForm}"
+                             styleClass="saveButton"
+                             style="background-color: #1d9e04;"
+                             update="@this bookingDialogId"
+                             process="@this"
+                             oncomplete="PF('bookingDialog').show();"/>
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
                 <p:commandButton id="cancelButtonId"
                                  value="#{tripSubForm.editMode? 'Cancel' : 'Close'}"
@@ -40,20 +49,11 @@
                 <p:inputText id="tripTitleInputTextId"
                              value="#{tripSubForm.currentEntity.Title}"
                              rendered="#{tripSubForm.editMode}"/>
-                <p:outputLabel id="tripTitleOutputTextId"
+                <h:outputText id="tripTitleOutputTextId"
                                value="#{tripSubForm.currentEntity.Title}"
                                rendered="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
-            <p:commandButton id="bookingButtonId"
-                             value="Book"
-                             actionListener="#{bookingSubForm.prepareAdding}"
-                             rendered="#{not tripSubForm.newMode}"
-                             styleClass="saveButton"
-                             style="background-color: #1d9e04;"
-                             update="@this bookingDialogId"
-                             process="@this bookingDialogId"
-                             oncomplete="PF('bookingDialog').show();"/>
 
             <div style="clear: both"/>
 
@@ -72,10 +72,11 @@
                             pattern="dd/MMM/yyyy HH:mm"
                             mindate="#{tripSubForm.currentDate}"
                             yearRange="c:c+10"
-                            readonly="true"
                             rendered="#{tripSubForm.editMode}"
                             navigator="true" mode="popup" readonlyInput="true" />
-                <p:outputLabel id="startDateOutputTextId" value="#{tripSubForm.currentEntity.StartDate}" rendered="#{not travelingLocationSubForm.editMode}"/>
+                <h:outputText id="startDateOutputTextId" value="#{tripSubForm.currentEntity.StartDate}" rendered="#{not tripSubForm.editMode}">
+                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
+                </h:outputText>
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -83,7 +84,16 @@
             <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
                 <p:outputLabel id="ticketsCountLabelId" value="Tickets Count: "/>
                 <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}"
-                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}"/>
+                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}" valueChangeListener="#{tripSubForm.onTicketsCountChange}">
+                    <p:ajax process="@this" update="@this availableTicketsPanelGroupId" />
+                </p:inputText>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="availableTicketsPanelGroupId" layout="block">
+                <p:outputLabel id="availableTicketsLabelId" value="Available Tickets: "/>
+                <h:outputText id="availableTicketsOutputTextId" value="#{tripSubForm.currentEntity.AvailableTickets}" />
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -100,7 +110,7 @@
                 <p:outputLabel id="tripCheckpointLabelId" value="Trip Checkpoints: "/>
                 <p:selectOneMenu id="tripCheckpointSelectOneMenuId"
                                  appendTo="@this"
-                                 rendered="#{travelingLocationSubForm.editMode}"
+                                 rendered="#{tripSubForm.editMode}"
                                  value="#{tripSubForm.selectedCheckpointId}">
                     <f:selectItem id="tripCheckpointEmptySelectItemId" itemLabel="--Select Checkpoint--"/>
                     <f:selectItems id="tripCheckpointsSelectItemsId"

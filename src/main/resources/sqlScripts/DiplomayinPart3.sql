@@ -10,7 +10,8 @@ CREATE TABLE DE_LocationTrip
 		StartDate DateTime,
 		Details NVARCHAR(MAX),
 		TicketsCount INT,
-		AvailableTickets INT
+		AvailableTickets INT,
+		TicketCost INT
     );
 GO
 Create Table DE_LocationTripCheckpoint
@@ -32,10 +33,16 @@ Create Table DE_Booking
 		BookingID INT
         CONSTRAINT PK_DE_Booking PRIMARY KEY CLUSTERED
         IDENTITY ,
+		LocationID INT
+        CONSTRAINT FK_DE_Location_DE_Booking
+        FOREIGN KEY REFERENCES DE_Location ( LocationID ) ON DELETE CASCADE,
 		LocationTripID INT
         CONSTRAINT FK_DE_LocationTrip_DE_Booking
         FOREIGN KEY REFERENCES DE_LocationTrip ( LocationTripID ) ON DELETE CASCADE,
+		TicketsCount INT,
+		TotalCost INT,
 		UserID INT
         CONSTRAINT FK_DE_User_DE_Booking
-        FOREIGN KEY REFERENCES C_User ( UserID ) ON DELETE CASCADE,
+        FOREIGN KEY REFERENCES C_User ( UserID ) ON DELETE CASCADE
 	);
+GO

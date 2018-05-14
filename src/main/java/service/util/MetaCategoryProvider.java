@@ -126,6 +126,7 @@ public class MetaCategoryProvider {
         if (BOOKING == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("BookingID", MetaCategoryType.IDENTITY);
+            columns.put("LocationID", MetaCategoryType.INTEGER);
             columns.put("LocationTripID", MetaCategoryType.INTEGER);
             columns.put("TicketsCount", MetaCategoryType.INTEGER);
             columns.put("TotalCost", MetaCategoryType.INTEGER);
