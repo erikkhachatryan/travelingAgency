@@ -13,14 +13,12 @@
                                  value="#{travelingLocationSubForm.editMode? 'Cancel' : 'Close'}"
                                  process="@this"
                                  styleClass="cancelButton"
-                                 style="background-color: #cfa402;"
                                  update="@this"
                                  actionListener="#{travelingLocationSubForm.closeAction}"/>
                 <p:commandButton id="deleteButtonId"
                                  value="Delete"
                                  rendered="#{travelingLocationSubForm.editMode and not travelingLocationSubForm.newMode}"
                                  styleClass="deleteButton"
-                                 style="background-color: #cf0c00;"
                                  update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
                                  process="travelingLocationSubFormId"
                                  actionListener="#{travelingLocationSubForm.deleteAction}"/>
@@ -29,7 +27,6 @@
                                  value="Save"
                                  rendered="#{travelingLocationSubForm.editMode}"
                                  styleClass="saveButton"
-                                 style="background-color: #1d9e04;"
                                  update="travelingLocationSubFormId deFormId:allLocationsPanelGroupId"
                                  process="travelingLocationSubFormId"
                                  actionListener="#{travelingLocationSubForm.saveAction}"/>
@@ -41,7 +38,9 @@
                 <p:outputLabel id="locationNameLabelId" value="Location Name: "/>
                 <p:inputText id="locationNameInputTextId"
                              value="#{travelingLocationSubForm.currentEntity.LocationName}"
-                             rendered="#{travelingLocationSubForm.editMode}"/>
+                             rendered="#{travelingLocationSubForm.editMode}">
+                    <p:ajax process="@this" update="@this" />
+                </p:inputText>
                 <h:outputText id="locationNameOutputTextId"
                                value="#{travelingLocationSubForm.currentEntity.LocationName}"
                                rendered="#{not travelingLocationSubForm.editMode}"/>
@@ -56,6 +55,8 @@
                                  rendered="#{travelingLocationSubForm.editMode}"
                                  value="#{travelingLocationSubForm.currentEntity.Country}"
                                  required="#{not empty param[saveButtonBinding.clientId]}"
+                                 filter="true"
+                                 filterMatchMode="contains"
                                  requiredMessage="Country is required.">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
                     <f:attribute name="itemsList" value="#{travelingLocationSubForm.loadCountries()}"/>
@@ -78,6 +79,8 @@
                 <p:selectOneMenu id="locationStateSelectOneMenuId"
                                  appendTo="@this"
                                  value="#{travelingLocationSubForm.currentEntity.State}"
+                                 filter="true"
+                                 filterMatchMode="contains"
                                  rendered="#{travelingLocationSubForm.editMode}">
                     <f:converter converterId="baseJSFSelectItemConverter"/>
                     <f:attribute name="itemsList" value="#{travelingLocationSubForm.loadStates()}"/>
@@ -86,6 +89,7 @@
                                    var="state"
                                    itemLabel="#{state.Name}"
                                    value="#{travelingLocationSubForm.loadStates()}"/>
+                    <p:ajax process="@this" update="@this" />
                 </p:selectOneMenu>
                 <h:outputText id="locationStateOutputLabelId"
                                value="#{travelingLocationSubForm.currentEntity.State.Name}"
@@ -111,6 +115,7 @@
                                        process="@this sightSeeingDialogId"
                                        title="#{locationSightSeeing.SightSeeingName}"
                                        oncomplete="PF('sightSeeingDialog').show();">
+                            <h:outputText value="#{locationSightSeeing.SightSeeingName}" />
                             <p:graphicImage
                                     url="#{travelingLocationSubForm.parentForm.getPhotoUrl(locationSightSeeing)}"
                                     title="#{locationSightSeeing.SightSeeingName}"
@@ -124,6 +129,7 @@
                                        process="@this sightSeeingDialogId"
                                        title="#{locationSightSeeing.SightSeeingName}"
                                        oncomplete="PF('sightSeeingDialog').show();">
+                            <h:outputText value="#{locationSightSeeing.SightSeeingName}" />
                             <p:graphicImage
                                     url="#{travelingLocationSubForm.parentForm.getPhotoUrl(locationSightSeeing)}"
                                     title="#{locationSightSeeing.SightSeeingName}"
@@ -180,6 +186,7 @@
                              value="Add Trip"
                              actionListener="#{tripSubForm.prepareAdding}"
                              rendered="#{travelingLocationSubForm.editMode}"
+                             disabled="#{travelingLocationSubForm.addTripDisabled}"
                              styleClass="saveButton"
                              style="background-color: #1d9e04;"
                              update="@this tripDialogId"

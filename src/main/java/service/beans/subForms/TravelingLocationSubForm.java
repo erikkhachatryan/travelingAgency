@@ -1,7 +1,6 @@
 package service.beans.subForms;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import service.beans.IdGenerator;
 import service.beans.PortfolioForm;
@@ -24,6 +23,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
 
     private PortfolioForm portfolioForm;
     private Map<MetaCategoryId, Set<Integer>> deletedSubEntities;
+    private boolean addTripDisabled = false;
 
     public PortfolioForm getParentForm() {
         return portfolioForm;
@@ -38,13 +38,13 @@ public class TravelingLocationSubForm extends BaseSubForm {
     @Override
     public void prepareAdding() {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true));
-        resetDeletedSubEntities();
+        prepareForm();
         super.prepareAdding();
     }
 
     @Override
     public void prepareEditing(EditableEntity editableEntity) {
-        resetDeletedSubEntities();
+        prepareForm();
         super.prepareEditing(editableEntity);
     }
 
@@ -122,7 +122,16 @@ public class TravelingLocationSubForm extends BaseSubForm {
         return deletedSubEntities;
     }
 
-    private void resetDeletedSubEntities() {
+    private void prepareForm() {
         deletedSubEntities = new HashMap<>();
+        addTripDisabled = false;
+    }
+
+    public boolean isAddTripDisabled() {
+        return addTripDisabled;
+    }
+
+    public void setAddTripDisabled(boolean addTripDisabled) {
+        this.addTripDisabled = addTripDisabled;
     }
 }

@@ -84,9 +84,10 @@
             <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
                 <p:outputLabel id="ticketsCountLabelId" value="Tickets Count: "/>
                 <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}"
-                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}" valueChangeListener="#{tripSubForm.onTicketsCountChange}">
+                             converter="javax.faces.Integer" rendered="#{tripSubForm.editMode}" valueChangeListener="#{tripSubForm.onTicketsCountChange}">
                     <p:ajax process="@this" update="@this availableTicketsPanelGroupId" />
                 </p:inputText>
+                <h:outputText id="ticketsCountOutputTextId" value="#{tripSubForm.currentEntity.TicketsCount}" rendered="#{not tripSubForm.editMode}" />
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -101,7 +102,8 @@
             <h:panelGroup id="ticketCostPanelGroupId" layout="block">
                 <p:outputLabel id="ticketCostLabelId" value="Ticket Cost: "/>
                 <p:inputText id="ticketCostInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketCost}"
-                             converter="javax.faces.Integer" readonly="#{not tripSubForm.editMode}"/>
+                             converter="javax.faces.Integer" rendered="#{tripSubForm.editMode}"/>
+                <h:outputText id="ticketCostOutputTextId" value="#{tripSubForm.currentEntity.TicketCost}" rendered="#{not tripSubForm.editMode}" />
             </h:panelGroup>
 
             <div style="clear: both"/>
@@ -110,6 +112,8 @@
                 <p:outputLabel id="tripCheckpointLabelId" value="Trip Checkpoints: "/>
                 <p:selectOneMenu id="tripCheckpointSelectOneMenuId"
                                  appendTo="@this"
+                                 filter="true"
+                                 filterMatchMode="contains"
                                  rendered="#{tripSubForm.editMode}"
                                  value="#{tripSubForm.selectedCheckpointId}">
                     <f:selectItem id="tripCheckpointEmptySelectItemId" itemLabel="--Select Checkpoint--"/>
@@ -120,6 +124,14 @@
                                    value="#{tripSubForm.availableTripCheckpoints}"/>
                     <p:ajax process="@this" update="@this addCheckpointButtonId" />
                 </p:selectOneMenu>
+                <p:commandButton id="resetCheckpointsButtonId"
+                                 value="Reset All"
+                                 rendered="#{tripSubForm.editMode}"
+                                 styleClass="deleteButton"
+                                 style="background-color: #1d9e04;"
+                                 update="@this tripDiagramPanelGroupId"
+                                 process="@this"
+                                 actionListener="#{tripSubForm.resetCheckpoints()}"/>
                 <p:commandButton id="addCheckpointButtonId"
                                  value="Add Checkpoint"
                                  rendered="#{tripSubForm.editMode}"
@@ -136,24 +148,6 @@
             <h:panelGroup id="tripDiagramPanelGroupId" layout="block">
                 <p:diagram value="#{tripSubForm.diagram}" style="height:300px" styleClass="ui-widget-content" />
             </h:panelGroup>
-
-            <style type="text/css">
-                .ui-diagram-element {
-                    width:10em;
-                    height:6em;
-                    line-height:5em;
-                    text-align: center;
-                    box-shadow: 0 5px 10px rgba(207, 101, 37, 0.8);
-                    border-radius: 1em;
-                    border: 1px solid #cf0c00;
-                    background-color: #cfa402;
-                    color: #ffffff;
-                }
-
-                .ui-diagram-element:hover {
-                    background-color: #cf0c00;
-                }
-            </style>
 
         </h:form>
     </p:dialog>

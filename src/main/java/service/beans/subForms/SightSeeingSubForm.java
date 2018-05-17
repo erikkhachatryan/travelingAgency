@@ -3,6 +3,8 @@ package service.beans.subForms;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import service.commons.SessionData;
 import service.model.EditableEntity;
 import service.model.GeneralClassifierCache;
@@ -13,6 +15,12 @@ import service.util.Util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,8 +61,10 @@ public class SightSeeingSubForm extends BaseSubForm {
     @Override
     public void deleteAction() {
         getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
-        getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationSightSeeing(), new HashSet<>());
-        getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationSightSeeing()).add(getCurrentEntity().getId());
+        if (getCurrentEntity().getId() > 0) {
+            getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationSightSeeing(), new HashSet<>());
+            getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationSightSeeing()).add(getCurrentEntity().getId());
+        }
         super.deleteAction();
     }
 
@@ -71,6 +81,9 @@ public class SightSeeingSubForm extends BaseSubForm {
         getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings").add(((SubEntity) getCurrentEntity()));
         getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationSightSeeingPhoto(), new HashSet<>());
         getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationSightSeeingPhoto()).addAll(deletedPhotosIds);
+        if (isNewMode()) {
+            getParentForm().setAddTripDisabled(true);
+        }
         super.saveAction();
     }
 
@@ -96,7 +109,9 @@ public class SightSeeingSubForm extends BaseSubForm {
 
     public void removeSightSeeingPhoto(SubEntity sightSeeingPhoto) {
         getCurrentEntity().getSubEntities("locationSightSeeingPhotos").removeIf(subEntity -> subEntity.getId().equals(sightSeeingPhoto.getId()));
-        deletedPhotosIds.add(sightSeeingPhoto.getId());
+        if (sightSeeingPhoto.getId() > 0) {
+            deletedPhotosIds.add(sightSeeingPhoto.getId());
+        }
     }
 
     private void resetIdsSet() {

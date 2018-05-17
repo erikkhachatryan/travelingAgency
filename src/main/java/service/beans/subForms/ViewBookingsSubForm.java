@@ -3,6 +3,7 @@ package service.beans.subForms;
 import service.commons.SessionData;
 import service.model.GeneralClassifierCache;
 import service.model.MainEntity;
+import service.model.SubEntity;
 import service.util.MetaCategoryProvider;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class ViewBookingsSubForm {
         bookings = new ArrayList<>();
         for (MainEntity booking : generalClassifierCache.loadMainEntities(MetaCategoryProvider.getBooking())) {
             if (booking.getInt("UserID").equals(sessionData.getApplicationUser().getId())) {
-                booking.put("Trip", generalClassifierCache.loadSubEntityById(MetaCategoryProvider.getLocationTrip(),
+                booking.put("trip", generalClassifierCache.loadSubEntityById(MetaCategoryProvider.getLocationTrip(),
                         booking.getInt("LocationTripID"), MetaCategoryProvider.getLocation(), booking.getInt("LocationID")));
                 bookings.add(booking);
             }
@@ -43,7 +44,13 @@ public class ViewBookingsSubForm {
     }
 
     public void removeBooking(MainEntity booking) {
+        SubEntity trip = (SubEntity) booking.get("trip");
+        trip.getParent().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(trip.getId()));
+        trip.put("AvailableTickets", trip.getInt("AvailableTickets") + booking.getInt("TicketsCount"));
+        trip.getParent().getSubEntities("locationTrips").add(trip);
+        generalClassifierCache.saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) trip.getParent()));
         generalClassifierCache.deleteMainEntity(MetaCategoryProvider.getBooking(), booking);
+        bookings.remove(booking);
     }
 
 

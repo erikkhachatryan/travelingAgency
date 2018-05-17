@@ -24,24 +24,27 @@
             <h:panelGroup id="allLocationsPanelGroupId" layout="block" styleClass="content">
                 <ui:repeat value="#{portfolioForm.travelingLocations}" var="travelingLocation">
                     <h:panelGroup style="display: inline-block">
-                        <p:commandLink id="#{travelingLocation.LocationName}EditCommandLinkId"
+                        <p:commandLink id="travelingLocationEditCommandLinkId"
                                        rendered="#{portfolioForm.loggedInAsAdministrator}"
                                        actionListener="#{travelingLocationSubForm.prepareEditing(travelingLocation)}"
                                        update="@this travelingLocationDialogId"
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
+                            <h:outputText value="#{travelingLocation.LocationName}" />
                             <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
                         </p:commandLink>
-                        <p:commandLink id="#{travelingLocation.LocationName}ViewCommandLinkId"
+                        <p:commandLink id="travelingLocationViewCommandLinkId"
                                        rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
                                        actionListener="#{travelingLocationSubForm.prepareViewing(travelingLocation)}"
                                        update="@this travelingLocationDialogId"
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
+                            <h:outputText value="#{travelingLocation.LocationName}" />
                             <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
                         </p:commandLink>
+                        <h:outputText value="#{travelingLocation.LocationName}" rendered="#{not portfolioForm.loggedIn}" />
                         <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
                                         title="#{travelingLocation.LocationName}"
                                         styleClass="locationImage"

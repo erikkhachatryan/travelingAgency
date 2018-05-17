@@ -13,12 +13,14 @@ import service.model.SubEntityImpl;
 import service.util.MetaCategoryProvider;
 
 import javax.faces.event.ValueChangeEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by erik.khachatryan on 22-Apr-18.
@@ -31,6 +33,7 @@ public class TripSubForm extends BaseSubForm {
     private DefaultDiagramModel diagram;
     private boolean openFromLocationForm;
     private List<SubEntity> availableTripCheckpoints;
+    private Set<Integer> deletedCheckpointIds;
 
     public TripSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "tripDialog");
@@ -73,11 +76,24 @@ public class TripSubForm extends BaseSubForm {
         initDiagram();
     }
 
+    public void resetCheckpoints() {
+        getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationTrip(), new HashSet<>());
+        getCurrentEntity().getSubEntities("locationTripCheckpoints").forEach(checkpoint -> {
+            if (checkpoint.getId() > 0) {
+                deletedCheckpointIds.add(checkpoint.getId());
+            }
+        });
+        getCurrentEntity().put("locationTripCheckpoints", new ArrayList<>());
+        visitOrder = 0;
+        initDiagram();
+    }
+
     public void resetFields() {
         visitOrder = 0;
         diagram = null;
         selectedCheckpointId = null;
         availableTripCheckpoints = null;
+        deletedCheckpointIds = new HashSet<>();
     }
 
     @Override
@@ -98,7 +114,6 @@ public class TripSubForm extends BaseSubForm {
     public void prepareEditing(EditableEntity editableEntity) {
         super.prepareEditing(editableEntity);
         resetFields();
-        visitOrder = 0;
         getCurrentEntity().getSubEntities("locationTripCheckpoints").forEach(checkpoint -> visitOrder++);
         initDiagram();
     }
@@ -106,8 +121,10 @@ public class TripSubForm extends BaseSubForm {
     @Override
     public void deleteAction() {
         getParentForm().getCurrentEntity().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
-        getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationTrip(), new HashSet<>());
-        getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationTrip()).add(getCurrentEntity().getId());
+        if (getCurrentEntity().getId() > 0) {
+            getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationTrip(), new HashSet<>());
+            getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationTrip()).add(getCurrentEntity().getId());
+        }
         super.deleteAction();
     }
 
@@ -116,6 +133,8 @@ public class TripSubForm extends BaseSubForm {
             getParentForm().getCurrentEntity().getSubEntities("locationTrips").removeIf(subEntity -> subEntity.getId().equals(getCurrentEntity().getId()));
         }
         getParentForm().getCurrentEntity().getSubEntities("locationTrips").add(((SubEntity) getCurrentEntity()));
+        getParentForm().getDeletedSubEntities().putIfAbsent(MetaCategoryProvider.getLocationTripCheckpoint(), new HashSet<>());
+        getParentForm().getDeletedSubEntities().get(MetaCategoryProvider.getLocationTripCheckpoint()).addAll(deletedCheckpointIds);
     }
 
     @Override
@@ -133,7 +152,7 @@ public class TripSubForm extends BaseSubForm {
         for (SubEntity locationTripCheckpoints : getCurrentEntity().getSubEntities("locationTripCheckpoints")) {
             element = new Element(getLocationSightseeingNameById(locationTripCheckpoints.getInt("LocationSightSeeingID")),
                     (locationTripCheckpoints.getInt("VisitOrder") * 11 + 3) + "em", "2em");
-            element.addEndPoint(new DotEndPoint(EndPointAnchor.BOTTOM));
+            element.addEndPoint(new DotEndPoint(EndPointAnchor.CENTER));
             diagram.addElement(element);
             elements.put(locationTripCheckpoints.getInt("VisitOrder"), element);
         }

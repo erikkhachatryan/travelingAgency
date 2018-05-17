@@ -20,15 +20,15 @@
             <p:dataTable id="bookingsTableId" value="#{viewBookingsSubForm.bookings}" var="booking">
                 <p:column id="tripTitleColumnId" headerText="TripTitle">
                     <p:commandLink id="tripTitleViewCommandLinkId"
-                                   actionListener="#{tripSubForm.prepareViewing(booking.Trip, false)}"
+                                   actionListener="#{tripSubForm.prepareViewing(booking.trip, false)}"
                                    update="@this tripDialogId"
                                    process="@this tripDialogId"
-                                   value="#{booking.Trip.Title}"
+                                   value="#{booking.trip.Title}"
                                    oncomplete="PF('tripDialog').show();">
                     </p:commandLink>
                 </p:column>
                 <p:column id="startDateColumnId" headerText="Start Date">
-                    <h:outputText value="#{booking.Trip.StartDate}">
+                    <h:outputText value="#{booking.trip.StartDate}">
                         <f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
                     </h:outputText>
                 </p:column>
@@ -38,11 +38,12 @@
                 <p:column id="locationToColumnId" headerText="Total Cost">
                     <h:outputText value="#{booking.TotalCost}" />
                 </p:column>
-                <p:column id="removeBookingColumnId" headerText="">
+                <p:column id="removeBookingColumnId" >
                     <p:commandLink id="removeBookingCommandLinkId"
-                                   update="@this bookingsTableId"
-                                   process="@this bookingsTableId"
-                                   value="remove" actionListener="#{viewBookingsSubForm.removeBooking(booking)}" />
+                                   update="bookingsTableId"
+                                   process="@this"
+                                   value="remove"
+                                   actionListener="#{viewBookingsSubForm.removeBooking(booking)}" />
                 </p:column>
             </p:dataTable>
         </h:form>
