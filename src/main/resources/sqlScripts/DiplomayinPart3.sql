@@ -46,3 +46,18 @@ Create Table DE_Booking
         FOREIGN KEY REFERENCES C_User ( UserID ) ON DELETE CASCADE
 	);
 GO
+Create Table DE_LocationSightSeeingComment
+	(
+		LocationSightSeeingCommentID INT
+        CONSTRAINT PK_DE_SightSeeingComments PRIMARY KEY CLUSTERED
+        IDENTITY ,
+		LocationSightSeeingID INT
+        CONSTRAINT FK_DE_LocationSightSeeing_DE_SightSeeingComments
+        FOREIGN KEY REFERENCES DE_LocationSightSeeing ( LocationSightSeeingID ) ON DELETE CASCADE,
+		Comment NVARCHAR(MAX),
+		Rate INT,
+		UserID INT
+        CONSTRAINT FK_DE_User_DE_SightSeeingComments
+        FOREIGN KEY REFERENCES C_User ( UserID ) ON DELETE CASCADE
+	);
+GO

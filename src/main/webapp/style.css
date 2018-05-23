@@ -1,21 +1,108 @@
 .locationImage {
-    width: 200px;
-    height: 200px;
-    padding: 5px;
+    max-width: 100%;
+    min-height: 150px;
 }
+
+html {
+    height: 100%;
+    margin: 0;
+}
+
 body {
+    font-family: 'Roboto', sans-serif !important;
     background-image: url("images/TravelingAgencyMainPicture.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    margin: 0px 150px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    margin: 0px;
 }
 
-label {
-    color: #8d5204;
+.container-form {
+    width: 80%;
+    background-color: rgb(255, 255, 255, 0.7);
+    border-radius: 5px;
+    margin: 100px auto 0;
+    padding: 20px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+.container-form-login {
+    width: 30%;
+    background-color: rgb(255, 255, 255, 0.7);
+    border-radius: 5px;
+    margin: 100px auto 0;
+    padding: 20px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+.container-form-register {
+    width: 40%;
+    background-color: rgb(255, 255, 255, 0.7);
+    border-radius: 5px;
+    margin: 100px auto 0;
+    padding: 20px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+div.polaroid {
+    width: 80%;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    float: left;
+    max-width: 220px;
+    margin: 20px;
+}
+
+img {
+    width: 100%;
+    margin: 0 auto;
+}
+
+div.img-container, .link-style span.image-title {
+    text-align: center;
+    padding: 10px 20px;
+    display: block;
+}
+
+.link-style, a {
+    font-size: 16px;
+    color: #24a0e5 !important;
+    text-decoration: none;
+}
+
+.link-style:hover, a:hover {
+    color: #1783bf !important;
+    outline-width: 0;
+}
+
+.ui-button-text-only .ui-button-text {
+    padding: 0 !important;
+}
+
+.h80{
+    height:80px !important;
+}
+
+.mrgl10{
+    margin-left:10px;
+}
+
+.mrgr15 {
+    margin-right: 15px;
+}
+
+.mrgt30 {
+    margin-top: 30px;
+}
+
+.clear {
+    clear: both;
 }
 
 .content {
-    margin: 80px 0px;
+    margin: 50px 0px;
 }
 
 .content-without-header {
@@ -25,6 +112,7 @@ label {
 .inline-grid {
     display: inline-grid;
     padding: 10px;
+    width: 100%;
 }
 
 .right {
@@ -44,9 +132,9 @@ label {
 }
 
 .ui-diagram-element {
-    width:10em;
-    height:6em;
-    line-height:5em;
+    width: 10em;
+    height: 6em;
+    line-height: 5em;
     text-align: center;
     box-shadow: 0 5px 10px rgba(207, 101, 37, 0.8);
     border-radius: 1em;
@@ -57,4 +145,149 @@ label {
 
 .ui-diagram-element:hover {
     background-color: #cf0c00;
+}
+
+.input-style, .calendar-input input {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background-clip: padding-box !important;
+    border: #b1b1b1 1px solid !important;
+    height: 36px;
+    padding: 0 8px;
+    width: 100%;
+    color: rgba(0, 0, 0, 0.87) !important;
+    font-size: 13px !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+}
+
+.input-style:focus {
+    box-shadow: none;
+}
+
+.label, .radio-button label {
+    color: #656565;
+    font-size: 13px !important;
+    line-height: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.radio-button .ui-radiobutton .ui-radiobutton-box {
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    margin-bottom: 7px;
+}
+
+.radio-button .ui-radiobutton .ui-radiobutton-box .ui-icon-bullet {
+    background-position: -81px -146px;
+    margin-left: 0 !important;
+}
+
+.floatRight {
+    float: right;
+}
+
+.login-section {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.register-section {
+    width: 420px;
+    margin: 0 auto;
+}
+
+.user-status {
+    color: #2f2f2f;
+    font-size: 16px;
+}
+
+.button-style {
+    background: #f79b12 !important;
+    height: auto;
+    padding: 10px 20px;
+    color: #ffffff !important;
+    border: 0 !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    text-shadow: none !important;
+}
+
+.cancel-button-style {
+    background: #fff !important;
+    height: auto;
+    padding: 10px 20px;
+    color: rgba(0, 0, 0, 0.87) !important;
+    border: 0 !important;
+    font-size: 15px !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    text-shadow: none !important;
+}
+
+.ui-selectonemenu.ui-widget.ui-state-default.ui-corner-all.select-menu-style {
+    width: 250px;
+    border-radius: 3px;
+    background-clip: padding-box !important;
+    border: #b1b1b1 1px solid !important;
+    height: 36px;
+    padding: 0 8px;
+    color: rgba(0, 0, 0, 0.87) !important;
+    font-size: 13px !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    background: none;
+    line-height: 25px;
+}
+
+.select-menu-style.ui-selectonemenu .ui-selectonemenu-label.ui-inputfield.ui-corner-all {
+    width: 100%;
+    color: rgba(0, 0, 0, 0.87) !important;
+    font-size: 13px !important;
+    height: 25px;
+    box-shadow: none !important;
+}
+
+.table-style .ui-widget-content {
+    border: none !important;
+}
+
+.table-style th {
+    background: #ededed !important;
+    color: rgba(0, 0, 0, 0.54) !important;
+    font-size: 13px;
+    white-space: normal;
+    vertical-align: top;
+    padding: 14px !important;
+    text-align: left !important;
+    border-top: 1px solid #c7c7c7 !important;
+    border-bottom: 1px solid #c7c7c7 !important;
+    border-right: 1px solid #c7c7c7 !important;
+}
+
+.table-style th:first-child, .table-style .ui-datatable tbody td:first-child {
+    border-left: none !important;
+}
+
+.table-style th:last-child {
+    border-right: none !important;
+}
+
+.table-style td {
+    padding: 12px 14px !important;
+    border-top: 1px solid #c7c7c7 !important;
+    border-bottom: 1px solid #c7c7c7 !important;
+    border-left: none !important;
+    border-right: none !important;
+    height: auto;
+    text-align: left;
+    font-size: 13px;
 }

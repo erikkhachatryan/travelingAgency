@@ -31,6 +31,11 @@
         <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
     </bean>
 
+    <bean id="searchSubForm" class="service.beans.subForms.SearchSubForm" scope="session">
+        <constructor-arg name="sessionData" ref="sessionData"/>
+        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+    </bean>
+
     <bean id="sightSeeingSubForm" class="service.beans.subForms.SightSeeingSubForm" scope="session">
         <constructor-arg name="travelingLocationSubForm" ref="travelingLocationSubForm" />
         <constructor-arg name="sessionData" ref="sessionData" />

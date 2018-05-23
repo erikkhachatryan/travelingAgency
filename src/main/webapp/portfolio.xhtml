@@ -9,55 +9,109 @@
 <h:head>
     <title>Traveling Agency</title>
     <script src="general.js" type="text/javascript"></script>
-    <link type="text/css" rel="stylesheet" href="style.css" />
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"/>
 </h:head>
 <h:body>
     <f:view>
-        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 
-        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-            <p:graphicImage url="images/loading.gif" alt="Loading..." />
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
+                  showHeader="false">
+            <p:graphicImage url="images/loading.gif" alt="Loading..."/>
         </p:dialog>
-        <h:form id="deFormId">
-            <ui:include src="deFormHeader.xhtml" />
+        <h:form id="deFormId" styleClass="container-form">
+            <ui:include src="deFormHeader.xhtml"/>
 
             <h:panelGroup id="allLocationsPanelGroupId" layout="block" styleClass="content">
-                <ui:repeat value="#{portfolioForm.travelingLocations}" var="travelingLocation">
-                    <h:panelGroup style="display: inline-block">
-                        <p:commandLink id="travelingLocationEditCommandLinkId"
+                <h:outputText value="Top 5 Locations"/>
+                <ui:repeat value="#{portfolioForm.topFiveLocations}" var="travelingLocation">
+                    <h:panelGroup styleClass="polaroid" layout="block">
+                        <p:commandLink id="topTravelingLocationEditCommandLinkId" styleClass="link-style"
                                        rendered="#{portfolioForm.loggedInAsAdministrator}"
                                        actionListener="#{travelingLocationSubForm.prepareEditing(travelingLocation)}"
                                        update="@this travelingLocationDialogId"
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
-                            <h:outputText value="#{travelingLocation.LocationName}" />
-                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
+
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
                         </p:commandLink>
-                        <p:commandLink id="travelingLocationViewCommandLinkId"
+                        <p:commandLink id="topTravelingLocationViewCommandLinkId" styleClass="link-style"
                                        rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
                                        actionListener="#{travelingLocationSubForm.prepareViewing(travelingLocation)}"
                                        update="@this travelingLocationDialogId"
                                        process="@this travelingLocationDialogId"
                                        title="#{travelingLocation.LocationName}"
                                        oncomplete="PF('travelingLocationDialog').show();">
-                            <h:outputText value="#{travelingLocation.LocationName}" />
-                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}" alt="#{travelingLocation.LocationName}" styleClass="locationImage" />
+
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
                         </p:commandLink>
-                        <h:outputText value="#{travelingLocation.LocationName}" rendered="#{not portfolioForm.loggedIn}" />
+
                         <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
                                         title="#{travelingLocation.LocationName}"
                                         styleClass="locationImage"
-                                        alt="#{travelingLocation.LocationName}"  rendered="#{not portfolioForm.loggedIn}" />
+                                        alt="#{travelingLocation.LocationName}"
+                                        rendered="#{not portfolioForm.loggedIn}"/>
+                        <h:panelGroup styleClass="img-container" layout="block"
+                                      rendered="#{not portfolioForm.loggedIn}">
+                            <h:outputText value="#{travelingLocation.LocationName}"/>
+                        </h:panelGroup>
                     </h:panelGroup>
                 </ui:repeat>
+                <div class="clear"></div>
+                <h:outputText value="All Locations"/>
+                <ui:repeat value="#{portfolioForm.travelingLocations}" var="travelingLocation">
+                    <h:panelGroup styleClass="polaroid" layout="block">
+                        <p:commandLink id="travelingLocationEditCommandLinkId" styleClass="link-style"
+                                       rendered="#{portfolioForm.loggedInAsAdministrator}"
+                                       actionListener="#{travelingLocationSubForm.prepareEditing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
+                        </p:commandLink>
+                        <p:commandLink id="travelingLocationViewCommandLinkId" styleClass="link-style"
+                                       rendered="#{not portfolioForm.loggedInAsAdministrator and portfolioForm.loggedIn}"
+                                       actionListener="#{travelingLocationSubForm.prepareViewing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+
+                            <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
+                        </p:commandLink>
+
+                        <p:graphicImage url="#{portfolioForm.getPhotoUrl(travelingLocation)}"
+                                        title="#{travelingLocation.LocationName}"
+                                        styleClass="locationImage"
+                                        alt="#{travelingLocation.LocationName}"
+                                        rendered="#{not portfolioForm.loggedIn}"/>
+                        <h:panelGroup styleClass="img-container" layout="block"
+                                      rendered="#{not portfolioForm.loggedIn}">
+                            <h:outputText value="#{travelingLocation.LocationName}"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </ui:repeat>
+                <div class="clear"></div>
             </h:panelGroup>
+
 
             <p:commandButton id="locationAddButtonId"
                              value="Add Location"
                              actionListener="#{travelingLocationSubForm.prepareAdding}"
                              rendered="#{portfolioForm.loggedInAsAdministrator}"
-                             styleClass="saveButton"
+                             styleClass="button-style"
                              update="@this travelingLocationDialogId"
                              process="@this travelingLocationDialogId"
                              oncomplete="PF('travelingLocationDialog').show();"/>
@@ -65,7 +119,7 @@
             <p:commandButton id="viewBookingsButtonId"
                              value="View Bookings"
                              rendered="#{portfolioForm.loggedIn and (not portfolioForm.loggedInAsAdministrator)}"
-                             styleClass="saveButton"
+                             styleClass="button-style"
                              actionListener="#{viewBookingsSubForm.prepareForm}"
                              update="@this viewBookingsDialogId"
                              process="@this viewBookingsDialogId"
@@ -77,6 +131,7 @@
         <ui:include src="subForms/viewBookings.xhtml"/>
         <ui:include src="subForms/booking.xhtml"/>
         <ui:include src="subForms/trip.xhtml"/>
+        <ui:include src="subForms/searchForm.xhtml"/>
     </f:view>
 </h:body>
 </html>

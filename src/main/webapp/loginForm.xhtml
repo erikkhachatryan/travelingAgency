@@ -8,52 +8,56 @@
 <h:head>
     <title>Login Page</title>
     <script src="general.js" type="text/javascript"></script>
-    <link type="text/css" rel="stylesheet" href="style.css" />
+    <link type="text/css" rel="stylesheet" href="style.css"/>
 </h:head>
 <h:body>
     <f:view>
-        <h:form id="loginFormId" styleClass="content-without-header">
-            <h:panelGroup id="userNamePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="userNameOutputTextId" value="User Name"/>
-                <p:inputText id="userNameInputTextId" value="#{loginForm.currentUser.Name}"
-                             required="true" requiredMessage="User Name is required.">
-                    <p:ajax process="@this" update="@this"/>
-                </p:inputText>
-                <p:message id="userNameRequiredMessageId" for="userNameInputTextId"/>
-            </h:panelGroup>
-            <h:panelGroup id="passwordPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{loginForm.currentUser.Password}"
-                             required="true" requiredMessage="Password is required." type="password">
-                    <p:ajax process="@this" update="@this"/>
-                </p:inputText>
-                <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
-            </h:panelGroup>
+        <h:form id="loginFormId" styleClass="container-form-login">
+            <div class="login-section">
+                <h:panelGroup id="userNamePanelGroupId" layout="block">
+                    <p:outputLabel styleClass="label" id="userNameOutputTextId" value="User Name"/>
+                    <p:inputText styleClass="input-style" id="userNameInputTextId" value="#{loginForm.currentUser.Name}"
+                                 required="true" requiredMessage="User Name is required.">
+                        <p:ajax process="@this" update="@this"/>
+                    </p:inputText>
+                    <p:message id="userNameRequiredMessageId" for="userNameInputTextId"/>
+                </h:panelGroup>
+                <h:panelGroup id="passwordPanelGroupId" layout="block" styleClass="mrgt30">
+                    <p:outputLabel styleClass="label" id="passwordOutputTextId" value="Password"/>
+                    <p:inputText id="passwordInputTextId" styleClass="input-style"
+                                 value="#{loginForm.currentUser.Password}"
+                                 required="true" requiredMessage="Password is required." type="password">
+                        <p:ajax process="@this" update="@this"/>
+                    </p:inputText>
+                    <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
+                </h:panelGroup>
 
-            <p:message id="loginValidationMessageId" for="loginValidatorId"/>
+                <p:message id="loginValidationMessageId" for="loginValidatorId"/>
 
-            <h:inputHidden value="true" id="loginValidatorId">
-                <f:validator validatorId="loginValidator" for="loginValidatorId"/>
-                <f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}"/>
-                <f:attribute name="message" value="Wrong User Name and/or password."/>
-                <f:attribute name="currentUser" value="#{loginForm.currentUser}"/>
-                <f:attribute name="allUsers" value="#{loginForm.users}"/>
-            </h:inputHidden>
+                <h:inputHidden value="true" id="loginValidatorId">
+                    <f:validator validatorId="loginValidator" for="loginValidatorId"/>
+                    <f:attribute name="process" value="#{not empty param[loginButtonBinding.clientId]}"/>
+                    <f:attribute name="message" value="Wrong User Name and/or password."/>
+                    <f:attribute name="currentUser" value="#{loginForm.currentUser}"/>
+                    <f:attribute name="allUsers" value="#{loginForm.users}"/>
+                </h:inputHidden>
+                <div class="floatRight mrgt30">
+                    <p:commandButton id="cancelButtonId"
+                                     value="Cancel"
+                                     actionListener="#{loginForm.cancelAction}"
+                                     styleClass="cancel-button-style mrgr15"
+                                     process="@this"
+                                     update="@this"/>
 
-            <p:commandButton id="cancelButtonId"
-                             value="Cancel"
-                             actionListener="#{loginForm.cancelAction}"
-                             style="margin-left: 283px"
-                             styleClass="cancelButton"
-                             process="@this"
-                             update="@this"/>
-
-            <p:commandButton id="performLoginButtonId" value="Login"
-                             binding="#{loginButtonBinding}"
-                             actionListener="#{loginForm.performLogin}"
-                             styleClass="saveButton"
-                             process="loginFormId"
-                             update="loginFormId"/>
+                    <p:commandButton id="performLoginButtonId" value="Login"
+                                     binding="#{loginButtonBinding}"
+                                     actionListener="#{loginForm.performLogin}"
+                                     styleClass="button-style"
+                                     process="loginFormId"
+                                     update="loginFormId"/>
+                </div>
+                <div class="clear"></div>
+            </div>
         </h:form>
     </f:view>
 </h:body>

@@ -5,14 +5,13 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="tripDialogId" widgetVar="tripDialog" width="1000px"
               header="Add / Edit Trip" height="500px" dynamic="true" modal="true" resizable="false">
-        <p:ajax event="close" listener="#{tripSubForm.closeAction}" />
+        <p:ajax event="close" listener="#{tripSubForm.closeAction}"/>
         <h:form id="tripSubFormId">
             <p:commandButton id="bookingButtonId"
                              value="Book"
                              actionListener="#{bookingSubForm.prepareAdding}"
                              rendered="#{(not tripSubForm.editMode) and tripSubForm.openFromLocationForm}"
-                             styleClass="saveButton"
-                             style="background-color: #1d9e04;"
+                             styleClass="button-style"
                              update="@this bookingDialogId"
                              process="@this"
                              oncomplete="PF('bookingDialog').show();"/>
@@ -20,23 +19,20 @@
                 <p:commandButton id="cancelButtonId"
                                  value="#{tripSubForm.editMode? 'Cancel' : 'Close'}"
                                  process="@this"
-                                 styleClass="cancelButton"
-                                 style="background-color: #cfa402;"
+                                 styleClass="cancel-button-style mrgr15"
                                  update="@this"
                                  actionListener="#{tripSubForm.closeAction}"/>
                 <p:commandButton id="deleteButtonId"
                                  value="Delete"
                                  rendered="#{tripSubForm.editMode and not tripSubForm.newMode}"
-                                 styleClass="deleteButton"
-                                 style="background-color: #cf0c00;"
+                                 styleClass="cancel-button-style mrgr15"
                                  update="tripSubFormId travelingLocationSubFormId"
                                  process="tripSubFormId"
                                  actionListener="#{tripSubForm.deleteAction}"/>
                 <p:commandButton id="saveButtonId"
                                  value="Save"
                                  rendered="#{tripSubForm.editMode}"
-                                 styleClass="saveButton"
-                                 style="background-color: #1d9e04;"
+                                 styleClass="button-style"
                                  update="tripSubFormId travelingLocationSubFormId"
                                  process="tripSubFormId startDateCalendarId"
                                  actionListener="#{tripSubForm.saveAction}"/>
@@ -44,22 +40,22 @@
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="tripTitlePanelGroupId" lstyleClass="inline-grid">
-                <p:outputLabel id="tripTitleLabelId" value="Trip Title: "/>
-                <p:inputText id="tripTitleInputTextId"
+            <h:panelGroup id="tripTitlePanelGroupId" styleClass="inline-grid">
+                <p:outputLabel id="tripTitleLabelId" styleClass="label" value="Trip Title: "/>
+                <p:inputText id="tripTitleInputTextId" styleClass="input-style"
                              value="#{tripSubForm.currentEntity.Title}"
                              rendered="#{tripSubForm.editMode}"/>
-                <h:outputText id="tripTitleOutputTextId"
-                               value="#{tripSubForm.currentEntity.Title}"
-                               rendered="#{not tripSubForm.editMode}"/>
+                <h:outputText id="tripTitleOutputTextId" styleClass="label"
+                              value="#{tripSubForm.currentEntity.Title}"
+                              rendered="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="tripDetailsPanelGroupId" layout="block">
-                <p:outputLabel id="tripDetailsLabelId" value="Trip Details: "/>
-                <p:inputTextarea id="tripDetailsInputTextAreaId" style="width: 100%;"
+            <h:panelGroup id="tripDetailsPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="tripDetailsLabelId" styleClass="label" value="Trip Details: "/>
+                <p:inputTextarea id="tripDetailsInputTextAreaId" styleClass="input-style h80"
                                  value="#{tripSubForm.currentEntity.Details}"
                                  readonly="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
@@ -67,50 +63,58 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="startDatePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="startDateOutputLabelId" value="Start Date: "/>
-                <p:calendar id="startDateCalendarId" value="#{tripSubForm.currentEntity.StartDate}"
+                <p:outputLabel id="startDateOutputLabelId" styleClass="label" value="Start Date: "/>
+                <p:calendar id="startDateCalendarId" styleClass="calendar-input"
+                            value="#{tripSubForm.currentEntity.StartDate}"
                             pattern="dd/MMM/yyyy HH:mm"
                             mindate="#{tripSubForm.currentDate}"
                             yearRange="c:c+10"
                             rendered="#{tripSubForm.editMode}"
-                            navigator="true" mode="popup" readonlyInput="true" />
-                <h:outputText id="startDateOutputTextId" value="#{tripSubForm.currentEntity.StartDate}" rendered="#{not tripSubForm.editMode}">
-                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
+                            navigator="true" mode="popup" readonlyInput="true"/>
+                <h:outputText id="startDateOutputTextId" styleClass="label" value="#{tripSubForm.currentEntity.StartDate}"
+                              rendered="#{not tripSubForm.editMode}">
+                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
                 </h:outputText>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
-                <p:outputLabel id="ticketsCountLabelId" value="Tickets Count: "/>
-                <p:inputText id="ticketsCountInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketsCount}"
-                             converter="javax.faces.Integer" rendered="#{tripSubForm.editMode}" valueChangeListener="#{tripSubForm.onTicketsCountChange}">
-                    <p:ajax process="@this" update="@this availableTicketsPanelGroupId" />
+            <h:panelGroup id="ticketsCountPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="ticketsCountLabelId" styleClass="label" value="Tickets Count: "/>
+                <p:inputText id="ticketsCountInputNumberId" styleClass="input-style" type="number"
+                             value="#{tripSubForm.currentEntity.TicketsCount}"
+                             converter="javax.faces.Integer" rendered="#{tripSubForm.editMode}"
+                             valueChangeListener="#{tripSubForm.onTicketsCountChange}">
+                    <p:ajax process="@this" update="@this availableTicketsPanelGroupId"/>
                 </p:inputText>
-                <h:outputText id="ticketsCountOutputTextId" value="#{tripSubForm.currentEntity.TicketsCount}" rendered="#{not tripSubForm.editMode}" />
+                <h:outputText id="ticketsCountOutputTextId" styleClass="label" value="#{tripSubForm.currentEntity.TicketsCount}"
+                              rendered="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="availableTicketsPanelGroupId" layout="block">
-                <p:outputLabel id="availableTicketsLabelId" value="Available Tickets: "/>
-                <h:outputText id="availableTicketsOutputTextId" value="#{tripSubForm.currentEntity.AvailableTickets}" />
+            <h:panelGroup id="availableTicketsPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="availableTicketsLabelId" styleClass="label" value="Available Tickets: "/>
+                <h:outputText styleClass="label" id="availableTicketsOutputTextId"
+                              value="#{tripSubForm.currentEntity.AvailableTickets}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="ticketCostPanelGroupId" layout="block">
-                <p:outputLabel id="ticketCostLabelId" value="Ticket Cost: "/>
-                <p:inputText id="ticketCostInputNumberId" type="number" value="#{tripSubForm.currentEntity.TicketCost}"
+            <h:panelGroup id="ticketCostPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="ticketCostLabelId" styleClass="label" value="Ticket Cost: "/>
+                <p:inputText id="ticketCostInputNumberId" styleClass="input-style" type="number"
+                             value="#{tripSubForm.currentEntity.TicketCost}"
                              converter="javax.faces.Integer" rendered="#{tripSubForm.editMode}"/>
-                <h:outputText id="ticketCostOutputTextId" value="#{tripSubForm.currentEntity.TicketCost}" rendered="#{not tripSubForm.editMode}" />
+                <h:outputText id="ticketCostOutputTextId" styleClass="label" value="#{tripSubForm.currentEntity.TicketCost}"
+                              rendered="#{not tripSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="tripCheckpointsPanelGroupId" layout="block">
-                <p:outputLabel id="tripCheckpointLabelId" value="Trip Checkpoints: "/>
-                <p:selectOneMenu id="tripCheckpointSelectOneMenuId"
+            <h:panelGroup id="tripCheckpointsPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="tripCheckpointLabelId" styleClass="label" value="Trip Checkpoints: "/>
+                <p:selectOneMenu id="tripCheckpointSelectOneMenuId" styleClass="select-menu-style"
                                  appendTo="@this"
                                  filter="true"
                                  filterMatchMode="contains"
@@ -122,31 +126,30 @@
                                    itemLabel="#{checkpoint.SightSeeingName}"
                                    itemValue="#{checkpoint.getId()}"
                                    value="#{tripSubForm.availableTripCheckpoints}"/>
-                    <p:ajax process="@this" update="@this addCheckpointButtonId" />
+                    <p:ajax process="@this" update="@this addCheckpointButtonId"/>
                 </p:selectOneMenu>
-                <p:commandButton id="resetCheckpointsButtonId"
-                                 value="Reset All"
-                                 rendered="#{tripSubForm.editMode}"
-                                 styleClass="deleteButton"
-                                 style="background-color: #1d9e04;"
-                                 update="@this tripDiagramPanelGroupId"
-                                 process="@this"
-                                 actionListener="#{tripSubForm.resetCheckpoints()}"/>
-                <p:commandButton id="addCheckpointButtonId"
-                                 value="Add Checkpoint"
-                                 rendered="#{tripSubForm.editMode}"
-                                 disabled="#{tripSubForm.selectedCheckpointId eq null}"
-                                 styleClass="saveButton"
-                                 style="background-color: #1d9e04;"
-                                 update="@this tripDiagramPanelGroupId"
-                                 process="@this"
-                                 actionListener="#{tripSubForm.addTripCheckpoint()}"/>
+
             </h:panelGroup>
+            <p:commandButton id="resetCheckpointsButtonId"
+                             value="Reset All"
+                             rendered="#{tripSubForm.editMode}"
+                             styleClass="cancel-button-style mrgr15 mrgl10"
+                             update="@this tripDiagramPanelGroupId"
+                             process="@this"
+                             actionListener="#{tripSubForm.resetCheckpoints()}"/>
+            <p:commandButton id="addCheckpointButtonId"
+                             value="Add Checkpoint"
+                             rendered="#{tripSubForm.editMode}"
+                             disabled="#{tripSubForm.selectedCheckpointId eq null}"
+                             styleClass="button-style"
+                             update="@this tripDiagramPanelGroupId"
+                             process="@this"
+                             actionListener="#{tripSubForm.addTripCheckpoint()}"/>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="tripDiagramPanelGroupId" layout="block">
-                <p:diagram value="#{tripSubForm.diagram}" style="height:300px" styleClass="ui-widget-content" />
+            <h:panelGroup id="tripDiagramPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:diagram value="#{tripSubForm.diagram}" style="height:300px" styleClass="ui-widget-content"/>
             </h:panelGroup>
 
         </h:form>

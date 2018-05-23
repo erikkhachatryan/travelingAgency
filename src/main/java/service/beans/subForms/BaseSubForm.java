@@ -45,6 +45,10 @@ public class BaseSubForm {
         return editMode;
     }
 
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
     public boolean isNewMode() {
         return newMode;
     }

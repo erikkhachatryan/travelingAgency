@@ -12,10 +12,11 @@
 </h:head>
 <h:body>
     <f:view>
-        <h:form id="registrationFormId" styleClass="content-without-header">
+        <h:form id="registrationFormId" styleClass="container-form-register">
+            <div class="register-section">
             <h:panelGroup id="userNamePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="userNameOutputTextId" value="User Name"/>
-                <p:inputText id="userNameInputTextId" value="#{registrationForm.currentUser.Name}"
+                <p:outputLabel id="userNameOutputTextId" styleClass="label" value="User Name"/>
+                <p:inputText id="userNameInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.Name}"
                              required="true" requiredMessage="User Name is required.">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
@@ -23,8 +24,8 @@
             </h:panelGroup>
 
             <h:panelGroup id="passwordPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="passwordOutputTextId" value="Password"/>
-                <p:inputText id="passwordInputTextId" value="#{registrationForm.currentUser.Password}"
+                <p:outputLabel id="passwordOutputTextId" styleClass="label" value="Password"/>
+                <p:inputText id="passwordInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.Password}"
                              required="true" requiredMessage="Password is required." type="password">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
@@ -44,15 +45,15 @@
             <div style="clear: both" />
 
             <h:panelGroup id="firstNamePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="firstNameOutputTextId" value="First Name"/>
-                <p:inputText id="firstNameInputTextId" value="#{registrationForm.currentUser.FirstName}">
+                <p:outputLabel id="firstNameOutputTextId" styleClass="label" value="First Name"/>
+                <p:inputText id="firstNameInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.FirstName}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
 
             <h:panelGroup id="lastNamePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="lastNameOutputTextId" value="Last Name"/>
-                <p:inputText id="lastNameInputTextId" value="#{registrationForm.currentUser.LastName}">
+                <p:outputLabel id="lastNameOutputTextId" styleClass="label" value="Last Name"/>
+                <p:inputText id="lastNameInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.LastName}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
@@ -60,8 +61,8 @@
             <div style="clear: both" />
 
             <h:panelGroup id="phoneNumberPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="phoneNumberOutputTextId" value="Phone Number"/>
-                <p:inputText id="phoneNumberInputTextId" value="#{registrationForm.currentUser.PhoneNumber}">
+                <p:outputLabel id="phoneNumberOutputTextId" styleClass="label" value="Phone Number"/>
+                <p:inputText id="phoneNumberInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.PhoneNumber}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
                 <p:message id="phoneNumberMessageId" for="phoneNumberValidatorId"/>
@@ -75,8 +76,8 @@
             </h:inputHidden>
 
             <h:panelGroup id="addressPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="addressOutputTextId" value="Address"/>
-                <p:inputText id="addressInputTextId" value="#{registrationForm.currentUser.Address}">
+                <p:outputLabel id="addressOutputTextId" styleClass="label" value="Address"/>
+                <p:inputText id="addressInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.Address}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
             </h:panelGroup>
@@ -84,8 +85,8 @@
             <div style="clear: both" />
 
             <h:panelGroup id="emailPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="emailOutputTextId" value="Email"/>
-                <p:inputText id="emailInputTextId" value="#{registrationForm.currentUser.Email}">
+                <p:outputLabel id="emailOutputTextId" styleClass="label" value="Email"/>
+                <p:inputText id="emailInputTextId" styleClass="input-style" value="#{registrationForm.currentUser.Email}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
                 <p:message id="emailMessageId" for="emailValidatorId"/>
@@ -99,8 +100,8 @@
             </h:inputHidden>
 
             <h:panelGroup id="dateOfBirthPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="dateOfBirthOutputTextId" value="Date Of Birth"/>
-                <p:calendar id="dateOfBirthCalendarId" value="#{registrationForm.currentUser.DateOfBirth}"
+                <p:outputLabel id="dateOfBirthOutputTextId" styleClass="label" value="Date Of Birth"/>
+                <p:calendar id="dateOfBirthCalendarId" styleClass="calendar-input" value="#{registrationForm.currentUser.DateOfBirth}"
                             pattern="dd/MMM/yyyy"
                             yearRange="c-120:c"
                             readonly="true"
@@ -110,8 +111,8 @@
             <div style="clear: both" />
 
             <h:panelGroup id="genderPanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="genderOutputTextId" value="Gender"/>
-                <p:selectOneRadio id="genderRadioId"
+                <p:outputLabel id="genderOutputTextId" styleClass="label" value="Gender"/>
+                <p:selectOneRadio id="genderRadioId" styleClass="radio-button"
                                   value="#{registrationForm.currentUser.Gender}">
                     <f:converter converterId="baseJSFSelectItemConverter" />
                     <f:attribute name="itemsList" value="#{registrationForm.loadGenders()}"/>
@@ -122,22 +123,24 @@
             </h:panelGroup>
 
             <div style="clear: both" />
-
+<div class="floatRight mrgt30">
             <p:commandButton id="cancelButtonId"
                              value="Cancel"
                              process="@this"
-                             style="margin-left: 260px;"
-                             styleClass="cancelButton"
+                             styleClass="cancel-button-style mrgr15"
                              update="@this"
                              actionListener="#{registrationForm.closeAction}"/>
 
             <p:commandButton id="registrationButtonId"
                              value="Register"
                              process="registrationFormId"
-                             styleClass="saveButton"
+                             styleClass="button-style"
                              update="registrationFormId"
                              binding="#{registrationButtonBinding}"
                              actionListener="#{registrationForm.register}"/>
+</div>
+                <div class="clear"></div>
+            </div>
         </h:form>
     </f:view>
 </h:body>

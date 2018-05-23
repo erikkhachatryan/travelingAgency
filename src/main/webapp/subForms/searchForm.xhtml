@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog id="searchDialogId" widgetVar="searchDialog" width="1000px"
+              header="Search" height="500px" dynamic="true" modal="true" resizable="false">
+        <p:ajax event="close" listener="#{searchSubForm.closeAction}"/>
+        <h:form id="searchSubFormId">
+            <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
+                <p:commandButton id="cancelButtonId"
+                                 value="Cancel"
+                                 process="@this"
+                                 styleClass="cancel-button-style mrgr15"
+                                 update="@this"
+                                 actionListener="#{searchSubForm.closeAction}"/>
+                <p:commandButton id="searchButtonId"
+                                 binding="#{searchButtonBinding}"
+                                 value="Search"
+                                 styleClass="button-style"
+                                 update="searchSubFormId"
+                                 process="searchSubFormId"
+                                 actionListener="#{searchSubForm.search}"/>
+            </h:panelGroup>
+
+            <div style="clear: both"/>
+
+            <h:panelGroup id="searchCriteriasPanelGroupId" layout="block">
+                <h:panelGroup id="locationNamePanelGroupId" layout="block">
+                    <p:outputLabel id="locationNameLabelId" styleClass="label" value="Location Name contains: "/>
+                    <p:inputText id="locationNameInputNumberId" styleClass="input-style"
+                                 value="#{searchSubForm.locationNameContains}"/>
+                </h:panelGroup>
+                <div class="clear"></div>
+                <h:panelGroup id="minTripCostPanelGroupId" layout="block">
+                    <p:outputLabel id="minTripCostLabelId" styleClass="label" value="Min Trip Cost: "/>
+                    <p:inputText id="minTripCostInputNumberId" type="number" styleClass="input-style"
+                                 value="#{searchSubForm.tripMinCost}" converter="javax.faces.Integer"/>
+                </h:panelGroup>
+                <div class="clear"></div>
+                <h:panelGroup id="maxTripCostPanelGroupId" layout="block">
+                    <p:outputLabel id="maxTripCostLabelId" styleClass="label" value="Max Trip Cost: "/>
+                    <p:inputText id="maxTripCostInputNumberId" type="number" styleClass="input-style"
+                                 value="#{searchSubForm.tripMaxCost}" converter="javax.faces.Integer"/>
+                </h:panelGroup>
+            </h:panelGroup>
+
+            <h:panelGroup id="allLocationsPanelGroupId" layout="block" styleClass="content">
+                <ui:repeat value="#{searchSubForm.locationsList}" var="travelingLocation">
+                    <h:panelGroup styleClass="polaroid" layout="block">
+                        <p:commandLink id="travelingLocationEditCommandLinkId" styleClass="link-style"
+                                       rendered="#{searchSubForm.editMode}"
+                                       actionListener="#{travelingLocationSubForm.prepareEditing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+                            <p:graphicImage url="#{searchSubForm.parentForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
+                        </p:commandLink>
+                        <p:commandLink id="travelingLocationViewCommandLinkId" styleClass="link-style"
+                                       rendered="#{not searchSubForm.editMode}"
+                                       actionListener="#{travelingLocationSubForm.prepareViewing(travelingLocation)}"
+                                       update="@this travelingLocationDialogId"
+                                       process="@this travelingLocationDialogId"
+                                       title="#{travelingLocation.LocationName}"
+                                       oncomplete="PF('travelingLocationDialog').show();">
+                            <p:graphicImage url="#{searchSubForm.parentForm.getPhotoUrl(travelingLocation)}"
+                                            alt="#{travelingLocation.LocationName}" styleClass="locationImage"/>
+                            <h:outputText styleClass="image-title" value="#{travelingLocation.LocationName}"/>
+                        </p:commandLink>
+                    </h:panelGroup>
+                </ui:repeat>
+            </h:panelGroup>
+
+        </h:form>
+    </p:dialog>
+</ui:composition>

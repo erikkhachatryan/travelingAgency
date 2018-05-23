@@ -16,6 +16,7 @@ public class MetaCategoryProvider {
     private static MetaCategoryId LOCATION;
     private static MetaCategoryId LOCATION_SIGHT_SEEING;
     private static MetaCategoryId LOCATION_SIGHT_SEEING_PHOTO;
+    private static MetaCategoryId LOCATION_SIGHT_SEEING_COMMENT;
     private static MetaCategoryId BOOKING;
     private static MetaCategoryId Location_Trip;
     private static MetaCategoryId Location_Trip_Checkpoint;
@@ -28,6 +29,7 @@ public class MetaCategoryProvider {
             columns.put("Country", MetaCategoryType.CLASSIFIER);
             columns.put("State", MetaCategoryType.CLASSIFIER);
             columns.put("Photo", MetaCategoryType.STRING);
+            columns.put("Rate", MetaCategoryType.BIG_DECIMAL);
             Map<String, MetaCategoryId> subEntities = new HashMap<>();
             subEntities.put("locationTrips", getLocationTrip());
             subEntities.put("locationSightSeeings", getLocationSightSeeing());
@@ -43,10 +45,10 @@ public class MetaCategoryProvider {
             columns.put("LocationID", MetaCategoryType.INTEGER);
             columns.put("SightSeeingName", MetaCategoryType.STRING);
             columns.put("Details", MetaCategoryType.STRING);
-            columns.put("Comment", MetaCategoryType.STRING);
             columns.put("Photo", MetaCategoryType.STRING);
             Map<String, MetaCategoryId> subEntities = new HashMap<>();
             subEntities.put("locationSightSeeingPhotos", getLocationSightSeeingPhoto());
+            subEntities.put("locationSightSeeingComments", getLocationSightSeeingComment());
             LOCATION_SIGHT_SEEING = new MetaCategoryId("LocationSightSeeing", columns, subEntities);
         }
         return LOCATION_SIGHT_SEEING;
@@ -61,6 +63,19 @@ public class MetaCategoryProvider {
             LOCATION_SIGHT_SEEING_PHOTO = new MetaCategoryId("LocationSightSeeingPhoto", columns);
         }
         return LOCATION_SIGHT_SEEING_PHOTO;
+    }
+
+    public static MetaCategoryId getLocationSightSeeingComment() {
+        if (LOCATION_SIGHT_SEEING_COMMENT == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("LocationSightSeeingCommentID", MetaCategoryType.IDENTITY);
+            columns.put("LocationSightSeeingID", MetaCategoryType.INTEGER);
+            columns.put("Comment", MetaCategoryType.STRING);
+            columns.put("Rate", MetaCategoryType.INTEGER);
+            columns.put("UserID", MetaCategoryType.INTEGER);
+            LOCATION_SIGHT_SEEING_COMMENT = new MetaCategoryId("LocationSightSeeingComment", columns);
+        }
+        return LOCATION_SIGHT_SEEING_COMMENT;
     }
 
     public static MetaCategoryId getUser() {

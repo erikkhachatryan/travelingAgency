@@ -11,15 +11,13 @@
                 <p:commandButton id="cancelButtonId"
                                  value="Cancel"
                                  process="@this"
-                                 styleClass="cancelButton"
-                                 style="background-color: #cfa402;"
+                                 styleClass="cancel-button-style mrgr15"
                                  update="@this"
                                  actionListener="#{bookingSubForm.closeAction}"/>
                 <p:commandButton id="bookingButtonId"
                                  binding="#{bookingButtonBinding}"
                                  value="Book"
-                                 styleClass="saveButton"
-                                 style="background-color: #1d9e04;"
+                                 styleClass="button-style"
                                  update="bookingSubFormId tripSubFormId travelingLocationSubFormId:locationTripsTableId"
                                  process="bookingSubFormId"
                                  actionListener="#{bookingSubForm.saveAction}"/>
@@ -29,12 +27,13 @@
 
             <h:panelGroup id="bookingDetailsPanelGroupId" layout="block">
                 <h:panelGroup id="availableTicketsPanelGroupId" layout="block">
-                    <p:outputLabel id="availableTicketsLabelId" value="Available Tickets: "/>
-                    <h:outputText id="availableTicketsOutputTextId" value="#{bookingSubForm.parentForm.currentEntity.AvailableTickets}" />
+                    <p:outputLabel id="availableTicketsLabelId" styleClass="label" value="Available Tickets: "/>
+                    <h:outputText id="availableTicketsOutputTextId" styleClass="label" value="#{bookingSubForm.parentForm.currentEntity.AvailableTickets}" />
                 </h:panelGroup>
-                <h:panelGroup id="ticketsCountPanelGroupId" layout="block" styleClass="inline-grid">
-                    <p:outputLabel id="ticketsCountLabelId" value="Order Tickets Count: "/>
-                    <p:inputText id="ticketsCountInputNumberId" type="number" value="#{bookingSubForm.currentEntity.TicketsCount}"
+                <div style="clear: both"/>
+                <h:panelGroup id="ticketsCountPanelGroupId" layout="block">
+                    <p:outputLabel id="ticketsCountLabelId" styleClass="label" value="Order Tickets Count: "/>
+                    <p:inputText id="ticketsCountInputNumberId" type="number" styleClass="input-style" value="#{bookingSubForm.currentEntity.TicketsCount}"
                                  converter="javax.faces.Integer" required="true">
                         <p:ajax process="@this" update="@this totalCostPanelGroupId" />
                     </p:inputText>
@@ -54,14 +53,14 @@
                 <div style="clear: both"/>
 
                 <h:panelGroup id="totalCostPanelGroupId" layout="block">
-                    <p:outputLabel id="totalCostLabelId" value="Total Cost: "/>
-                    <h:outputText id="totalCostOutputTextId" type="number" value="#{bookingSubForm.totalCost}" />
+                    <p:outputLabel id="totalCostLabelId" styleClass="label" value="Total Cost: "/>
+                    <h:outputText id="totalCostOutputTextId" type="number" styleClass="label" value="#{bookingSubForm.totalCost}" />
                 </h:panelGroup>
 
                 <div style="clear: both"/>
 
                 <h:panelGroup id="tripDiagramPanelGroupId" layout="block">
-                    <p:outputLabel id="tripCheckpointLabelId" value="Trip Checkpoints: "/>
+                    <p:outputLabel id="tripCheckpointLabelId" styleClass="label" value="Trip Checkpoints: "/>
                     <p:diagram value="#{bookingSubForm.parentForm.diagram}" style="height:300px" styleClass="ui-widget-content" />
                 </h:panelGroup>
             </h:panelGroup>

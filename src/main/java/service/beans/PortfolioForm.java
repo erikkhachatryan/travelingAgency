@@ -15,6 +15,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +48,10 @@ public class PortfolioForm {
 
     public List<MainEntity> getTravelingLocations() {
         return getGeneralClassifierCache().loadMainEntities(MetaCategoryProvider.getLocation());
+    }
+
+    public List<MainEntity> getTopFiveLocations() {
+        return getGeneralClassifierCache().loadTopFiveLocations();
     }
 
     public boolean isLoggedIn() {

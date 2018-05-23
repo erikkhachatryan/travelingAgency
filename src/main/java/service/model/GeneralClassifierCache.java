@@ -4,6 +4,7 @@ import service.dao.DataSource;
 import service.util.MetaCategoryId;
 import service.util.MetaCategoryProvider;
 import service.util.MetaCategoryType;
+import service.util.Util;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -507,5 +508,36 @@ public class GeneralClassifierCache {
 
     private String prepareLoadQuery(MetaCategoryId metaCategoryId, boolean isClassifier) {
         return "SELECT * FROM " + (isClassifier ? "C_" : "DE_") + metaCategoryId.getTableName();
+    }
+
+    public List<MainEntity> loadTopFiveLocations() {
+        List<MainEntity> topFiveLocations = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("EXEC Top5Locations");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                topFiveLocations.add(loadMainEntityById(MetaCategoryProvider.getLocation(), resultSet.getInt("LocationID")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return topFiveLocations;
+    }
+
+    public List<MainEntity> searchLocations(String locationNameContains, Integer minTripCost, Integer maxTripCost) {
+        List<MainEntity> locations = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("EXEC SearchLocations @LocationName="
+                     + (Util.isEmpty(locationNameContains) ? null : locationNameContains)
+                     + ", @MinTripCost=" + (minTripCost == null ? 0 : minTripCost)
+                     + ", @MaxTripCost=" + (maxTripCost == null ? 0 : maxTripCost));
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                locations.add(loadMainEntityById(MetaCategoryProvider.getLocation(), resultSet.getInt("LocationID")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return locations;
     }
 }

@@ -13,6 +13,7 @@ import service.util.Util;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
@@ -38,6 +39,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
     @Override
     public void prepareAdding() {
         setCurrentEntity(new MainEntityImpl(Util.getBean("idGenerator", IdGenerator.class).getNextId(MetaCategoryProvider.getLocation()), true));
+        getCurrentEntity().put("Rate", BigDecimal.ZERO);
         prepareForm();
         super.prepareAdding();
     }
@@ -54,8 +56,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
         super.deleteAction();
     }
 
-    @Override
-    public void saveAction() {
+    public void saveStayAction() {
         if (!getCurrentEntity().getSubEntities("locationSightSeeings").isEmpty()) {
             getCurrentEntity().put("Photo", getCurrentEntity().getSubEntities("locationSightSeeings").get(0).getString("Photo"));
         } else {
@@ -67,6 +68,11 @@ public class TravelingLocationSubForm extends BaseSubForm {
             }
         }
         getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
+    }
+
+    @Override
+    public void saveAction() {
+        saveStayAction();
         super.saveAction();
     }
 
@@ -86,36 +92,10 @@ public class TravelingLocationSubForm extends BaseSubForm {
         return states;
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
-        String fileName = event.getFile().getFileName();
-        try {
-            InputStream initialStream = event.getFile().getInputstream();
-            File targetFile = new File(Util.getApplicationProperty("file.upload.folder") + "/" + fileName);
-            java.nio.file.Files.copy(
-                    initialStream,
-                    targetFile.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-            IOUtils.closeQuietly(initialStream);
-            getCurrentEntity().put("Photo", fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        FacesMessage message = new FacesMessage("Succesful", fileName + " is uploaded.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
     public void resetState() {
         if (getCurrentEntity() != null) {
             getCurrentEntity().put("State", null);
         }
-    }
-
-    public boolean isLocationPhotoUploaded() {
-        return Util.isPhotoUploaded(getCurrentEntity());
-    }
-
-    public String getLocationPhotoUrl() {
-        return portfolioForm.getPhotoUrl(getCurrentEntity());
     }
 
     public Map<MetaCategoryId, Set<Integer>> getDeletedSubEntities() {

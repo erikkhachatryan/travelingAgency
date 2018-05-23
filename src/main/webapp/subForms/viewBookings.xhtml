@@ -10,14 +10,13 @@
                 <p:commandButton id="cancelButtonId"
                                  value="Close"
                                  process="@this"
-                                 styleClass="cancelButton"
-                                 style="background-color: #cfa402;"
+                                 styleClass="cancel-button-style"
                                  update="@this"
                                  oncomplete="PF('viewBookingsDialog').hide();" />
             </h:panelGroup>
             <div style="clear: both"/>
 
-            <p:dataTable id="bookingsTableId" value="#{viewBookingsSubForm.bookings}" var="booking">
+            <p:dataTable id="bookingsTableId" value="#{viewBookingsSubForm.bookings}" var="booking" styleClass="mrgt30" tableStyleClass="table-style">
                 <p:column id="tripTitleColumnId" headerText="TripTitle">
                     <p:commandLink id="tripTitleViewCommandLinkId"
                                    actionListener="#{tripSubForm.prepareViewing(booking.trip, false)}"
@@ -42,7 +41,7 @@
                     <p:commandLink id="removeBookingCommandLinkId"
                                    update="bookingsTableId"
                                    process="@this"
-                                   value="remove"
+                                   value="unbook"
                                    actionListener="#{viewBookingsSubForm.removeBooking(booking)}" />
                 </p:column>
             </p:dataTable>

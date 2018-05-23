@@ -5,96 +5,168 @@
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="sightSeeingDialogId" widgetVar="sightSeeingDialog" width="1000px"
               header="Add / Edit Sightseeing" height="500px" dynamic="true" modal="true" resizable="false">
-        <p:ajax event="close" listener="#{sightSeeingSubForm.closeAction}" />
+        <p:ajax event="close" listener="#{sightSeeingSubForm.closeAction}"/>
         <h:form id="sightSeeingSubFormId">
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
                 <p:commandButton id="cancelButtonId"
                                  value="#{sightSeeingSubForm.editMode? 'Cancel' : 'Close'}"
                                  process="@this"
-                                 styleClass="cancelButton"
-                                 style="background-color: #cfa402;"
+                                 styleClass="cancel-button-style mrgr15"
                                  update="@this"
                                  actionListener="#{sightSeeingSubForm.closeAction}"/>
                 <p:commandButton id="deleteButtonId"
                                  value="Delete"
                                  rendered="#{sightSeeingSubForm.editMode and not sightSeeingSubForm.newMode}"
-                                 styleClass="deleteButton"
-                                 style="background-color: #cf0c00;"
+                                 styleClass="cancel-button-style mrgr15"
                                  update="sightSeeingSubFormId travelingLocationSubFormId"
                                  process="sightSeeingSubFormId"
                                  actionListener="#{sightSeeingSubForm.deleteAction}"/>
                 <p:commandButton id="saveButtonId"
                                  value="Save"
                                  rendered="#{sightSeeingSubForm.editMode}"
-                                 styleClass="saveButton"
-                                 style="background-color: #1d9e04;"
+                                 styleClass="button-style"
                                  update="sightSeeingSubFormId travelingLocationSubFormId"
                                  process="sightSeeingSubFormId"
                                  actionListener="#{sightSeeingSubForm.saveAction}"/>
             </h:panelGroup>
-            <div style="clear: both"/>
+            <div class="clear"/>
 
-            <h:panelGroup id="sightSeeingNamePanelGroupId" lstyleClass="inline-grid">
-                <p:outputLabel id="sightSeeingNameLabelId" value="Sightseeing Name: "/>
-                <p:inputText id="sightSeeingNameInputTextId"
+            <h:panelGroup id="sightSeeingNamePanelGroupId" styleClass="inline-grid" layout="block">
+                <p:outputLabel id="sightSeeingNameLabelId" styleClass="label" value="Sightseeing Name: "/>
+                <p:inputText id="sightSeeingNameInputTextId" styleClass="input-style"
                              value="#{sightSeeingSubForm.currentEntity.SightSeeingName}"
                              rendered="#{sightSeeingSubForm.editMode}"/>
-                <h:outputText id="sightSeeingNameOutputTextId"
-                               value="#{sightSeeingSubForm.currentEntity.SightSeeingName}"
-                               rendered="#{not sightSeeingSubForm.editMode}"/>
+                <h:outputText id="sightSeeingNameOutputTextId" styleClass="label"
+                              value="#{sightSeeingSubForm.currentEntity.SightSeeingName}"
+                              rendered="#{not sightSeeingSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="sightSeeingDetailsPanelGroupId" layout="block">
-                <p:outputLabel id="sightSeeingDetailsLabelId" value="Details: "/>
-                <p:inputTextarea id="sightSeeingDetailsInputTextAreaId" style="width: 100%;"
+            <h:panelGroup id="sightSeeingDetailsPanelGroupId" styleClass="inline-grid" layout="block">
+                <p:outputLabel id="sightSeeingDetailsLabelId" styleClass="label" value="Details: "/>
+                <p:inputTextarea id="sightSeeingDetailsInputTextAreaId" styleClass="input-style h80"
                                  value="#{sightSeeingSubForm.currentEntity.Details}"
                                  readonly="#{not sightSeeingSubForm.editMode}"/>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="sightSeeingCommentPanelGroupId" layout="block">
-                <p:outputLabel id="sightSeeingCommentLabelId" value="Comment: "/>
-                <p:inputTextarea id="sightSeeingCommentInputTextAreaId" style="width: 100%;"
-                                 value="#{sightSeeingSubForm.currentEntity.Comment}"
-                                 readonly="#{not sightSeeingSubForm.editMode}"/>
-            </h:panelGroup>
-
-            <div style="clear: both"/>
-
-            <h:panelGroup id="locationPhotoPanelGroupId">
+            <h:panelGroup id="locationPhotoPanelGroupId" styleClass="inline-grid" layout="block">
                 <h:panelGroup id="flieUploadPanelGroupId" rendered="#{sightSeeingSubForm.editMode}">
-                    <p:outputLabel id="locationImageLabelId" value="Location Image: "/>
+                    <p:outputLabel id="locationImageLabelId" styleClass="label" value="Location Image: "/>
                     <p:fileUpload fileUploadListener="#{sightSeeingSubForm.handleFileUpload}"
                                   mode="advanced" dragDropSupport="true" process="@this"
-                                  update="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId deFormId:messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                  update="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId deFormId:messages"
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                 </h:panelGroup>
             </h:panelGroup>
 
             <div style="clear: both"/>
 
-            <h:panelGroup id="locationSightSeeingPhotosPanelGroupId" layout="block" styleClass="content">
+            <h:panelGroup id="locationSightSeeingPhotosPanelGroupId" layout="block">
                 <ui:repeat value="#{sightSeeingSubForm.currentEntity.locationSightSeeingPhotos}"
                            var="locationSightSeeingPhoto">
-                    <h:panelGroup style="display: inline-block">
+                    <h:panelGroup style="display: inline-block;margin:10px;">
                         <p:commandLink id="sightSeeingPhotoRemoveCommandLinkId"
                                        rendered="#{sightSeeingSubForm.editMode}"
                                        actionListener="#{sightSeeingSubForm.removeSightSeeingPhoto(locationSightSeeingPhoto)}"
                                        process="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId"
                                        update="@this sightSeeingSubFormId:locationSightSeeingPhotosPanelGroupId"
                                        title="Remove">
-                            <p:graphicImage url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"
-                                    styleClass="locationImage"/>
+                            <p:graphicImage style="max-width:200px;height:150px;"
+                                            url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"/>
                         </p:commandLink>
-                        <p:graphicImage
-                                url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"
-                                rendered="#{not sightSeeingSubForm.editMode}"
-                                styleClass="locationImage"/>
+                        <p:graphicImage style="max-width:200px;height:150px;"
+                                        url="#{sightSeeingSubForm.parentForm.parentForm.getPhotoUrl(locationSightSeeingPhoto)}"
+                                        rendered="#{not sightSeeingSubForm.editMode}"/>
                     </h:panelGroup>
                 </ui:repeat>
             </h:panelGroup>
+
+            <h:panelGroup id="sightseeingCommentsPanelGroupId" layout="block">
+                <ui:repeat value="#{sightSeeingSubForm.currentEntity.locationSightSeeingComments}"
+                           var="locationSightSeeingComment">
+                    <h:outputText id="userNameId"
+                                  value="#{sightSeeingSubForm.getUserName(locationSightSeeingComment.UserID)}"/>
+                    <h:panelGroup id="ratePanelGroupId">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{sightSeeingSubForm.renderRateStart(1, locationSightSeeingComment.Rate)}"
+                                        url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{sightSeeingSubForm.renderRateStart(2, locationSightSeeingComment.Rate)}"
+                                        url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{sightSeeingSubForm.renderRateStart(3, locationSightSeeingComment.Rate)}"
+                                        url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{sightSeeingSubForm.renderRateStart(4, locationSightSeeingComment.Rate)}"
+                                        url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{sightSeeingSubForm.renderRateStart(5, locationSightSeeingComment.Rate)}"
+                                        url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
+                    </h:panelGroup>
+                    <div class="clear"></div>
+                    <h:outputText id="commentId" value="#{locationSightSeeingComment.Comment}"/>
+                    <div class="clear"></div>
+                </ui:repeat>
+            </h:panelGroup>
+
+            <h:panelGroup id="newCommnetPanelGroupId" rendered="#{not sightSeeingSubForm.editMode}" layout="block">
+                <p:inputTextarea id="sightSeeingCommentInputTextAreaId" styleClass="input-style h80"
+                                 value="#{sightSeeingSubForm.comment}">
+                    <p:ajax process="@this" update="@this" />
+                </p:inputTextarea>
+                <h:panelGroup id="ratingPanelGroupId">
+                    <p:commandLink id="oneStartCommandLinkId"
+                                   actionListener="#{sightSeeingSubForm.rate(1)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{sightSeeingSubForm.getStarImageUrl(1)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="twoStartCommandLinkId"
+                                   actionListener="#{sightSeeingSubForm.rate(2)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{sightSeeingSubForm.getStarImageUrl(2)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="threeStartCommandLinkId"
+                                   actionListener="#{sightSeeingSubForm.rate(3)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{sightSeeingSubForm.getStarImageUrl(3)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="fourStartCommandLinkId"
+                                   actionListener="#{sightSeeingSubForm.rate(4)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{sightSeeingSubForm.getStarImageUrl(4)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="fiveStartCommandLinkId"
+                                   actionListener="#{sightSeeingSubForm.rate(5)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{sightSeeingSubForm.getStarImageUrl(5)}"/>
+                    </p:commandLink>
+                </h:panelGroup>
+                <p:commandButton id="commentButtonId"
+                                 value="Comment"
+                                 process="@this"
+                                 styleClass="cancel-button-style mrgr15"
+                                 update="@this sightseeingCommentsPanelGroupId newCommnetPanelGroupId"
+                                 actionListener="#{sightSeeingSubForm.addComment}"/>
+            </h:panelGroup>
+
         </h:form>
     </p:dialog>
 </ui:composition>

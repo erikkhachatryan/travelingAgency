@@ -5,26 +5,33 @@
                 xmlns:p="http://primefaces.org/ui">
     <f:view>
         <h:panelGroup id="loginAndRegistrationPanelgroupId" layout="block" style="float: right">
-            <p:outputLabel id="guestUserNameId" value="GUEST" rendered="#{not portfolioForm.loggedIn}"/>
-            <p:outputLabel id="loggedInUserNameId" value="#{sessionData.applicationUser.Name}"
+            <p:outputLabel id="guestUserNameId" styleClass="user-status" value="Guest" rendered="#{not portfolioForm.loggedIn}"/>
+            <p:outputLabel id="loggedInUserNameId" styleClass="user-status" value="#{sessionData.applicationUser.Name}"
                            rendered="#{portfolioForm.loggedIn}"/>
             <p:commandButton id="loginButtonId" value="Login" rendered="#{not portfolioForm.loggedIn}"
                              actionListener="#{loginForm.prepare}"
-                             styleClass="saveButton"
+                             styleClass="button-style mrgr15" style="margin-left:20px;"
                              onclick="window.location.href = '${request.contextPath}/loginForm.xhtml'"/>
             <p:commandButton id="logoutButtonId" value="Logout" rendered="#{portfolioForm.loggedIn}"
-                             styleClass="deleteButton"
+                             styleClass="cancel-button-style" style="margin-left:20px;"
                              update="@this deFormId"
                              process="@this"
                              actionListener="${portfolioForm.logout()}"/>
+            <p:commandButton id="searchButtonId" value="Search"
+                             actionListener="#{searchSubForm.prepare(portfolioForm.loggedInAsAdministrator)}"
+                             styleClass="button-style"
+                             rendered="#{portfolioForm.loggedIn}"
+                             update="@this searchDialogId"
+                             process="@this searchDialogId"
+                             oncomplete="PF('searchDialog').show();"/>
             <p:commandButton id="registerButtonId" value="Register"
                              actionListener="#{registrationForm.prepare}"
-                             styleClass="cancelButton"
+                             styleClass="button-style"
                              rendered="#{not portfolioForm.loggedIn}"
                              onclick="window.location.href = '${request.contextPath}/registrationForm.xhtml'"/>
         </h:panelGroup>
         <div style="clear: both"/>
-        <p:growl id="messages" showDetail="true" />
+        <p:growl id="messages" showDetail="true"/>
         <div style="clear: both"/>
     </f:view>
 </ui:composition>

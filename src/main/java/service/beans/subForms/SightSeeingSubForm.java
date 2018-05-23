@@ -1,11 +1,9 @@
 package service.beans.subForms;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import service.commons.SessionData;
+import service.model.Classifier;
 import service.model.EditableEntity;
 import service.model.GeneralClassifierCache;
 import service.model.SubEntity;
@@ -15,17 +13,13 @@ import service.util.Util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -35,6 +29,7 @@ public class SightSeeingSubForm extends BaseSubForm {
 
     private TravelingLocationSubForm travelingLocationSubForm;
     private Set<Integer> deletedPhotosIds;
+    private List<Classifier> users;
 
     public SightSeeingSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
         super(sessionData, generalClassifierCache, "sightSeeingDialog");
@@ -49,13 +44,21 @@ public class SightSeeingSubForm extends BaseSubForm {
     public void prepareAdding() {
         setCurrentEntity(new SubEntityImpl(getParentForm().getCurrentEntity()));
         resetIdsSet();
+        resetFields();
         super.prepareAdding();
     }
 
     @Override
     public void prepareEditing(EditableEntity editableEntity) {
         resetIdsSet();
+        resetFields();
         super.prepareEditing(editableEntity);
+    }
+
+    @Override
+    public void prepareViewing(EditableEntity editableEntity) {
+        resetFields();
+        super.prepareViewing(editableEntity);
     }
 
     @Override
@@ -116,5 +119,62 @@ public class SightSeeingSubForm extends BaseSubForm {
 
     private void resetIdsSet() {
         deletedPhotosIds = new HashSet<>();
+    }
+
+    private void resetFields() {
+        rate = null;
+        comment = null;
+        this.users = getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getUser());
+    }
+
+    private Integer rate;
+
+    public void rate(Integer rate) {
+        this.rate = rate;
+    }
+
+    public boolean renderRateStart(Integer starRate, Integer actualRate) {
+        return actualRate != null && starRate <= actualRate;
+    }
+
+    public String getStarImageUrl(Integer rate) {
+        return renderRateStart(rate, this.rate) ? getRatedStarImageUrl() : getNonRatedStarImageUrl();
+    }
+
+    public String getRatedStarImageUrl() {
+        return "images/ratedStar.png";
+    }
+
+    public String getNonRatedStarImageUrl() {
+        return "images/star.png";
+    }
+
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void addComment() {
+        SubEntity comment = new SubEntityImpl(getCurrentEntity());
+        comment.put("Comment", this.comment);
+        comment.put("Rate", this.rate);
+        comment.put("UserID", getSessionData().getApplicationUser().getId());
+        getCurrentEntity().getSubEntities("locationSightSeeingComments").add(comment);
+        getParentForm().saveStayAction();
+        resetFields();
+    }
+
+    public String getUserName(Integer userId) {
+        for (Classifier user : users) {
+            if (Objects.equals(user.getId(), userId)) {
+                return user.getName();
+            }
+        }
+        return "";
     }
 }
