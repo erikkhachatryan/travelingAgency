@@ -16,6 +16,8 @@ import javax.faces.context.FacesContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.List;
@@ -142,11 +144,11 @@ public class SightSeeingSubForm extends BaseSubForm {
     }
 
     public String getRatedStarImageUrl() {
-        return "images/ratedStar.png";
+        return "images/star.png";
     }
 
     public String getNonRatedStarImageUrl() {
-        return "images/star.png";
+        return "images/ratedStar.png";
     }
 
     private String comment;
@@ -165,6 +167,15 @@ public class SightSeeingSubForm extends BaseSubForm {
         comment.put("Rate", this.rate);
         comment.put("UserID", getSessionData().getApplicationUser().getId());
         getCurrentEntity().getSubEntities("locationSightSeeingComments").add(comment);
+        int rateSum = 0;
+        int ratesCount = 0;
+        for (SubEntity locationSightSeeing : getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings")) {
+            for (SubEntity locationSightSeeingComment : locationSightSeeing.getSubEntities("locationSightSeeingComments")) {
+                ratesCount++;
+                rateSum += locationSightSeeingComment.getInt("Rate");
+            }
+        }
+        getParentForm().getCurrentEntity().put("Rate", new BigDecimal(rateSum).setScale(10, RoundingMode.HALF_DOWN).divide(new BigDecimal(ratesCount), RoundingMode.HALF_DOWN));
         getParentForm().saveStayAction();
         resetFields();
     }

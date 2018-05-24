@@ -26,20 +26,20 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="searchCriteriasPanelGroupId" layout="block">
-                <h:panelGroup id="locationNamePanelGroupId" layout="block">
+                <h:panelGroup id="locationNamePanelGroupId" layout="block" styleClass="inline-grid">
                     <p:outputLabel id="locationNameLabelId" styleClass="label" value="Location Name contains: "/>
                     <p:inputText id="locationNameInputNumberId" styleClass="input-style"
                                  value="#{searchSubForm.locationNameContains}"/>
                 </h:panelGroup>
                 <div class="clear"></div>
-                <h:panelGroup id="minTripCostPanelGroupId" layout="block">
-                    <p:outputLabel id="minTripCostLabelId" styleClass="label" value="Min Trip Cost: "/>
+                <h:panelGroup id="minTripCostPanelGroupId" layout="block" styleClass="inline-grid">
+                    <p:outputLabel id="minTripCostLabelId" styleClass="label" value="Min Tour Cost: "/>
                     <p:inputText id="minTripCostInputNumberId" type="number" styleClass="input-style"
                                  value="#{searchSubForm.tripMinCost}" converter="javax.faces.Integer"/>
                 </h:panelGroup>
                 <div class="clear"></div>
-                <h:panelGroup id="maxTripCostPanelGroupId" layout="block">
-                    <p:outputLabel id="maxTripCostLabelId" styleClass="label" value="Max Trip Cost: "/>
+                <h:panelGroup id="maxTripCostPanelGroupId" layout="block" styleClass="inline-grid">
+                    <p:outputLabel id="maxTripCostLabelId" styleClass="label" value="Max Tour Cost: "/>
                     <p:inputText id="maxTripCostInputNumberId" type="number" styleClass="input-style"
                                  value="#{searchSubForm.tripMaxCost}" converter="javax.faces.Integer"/>
                 </h:panelGroup>

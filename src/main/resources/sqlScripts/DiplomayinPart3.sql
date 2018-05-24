@@ -61,3 +61,26 @@ Create Table DE_LocationSightSeeingComment
         FOREIGN KEY REFERENCES C_User ( UserID ) ON DELETE CASCADE
 	);
 GO
+CREATE trigger [dbo].[DE_LocationSightSeeingComment_Rate] on [dbo].[DE_LocationSightSeeingComment]
+after insert , update
+as
+begin
+declare @LocationID as int =
+(
+select b.LocationID
+from inserted as c
+join DE_LocationSightSeeing as b on b.LocationSightSeeingID = c.LocationSightSeeingID
+)
+
+update a
+set a.Rate = (
+select AVG(cast(c.rate as decimal(18,10))) as rate
+from DE_Location as a
+join DE_LocationSightSeeing as b on a.LocationID = b.LocationID
+join DE_LocationSightSeeingcomment as c on b.LocationSightSeeingID = c.LocationSightSeeingID
+where a.LocationID = @LocationID
+)
+from DE_Location as a
+where a.LocationID = @LocationID
+end
+GO

@@ -3,20 +3,26 @@
     min-height: 150px;
 }
 
-html {
+html, body {
     height: 100%;
     margin: 0;
+    padding:0;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 body {
-    font-family: 'Roboto', sans-serif !important;
-    background-image: url("images/TravelingAgencyMainPicture.jpg");
-    background-repeat: no-repeat;
+    background: url("images/TravelingAgencyMainPicture.jpg") no-repeat center center fixed;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    margin: 0px;
+}
+
+h2{
+    color: #007498;
+    font-size: 18px;
+    margin-left: 15px;
+
 }
 
 .container-form {
@@ -81,16 +87,20 @@ div.img-container, .link-style span.image-title {
     padding: 0 !important;
 }
 
-.h80{
-    height:80px !important;
+.h80 {
+    height: 80px !important;
 }
 
-.mrgl10{
-    margin-left:10px;
+.mrgl10 {
+    margin-left: 10px;
 }
 
 .mrgr15 {
     margin-right: 15px;
+}
+
+.mrgl15 {
+    margin-left: 15px;
 }
 
 .mrgt30 {
@@ -112,7 +122,7 @@ div.img-container, .link-style span.image-title {
 .inline-grid {
     display: inline-grid;
     padding: 10px;
-    width: 100%;
+    width: 98%;
 }
 
 .right {

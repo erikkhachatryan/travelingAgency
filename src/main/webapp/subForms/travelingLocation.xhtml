@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1200px"
-              header="Add / Edit Traveling Location" height="500px" dynamic="true" modal="true" resizable="false"
+              header="Traveling Location" height="500px" dynamic="true" modal="true" resizable="false"
               minHeight="600">
         <p:ajax event="close" listener="#{travelingLocationSubForm.closeAction}"/>
         <h:form id="travelingLocationSubFormId">
@@ -188,7 +188,7 @@
             </h:panelGroup>
 
             <p:commandButton id="tripAddButtonId"
-                             value="Add Trip"
+                             value="Add Tour"
                              actionListener="#{tripSubForm.prepareAdding}"
                              rendered="#{travelingLocationSubForm.editMode}"
                              disabled="#{travelingLocationSubForm.addTripDisabled}"

@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="sightSeeingDialogId" widgetVar="sightSeeingDialog" width="1000px"
-              header="Add / Edit Sightseeing" height="500px" dynamic="true" modal="true" resizable="false">
+              header="Sightseeing" height="500px" dynamic="true" modal="true" resizable="false">
         <p:ajax event="close" listener="#{sightSeeingSubForm.closeAction}"/>
         <h:form id="sightSeeingSubFormId">
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
@@ -84,10 +84,10 @@
                 </ui:repeat>
             </h:panelGroup>
 
-            <h:panelGroup id="sightseeingCommentsPanelGroupId" layout="block">
+            <h:panelGroup id="sightseeingCommentsPanelGroupId" layout="block" styleClass="inline-grid">
                 <ui:repeat value="#{sightSeeingSubForm.currentEntity.locationSightSeeingComments}"
                            var="locationSightSeeingComment">
-                    <h:outputText id="userNameId"
+                    <h:outputText id="userNameId" styleClass="label"
                                   value="#{sightSeeingSubForm.getUserName(locationSightSeeingComment.UserID)}"/>
                     <h:panelGroup id="ratePanelGroupId">
                         <p:graphicImage style="width:20px;height:20px;"
@@ -107,7 +107,7 @@
                                         url="#{sightSeeingSubForm.ratedStarImageUrl}"/>
                     </h:panelGroup>
                     <div class="clear"></div>
-                    <h:outputText id="commentId" value="#{locationSightSeeingComment.Comment}"/>
+                    <h:outputText styleClass="label" id="commentId" value="#{locationSightSeeingComment.Comment}"/>
                     <div class="clear"></div>
                 </ui:repeat>
             </h:panelGroup>
@@ -162,8 +162,8 @@
                 <p:commandButton id="commentButtonId"
                                  value="Comment"
                                  process="@this"
-                                 styleClass="cancel-button-style mrgr15"
-                                 update="@this sightseeingCommentsPanelGroupId newCommnetPanelGroupId"
+                                 styleClass="button-style mrgl15"
+                                 update="@this sightseeingCommentsPanelGroupId newCommnetPanelGroupId deFormId:allLocationsPanelGroupId"
                                  actionListener="#{sightSeeingSubForm.addComment}"/>
             </h:panelGroup>
 

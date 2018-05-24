@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="tripDialogId" widgetVar="tripDialog" width="1000px"
-              header="Add / Edit Trip" height="500px" dynamic="true" modal="true" resizable="false">
+              header="Tour" height="500px" dynamic="true" modal="true" resizable="false">
         <p:ajax event="close" listener="#{tripSubForm.closeAction}"/>
         <h:form id="tripSubFormId">
             <p:commandButton id="bookingButtonId"
@@ -41,7 +41,7 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="tripTitlePanelGroupId" styleClass="inline-grid">
-                <p:outputLabel id="tripTitleLabelId" styleClass="label" value="Trip Title: "/>
+                <p:outputLabel id="tripTitleLabelId" styleClass="label" value="Tour Title: "/>
                 <p:inputText id="tripTitleInputTextId" styleClass="input-style"
                              value="#{tripSubForm.currentEntity.Title}"
                              rendered="#{tripSubForm.editMode}"/>
@@ -54,7 +54,7 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="tripDetailsPanelGroupId" layout="block" styleClass="inline-grid">
-                <p:outputLabel id="tripDetailsLabelId" styleClass="label" value="Trip Details: "/>
+                <p:outputLabel id="tripDetailsLabelId" styleClass="label" value="Tour Details: "/>
                 <p:inputTextarea id="tripDetailsInputTextAreaId" styleClass="input-style h80"
                                  value="#{tripSubForm.currentEntity.Details}"
                                  readonly="#{not tripSubForm.editMode}"/>
@@ -113,7 +113,7 @@
             <div style="clear: both"/>
 
             <h:panelGroup id="tripCheckpointsPanelGroupId" layout="block" styleClass="inline-grid">
-                <p:outputLabel id="tripCheckpointLabelId" styleClass="label" value="Trip Checkpoints: "/>
+                <p:outputLabel id="tripCheckpointLabelId" styleClass="label" value="Tour Checkpoints: "/>
                 <p:selectOneMenu id="tripCheckpointSelectOneMenuId" styleClass="select-menu-style"
                                  appendTo="@this"
                                  filter="true"
