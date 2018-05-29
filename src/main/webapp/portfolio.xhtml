@@ -130,25 +130,6 @@
                     <div class="clear"></div>
                 </h:panelGroup>
 
-
-                <p:commandButton id="locationAddButtonId"
-                                 value="Add Location"
-                                 actionListener="#{travelingLocationSubForm.prepareAdding}"
-                                 rendered="#{portfolioForm.loggedInAsAdministrator}"
-                                 styleClass="button-style"
-                                 update="@this travelingLocationDialogId"
-                                 process="@this travelingLocationDialogId"
-                                 oncomplete="PF('travelingLocationDialog').show();"/>
-
-                <p:commandButton id="viewBookingsButtonId"
-                                 value="View Bookings"
-                                 rendered="#{portfolioForm.loggedIn and (not portfolioForm.loggedInAsAdministrator)}"
-                                 styleClass="button-style"
-                                 actionListener="#{viewBookingsSubForm.prepareForm}"
-                                 update="@this viewBookingsDialogId"
-                                 process="@this viewBookingsDialogId"
-                                 oncomplete="PF('viewBookingsDialog').show();"/>
-
             </h:form>
             <ui:include src="subForms/travelingLocation.xhtml"/>
             <ui:include src="subForms/sightSeeing.xhtml"/>

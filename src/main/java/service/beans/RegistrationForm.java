@@ -3,7 +3,7 @@ package service.beans;
 import org.primefaces.context.RequestContext;
 import service.model.Classifier;
 import service.model.ClassifierImpl;
-import service.model.GeneralClassifierCache;
+import service.model.GeneralCache;
 import service.util.MetaCategoryProvider;
 
 import javax.faces.context.FacesContext;
@@ -16,18 +16,18 @@ public class RegistrationForm {
 
     private Classifier currentUser;
 
-    private GeneralClassifierCache generalClassifierCache;
+    private GeneralCache generalCache;
 
-    public GeneralClassifierCache getGeneralClassifierCache() {
-        return generalClassifierCache;
+    public GeneralCache getGeneralCache() {
+        return generalCache;
     }
 
-    public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
-        this.generalClassifierCache = generalClassifierCache;
+    public void setGeneralCache(GeneralCache generalCache) {
+        this.generalCache = generalCache;
     }
 
     public List<Classifier> getUsers() {
-        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getUser());
+        return getGeneralCache().loadClassifiers(MetaCategoryProvider.getUser());
     }
 
     public Classifier getCurrentUser() {
@@ -47,11 +47,11 @@ public class RegistrationForm {
     }
 
     public void register() {
-        getGeneralClassifierCache().saveClassifier(MetaCategoryProvider.getUser(), currentUser);
+        getGeneralCache().saveClassifier(MetaCategoryProvider.getUser(), currentUser);
         closeAction();
     }
 
     public List<Classifier> loadGenders() {
-        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getGender());
+        return getGeneralCache().loadClassifiers(MetaCategoryProvider.getGender());
     }
 }

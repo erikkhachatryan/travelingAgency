@@ -17,14 +17,16 @@
             <div style="clear: both"/>
 
             <p:dataTable id="bookingsTableId" value="#{viewBookingsSubForm.bookings}" var="booking" styleClass="mrgt30" tableStyleClass="table-style">
-                <p:column id="tripTitleColumnId" headerText="TripTitle">
+                <p:column id="tripTitleColumnId" headerText="TourTitle">
                     <p:commandLink id="tripTitleViewCommandLinkId"
                                    actionListener="#{tripSubForm.prepareViewing(booking.trip, false)}"
+                                   rendered="#{not portfolioForm.loggedInAsAdministrator}"
                                    update="@this tripDialogId"
                                    process="@this tripDialogId"
                                    value="#{booking.trip.Title}"
                                    oncomplete="PF('tripDialog').show();">
                     </p:commandLink>
+                    <h:outputText rendered="#{portfolioForm.loggedInAsAdministrator}" value="#{booking.trip.Title}" />
                 </p:column>
                 <p:column id="startDateColumnId" headerText="Start Date">
                     <h:outputText value="#{booking.trip.StartDate}">
@@ -37,12 +39,15 @@
                 <p:column id="locationToColumnId" headerText="Total Cost">
                     <h:outputText value="#{booking.TotalCost}" />
                 </p:column>
-                <p:column id="removeBookingColumnId" >
+                <p:column id="removeBookingColumnId" rendered="#{not viewBookingsSubForm.editMode}">
                     <p:commandLink id="removeBookingCommandLinkId"
                                    update="bookingsTableId"
                                    process="@this"
                                    value="unbook"
                                    actionListener="#{viewBookingsSubForm.removeBooking(booking)}" />
+                </p:column>
+                <p:column id="userNameColumnId" headerText="User Name" rendered="#{viewBookingsSubForm.editMode}">
+                    <h:outputText id="userNameCommandLinkId" value="#{booking.User.Name}"/>
                 </p:column>
             </p:dataTable>
         </h:form>

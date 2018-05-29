@@ -21,6 +21,7 @@
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
                 <p:message id="userNameRequiredMessageId" for="userNameInputTextId"/>
+                <p:message id="registrationValidationMessageId" for="registrationValidatorId"/>
             </h:panelGroup>
 
             <h:panelGroup id="passwordPanelGroupId" styleClass="inline-grid">
@@ -31,8 +32,6 @@
                 </p:inputText>
                 <p:message id="passwordRequiredMessageId" for="passwordInputTextId"/>
             </h:panelGroup>
-
-            <p:message id="registrationValidationMessageId" for="registrationValidatorId"/>
 
             <h:inputHidden value="true" id="registrationValidatorId">
                 <f:validator validatorId="registrationValidator" for="registrationValidatorId"/>

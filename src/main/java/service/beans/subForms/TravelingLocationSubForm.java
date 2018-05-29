@@ -1,7 +1,5 @@
 package service.beans.subForms;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.primefaces.event.FileUploadEvent;
 import service.beans.IdGenerator;
 import service.beans.PortfolioForm;
 import service.commons.SessionData;
@@ -10,11 +8,7 @@ import service.util.MetaCategoryId;
 import service.util.MetaCategoryProvider;
 import service.util.Util;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import java.io.*;
 import java.math.BigDecimal;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 /**
@@ -30,8 +24,8 @@ public class TravelingLocationSubForm extends BaseSubForm {
         return portfolioForm;
     }
 
-    public TravelingLocationSubForm(PortfolioForm portfolioForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
-        super(sessionData, generalClassifierCache, "travelingLocationDialog");
+    public TravelingLocationSubForm(PortfolioForm portfolioForm, SessionData sessionData, GeneralCache generalCache) {
+        super(sessionData, generalCache, "travelingLocationDialog");
         this.portfolioForm = portfolioForm;
         deletedSubEntities = new HashMap<>();
     }
@@ -52,7 +46,7 @@ public class TravelingLocationSubForm extends BaseSubForm {
 
     @Override
     public void deleteAction() {
-        getGeneralClassifierCache().deleteMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
+        getGeneralCache().deleteMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
         super.deleteAction();
     }
 
@@ -64,10 +58,10 @@ public class TravelingLocationSubForm extends BaseSubForm {
         }
         for (Map.Entry<MetaCategoryId, Set<Integer>> deletedEntityEntry : deletedSubEntities.entrySet()) {
             for (Integer subEntityId : deletedEntityEntry.getValue()) {
-                getGeneralClassifierCache().deleteSubEntityById(deletedEntityEntry.getKey(), subEntityId);
+                getGeneralCache().deleteSubEntityById(deletedEntityEntry.getKey(), subEntityId);
             }
         }
-        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
+        getGeneralCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getCurrentEntity()));
     }
 
     @Override
@@ -77,13 +71,13 @@ public class TravelingLocationSubForm extends BaseSubForm {
     }
 
     public List<Classifier> loadCountries() {
-        return getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getCountry());
+        return getGeneralCache().loadClassifiers(MetaCategoryProvider.getCountry());
     }
 
     public List<Classifier> loadStates() {
         List<Classifier> states = new ArrayList<>();
         if (getCurrentEntity() != null && getCurrentEntity().getClassifier("Country") != null) {
-            for (Classifier state : getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getState())) {
+            for (Classifier state : getGeneralCache().loadClassifiers(MetaCategoryProvider.getState())) {
                 if (Objects.equals(state.getClassifier("Country").getId(), getCurrentEntity().getClassifier("Country").getId())) {
                     states.add(state);
                 }

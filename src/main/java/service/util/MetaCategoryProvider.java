@@ -18,8 +18,9 @@ public class MetaCategoryProvider {
     private static MetaCategoryId LOCATION_SIGHT_SEEING_PHOTO;
     private static MetaCategoryId LOCATION_SIGHT_SEEING_COMMENT;
     private static MetaCategoryId BOOKING;
-    private static MetaCategoryId Location_Trip;
-    private static MetaCategoryId Location_Trip_Checkpoint;
+    private static MetaCategoryId LOCATION_TRIP;
+    private static MetaCategoryId LOCATION_TRIP_CHECKPOINT;
+    private static MetaCategoryId LOCATION_TRIP_COMMENT;
 
     public static MetaCategoryId getLocation() {
         if (LOCATION == null) {
@@ -152,7 +153,7 @@ public class MetaCategoryProvider {
     }
 
     public static MetaCategoryId getLocationTrip() {
-        if (Location_Trip == null) {
+        if (LOCATION_TRIP == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("LocationTripID", MetaCategoryType.IDENTITY);
             columns.put("LocationID", MetaCategoryType.INTEGER);
@@ -164,22 +165,35 @@ public class MetaCategoryProvider {
             columns.put("TicketCost", MetaCategoryType.INTEGER);
             Map<String, MetaCategoryId> subEntities = new HashMap<>();
             subEntities.put("locationTripCheckpoints", getLocationTripCheckpoint());
-            Location_Trip = new MetaCategoryId("LocationTrip", columns, subEntities);
+            subEntities.put("locationTripComments", getLocationTripComment());
+            LOCATION_TRIP = new MetaCategoryId("LocationTrip", columns, subEntities);
         }
-        return Location_Trip;
+        return LOCATION_TRIP;
     }
 
     public static MetaCategoryId getLocationTripCheckpoint() {
-        if (Location_Trip_Checkpoint == null) {
+        if (LOCATION_TRIP_CHECKPOINT == null) {
             Map<String, MetaCategoryType> columns = new HashMap<>();
             columns.put("LocationTripCheckPointID", MetaCategoryType.IDENTITY);
             columns.put("LocationTripID", MetaCategoryType.INTEGER);
             columns.put("LocationSightSeeingID", MetaCategoryType.INTEGER);
             columns.put("VisitOrder", MetaCategoryType.INTEGER);
-            Location_Trip_Checkpoint = new MetaCategoryId("LocationTripCheckpoint", columns);
+            LOCATION_TRIP_CHECKPOINT = new MetaCategoryId("LocationTripCheckpoint", columns);
         }
-        return Location_Trip_Checkpoint;
+        return LOCATION_TRIP_CHECKPOINT;
     }
 
+    public static MetaCategoryId getLocationTripComment() {
+        if (LOCATION_TRIP_COMMENT == null) {
+            Map<String, MetaCategoryType> columns = new HashMap<>();
+            columns.put("LocationTripCommentID", MetaCategoryType.IDENTITY);
+            columns.put("LocationTripID", MetaCategoryType.INTEGER);
+            columns.put("Comment", MetaCategoryType.STRING);
+            columns.put("Rate", MetaCategoryType.INTEGER);
+            columns.put("UserID", MetaCategoryType.INTEGER);
+            LOCATION_TRIP_COMMENT = new MetaCategoryId("LocationTripComment", columns);
+        }
+        return LOCATION_TRIP_COMMENT;
+    }
 
 }

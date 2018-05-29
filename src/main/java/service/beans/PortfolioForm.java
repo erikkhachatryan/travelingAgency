@@ -1,26 +1,11 @@
 package service.beans;
 
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import service.commons.SessionData;
 import service.model.*;
 import service.util.MetaCategoryProvider;
 import service.util.Util;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.RoundingMode;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,15 +13,15 @@ import java.util.List;
  */
 public class PortfolioForm {
 
-    private GeneralClassifierCache generalClassifierCache;
+    private GeneralCache generalCache;
     private SessionData sessionData;
 
-    public GeneralClassifierCache getGeneralClassifierCache() {
-        return generalClassifierCache;
+    public GeneralCache getGeneralCache() {
+        return generalCache;
     }
 
-    public void setGeneralClassifierCache(GeneralClassifierCache generalClassifierCache) {
-        this.generalClassifierCache = generalClassifierCache;
+    public void setGeneralCache(GeneralCache generalCache) {
+        this.generalCache = generalCache;
     }
 
     public SessionData getSessionData() {
@@ -48,11 +33,11 @@ public class PortfolioForm {
     }
 
     public List<MainEntity> getTravelingLocations() {
-        return getGeneralClassifierCache().loadMainEntities(MetaCategoryProvider.getLocation());
+        return getGeneralCache().loadMainEntities(MetaCategoryProvider.getLocation());
     }
 
     public List<MainEntity> getTopFiveLocations() {
-        return getGeneralClassifierCache().loadTopFiveLocations();
+        return getGeneralCache().loadTopFiveLocations();
     }
 
     public boolean isLoggedIn() {

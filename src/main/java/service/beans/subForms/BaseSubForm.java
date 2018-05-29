@@ -3,7 +3,7 @@ package service.beans.subForms;
 import org.primefaces.context.RequestContext;
 import service.commons.SessionData;
 import service.model.EditableEntity;
-import service.model.GeneralClassifierCache;
+import service.model.GeneralCache;
 
 /**
  * Created by erik.khachatryan on 01-May-18.
@@ -11,15 +11,15 @@ import service.model.GeneralClassifierCache;
 public class BaseSubForm {
 
     private SessionData sessionData;
-    private GeneralClassifierCache generalClassifierCache;
+    private GeneralCache generalCache;
     private EditableEntity currentEntity;
     private boolean editMode = false;
     private boolean newMode = false;
     private String subFormName;
 
-    public BaseSubForm(SessionData sessionData, GeneralClassifierCache generalClassifierCache, String subFormName) {
+    public BaseSubForm(SessionData sessionData, GeneralCache generalCache, String subFormName) {
         this.sessionData = sessionData;
-        this.generalClassifierCache = generalClassifierCache;
+        this.generalCache = generalCache;
         this.editMode = false;
         this.newMode = false;
         this.subFormName = subFormName;
@@ -29,8 +29,8 @@ public class BaseSubForm {
         return sessionData;
     }
 
-    public GeneralClassifierCache getGeneralClassifierCache() {
-        return generalClassifierCache;
+    public GeneralCache getGeneralCache() {
+        return generalCache;
     }
 
     public void setCurrentEntity(EditableEntity editableEntity) {

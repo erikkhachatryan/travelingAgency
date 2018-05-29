@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <p:dialog id="travelingLocationDialogId" widgetVar="travelingLocationDialog" width="1200px"
-              header="Traveling Location" height="500px" dynamic="true" modal="true" resizable="false"
+              header="Traveling Location" height="900px" dynamic="true" modal="true" resizable="false"
               minHeight="600">
         <p:ajax event="close" listener="#{travelingLocationSubForm.closeAction}"/>
         <h:form id="travelingLocationSubFormId">
@@ -40,9 +40,12 @@
                 <p:outputLabel id="locationNameLabelId" styleClass="label" value="Location Name: "/>
                 <p:inputText id="locationNameInputTextId" styleClass="input-style"
                              value="#{travelingLocationSubForm.currentEntity.LocationName}"
+                             required="#{not empty param[saveButtonBinding.clientId]}"
+                             requiredMessage="Location Name is required."
                              rendered="#{travelingLocationSubForm.editMode}">
                     <p:ajax process="@this" update="@this"/>
                 </p:inputText>
+                <p:message id="locationNameMessageId" for="locationNameInputTextId"/>
                 <h:outputText id="locationNameOutputTextId" styleClass="label"
                               value="#{travelingLocationSubForm.currentEntity.LocationName}"
                               rendered="#{not travelingLocationSubForm.editMode}"/>
@@ -154,7 +157,7 @@
 
 
             <h:panelGroup id="locationTripsPanelGroupId" layout="block" styleClass="content">
-                <p:outputLabel styleClass="label" value="Available Trips:"/>
+                <p:outputLabel styleClass="label" value="Available Tours:"/>
                 <p:dataTable id="locationTripsTableId" value="#{travelingLocationSubForm.currentEntity.locationTrips}"
                              tableStyleClass="table-style"
                              var="trip">

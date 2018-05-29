@@ -1,11 +1,6 @@
 package service.commons;
 
 import service.model.Classifier;
-import service.model.GeneralClassifierCache;
-import service.util.MetaCategoryProvider;
-import service.util.Util;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by Erik on 10-Dec-17.

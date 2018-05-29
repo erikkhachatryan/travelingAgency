@@ -5,7 +5,7 @@ import org.primefaces.event.FileUploadEvent;
 import service.commons.SessionData;
 import service.model.Classifier;
 import service.model.EditableEntity;
-import service.model.GeneralClassifierCache;
+import service.model.GeneralCache;
 import service.model.SubEntity;
 import service.model.SubEntityImpl;
 import service.util.MetaCategoryProvider;
@@ -33,8 +33,8 @@ public class SightSeeingSubForm extends BaseSubForm {
     private Set<Integer> deletedPhotosIds;
     private List<Classifier> users;
 
-    public SightSeeingSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
-        super(sessionData, generalClassifierCache, "sightSeeingDialog");
+    public SightSeeingSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralCache generalCache) {
+        super(sessionData, generalCache, "sightSeeingDialog");
         this.travelingLocationSubForm = travelingLocationSubForm;
     }
 
@@ -126,7 +126,7 @@ public class SightSeeingSubForm extends BaseSubForm {
     private void resetFields() {
         rate = null;
         comment = null;
-        this.users = getGeneralClassifierCache().loadClassifiers(MetaCategoryProvider.getUser());
+        this.users = getGeneralCache().loadClassifiers(MetaCategoryProvider.getUser());
     }
 
     private Integer rate;
@@ -173,6 +173,12 @@ public class SightSeeingSubForm extends BaseSubForm {
             for (SubEntity locationSightSeeingComment : locationSightSeeing.getSubEntities("locationSightSeeingComments")) {
                 ratesCount++;
                 rateSum += locationSightSeeingComment.getInt("Rate");
+            }
+        }
+        for (SubEntity locationSightSeeing : getParentForm().getCurrentEntity().getSubEntities("locationTrips")) {
+            for (SubEntity locationTripComment : locationSightSeeing.getSubEntities("locationTripComments")) {
+                ratesCount++;
+                rateSum += locationTripComment.getInt("Rate");
             }
         }
         getParentForm().getCurrentEntity().put("Rate", new BigDecimal(rateSum).setScale(10, RoundingMode.HALF_DOWN).divide(new BigDecimal(ratesCount), RoundingMode.HALF_DOWN));

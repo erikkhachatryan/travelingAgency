@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="searchDialogId" widgetVar="searchDialog" width="1000px"
-              header="Search" height="500px" dynamic="true" modal="true" resizable="false">
+              header="Search" height="700px" dynamic="true" modal="true" resizable="false">
         <p:ajax event="close" listener="#{searchSubForm.closeAction}"/>
         <h:form id="searchSubFormId">
             <h:panelGroup id="buttonsPanelGroupId" styleClass="right">
@@ -42,6 +42,16 @@
                     <p:outputLabel id="maxTripCostLabelId" styleClass="label" value="Max Tour Cost: "/>
                     <p:inputText id="maxTripCostInputNumberId" type="number" styleClass="input-style"
                                  value="#{searchSubForm.tripMaxCost}" converter="javax.faces.Integer"/>
+                </h:panelGroup>
+                <div class="clear"></div>
+                <h:panelGroup id="tripStartsAfterPanelGroupId" layout="block" styleClass="inline-grid">
+                    <p:outputLabel id="tripStartsAfterLabelId" styleClass="label" value="Has Tours After: "/>
+                    <p:calendar id="tripStartsAfterCalendarId" styleClass="calendar-input"
+                                value="#{searchSubForm.tripStartsAfter}"
+                                pattern="dd/MMM/yyyy"
+                                mindate="#{searchSubForm.currentDate}"
+                                yearRange="c:c+10"
+                                navigator="true" mode="popup" readonlyInput="true"/>
                 </h:panelGroup>
             </h:panelGroup>
 

@@ -11,7 +11,7 @@
         <property name="locations" value="classpath:properties/application.properties"/>
     </bean>
 
-    <bean id="generalClassifierCache" class="service.model.GeneralClassifierCache" scope="session">
+    <bean id="generalCache" class="service.model.GeneralCache" scope="session">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
@@ -21,46 +21,47 @@
     </bean>
 
     <bean id="loginForm" class="service.beans.LoginForm" scope="session">
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache"/>
+        <constructor-arg name="generalCache" ref="generalCache"/>
         <constructor-arg name="sessionData" ref="sessionData"/>
     </bean>
 
     <bean id="travelingLocationSubForm" class="service.beans.subForms.TravelingLocationSubForm" scope="session">
         <constructor-arg name="portfolioForm" ref="portfolioForm"/>
         <constructor-arg name="sessionData" ref="sessionData"/>
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="searchSubForm" class="service.beans.subForms.SearchSubForm" scope="session">
+        <constructor-arg name="portfolioForm" ref="portfolioForm"/>
         <constructor-arg name="sessionData" ref="sessionData"/>
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="sightSeeingSubForm" class="service.beans.subForms.SightSeeingSubForm" scope="session">
         <constructor-arg name="travelingLocationSubForm" ref="travelingLocationSubForm" />
         <constructor-arg name="sessionData" ref="sessionData" />
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="tripSubForm" class="service.beans.subForms.TripSubForm" scope="session">
         <constructor-arg name="travelingLocationSubForm" ref="travelingLocationSubForm" />
         <constructor-arg name="sessionData" ref="sessionData" />
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="viewBookingsSubForm" class="service.beans.subForms.ViewBookingsSubForm" scope="session">
         <constructor-arg name="sessionData" ref="sessionData" />
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="bookingSubForm" class="service.beans.subForms.BookingSubForm" scope="session">
         <constructor-arg name="tripSubForm" ref="tripSubForm" />
         <constructor-arg name="sessionData" ref="sessionData" />
-        <constructor-arg name="generalClassifierCache" ref="generalClassifierCache" />
+        <constructor-arg name="generalCache" ref="generalCache" />
     </bean>
 
     <bean id="registrationForm" class="service.beans.RegistrationForm" scope="session">
-        <property name="generalClassifierCache" ref="generalClassifierCache"/>
+        <property name="generalCache" ref="generalCache"/>
     </bean>
 
     <bean id="newClassifier" class="service.model.ClassifierImpl" scope="session">
@@ -78,7 +79,7 @@
     </bean>
 
     <bean id="portfolioForm" class="service.beans.PortfolioForm" scope="session">
-        <property name="generalClassifierCache" ref="generalClassifierCache" />
+        <property name="generalCache" ref="generalCache" />
         <property name="sessionData" ref="sessionData" />
     </bean>
 

@@ -6,13 +6,16 @@ import org.primefaces.model.diagram.Element;
 import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import service.commons.SessionData;
+import service.model.Classifier;
 import service.model.EditableEntity;
-import service.model.GeneralClassifierCache;
+import service.model.GeneralCache;
 import service.model.SubEntity;
 import service.model.SubEntityImpl;
 import service.util.MetaCategoryProvider;
 
 import javax.faces.event.ValueChangeEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,9 +37,10 @@ public class TripSubForm extends BaseSubForm {
     private boolean openFromLocationForm;
     private List<SubEntity> availableTripCheckpoints;
     private Set<Integer> deletedCheckpointIds;
+    private List<Classifier> users;
 
-    public TripSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
-        super(sessionData, generalClassifierCache, "tripDialog");
+    public TripSubForm(TravelingLocationSubForm travelingLocationSubForm, SessionData sessionData, GeneralCache generalCache) {
+        super(sessionData, generalCache, "tripDialog");
         this.travelingLocationSubForm = travelingLocationSubForm;
     }
 
@@ -61,7 +65,7 @@ public class TripSubForm extends BaseSubForm {
             if (travelingLocationSubForm != null && travelingLocationSubForm.getCurrentEntity() != null) {
                 availableTripCheckpoints = travelingLocationSubForm.getCurrentEntity().getSubEntities("locationSightSeeings");
             } else {
-                availableTripCheckpoints = getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
+                availableTripCheckpoints = getGeneralCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
                         getCurrentEntity().getInt("LocationID")).getSubEntities("locationSightSeeings");
             }
         }
@@ -94,6 +98,7 @@ public class TripSubForm extends BaseSubForm {
         selectedCheckpointId = null;
         availableTripCheckpoints = null;
         deletedCheckpointIds = new HashSet<>();
+        resetCommentFields();
     }
 
     @Override
@@ -186,4 +191,77 @@ public class TripSubForm extends BaseSubForm {
         }
         getCurrentEntity().put("AvailableTickets", getCurrentEntity().getInt("AvailableTickets") + ((Integer) event.getNewValue() - (Integer) event.getOldValue()));
     }
+
+    private void resetCommentFields() {
+        rate = null;
+        comment = null;
+        this.users = getGeneralCache().loadClassifiers(MetaCategoryProvider.getUser());
+    }
+
+    private Integer rate;
+
+    public void rate(Integer rate) {
+        this.rate = rate;
+    }
+
+    public boolean renderRateStart(Integer starRate, Integer actualRate) {
+        return actualRate != null && starRate <= actualRate;
+    }
+
+    public String getStarImageUrl(Integer rate) {
+        return renderRateStart(rate, this.rate) ? getRatedStarImageUrl() : getNonRatedStarImageUrl();
+    }
+
+    public String getRatedStarImageUrl() {
+        return "images/star.png";
+    }
+
+    public String getNonRatedStarImageUrl() {
+        return "images/ratedStar.png";
+    }
+
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void addComment() {
+        SubEntity comment = new SubEntityImpl(getCurrentEntity());
+        comment.put("Comment", this.comment);
+        comment.put("Rate", this.rate);
+        comment.put("UserID", getSessionData().getApplicationUser().getId());
+        getCurrentEntity().getSubEntities("locationTripComments").add(comment);
+        int rateSum = 0;
+        int ratesCount = 0;
+        for (SubEntity locationSightSeeing : getParentForm().getCurrentEntity().getSubEntities("locationSightSeeings")) {
+            for (SubEntity locationSightSeeingComment : locationSightSeeing.getSubEntities("locationSightSeeingComments")) {
+                ratesCount++;
+                rateSum += locationSightSeeingComment.getInt("Rate");
+            }
+        }
+        for (SubEntity locationSightSeeing : getParentForm().getCurrentEntity().getSubEntities("locationTrips")) {
+            for (SubEntity locationTripComment : locationSightSeeing.getSubEntities("locationTripComments")) {
+                ratesCount++;
+                rateSum += locationTripComment.getInt("Rate");
+            }
+        }
+        getParentForm().getCurrentEntity().put("Rate", new BigDecimal(rateSum).setScale(10, RoundingMode.HALF_DOWN).divide(new BigDecimal(ratesCount), RoundingMode.HALF_DOWN));
+        getParentForm().saveStayAction();
+        resetCommentFields();
+    }
+
+    public String getUserName(Integer userId) {
+        for (Classifier user : users) {
+            if (Objects.equals(user.getId(), userId)) {
+                return user.getName();
+            }
+        }
+        return "";
+    }
+
 }

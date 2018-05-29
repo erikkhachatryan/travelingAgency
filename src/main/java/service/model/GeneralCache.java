@@ -10,19 +10,22 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
  * Created by Erik on 10/22/2017.
  */
-public class GeneralClassifierCache {
+public class GeneralCache {
 
     private DataSource dataSource;
 
     private Map<MetaCategoryId, List<Classifier>> classifierCache;
     private Map<MetaCategoryId, List<MainEntity>> mainEntitiesCache;
 
-    public GeneralClassifierCache(DataSource dataSource) {
+    public GeneralCache(DataSource dataSource) {
         this.dataSource = dataSource;
         classifierCache = new HashMap<>();
         mainEntitiesCache = new HashMap<>();
@@ -524,19 +527,44 @@ public class GeneralClassifierCache {
         return topFiveLocations;
     }
 
-    public List<MainEntity> searchLocations(String locationNameContains, Integer minTripCost, Integer maxTripCost) {
+    public List<MainEntity> searchLocations(String locationNameContains, Integer minTripCost, Integer maxTripCost, java.util.Date tripStartsAfter) {
         List<MainEntity> locations = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("EXEC SearchLocations @LocationName="
-                     + (Util.isEmpty(locationNameContains) ? null : locationNameContains)
-                     + ", @MinTripCost=" + (minTripCost == null ? 0 : minTripCost)
-                     + ", @MaxTripCost=" + (maxTripCost == null ? 0 : maxTripCost));
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try (Connection connection = dataSource.getConnection()) {
+            preparedStatement = connection.prepareStatement("EXEC SearchLocations @LocationName=?, @MinTripCost=?, @MaxTripCost=?, @StartsAfter=?");
+            String locationName = Util.isEmpty(locationNameContains) ? null : locationNameContains;
+            Integer minCost = minTripCost == null ? 0 : minTripCost;
+            Integer maxCost = maxTripCost == null ? 0 : maxTripCost;
+            preparedStatement.setObject(1, locationName, JDBCType.NVARCHAR);
+            preparedStatement.setObject(2, minCost, JDBCType.INTEGER);
+            preparedStatement.setObject(3, maxCost, JDBCType.INTEGER);
+            if (tripStartsAfter == null) {
+                preparedStatement.setNull(4, Types.DATE);
+            } else {
+                preparedStatement.setDate(4, Date.valueOf(ZonedDateTime.ofInstant(tripStartsAfter.toInstant(), ZoneId.systemDefault()).toLocalDate()));
+            }
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 locations.add(loadMainEntityById(MetaCategoryProvider.getLocation(), resultSet.getInt("LocationID")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return locations;
     }

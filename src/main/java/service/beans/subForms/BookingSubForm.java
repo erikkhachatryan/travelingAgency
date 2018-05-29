@@ -6,9 +6,6 @@ import service.model.*;
 import service.util.MetaCategoryProvider;
 import service.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by erik.khachatryan on 01-May-18.
@@ -18,8 +15,8 @@ public class BookingSubForm extends BaseSubForm {
     private TripSubForm tripSubForm;
     private Integer oldBookedTicketsCount = null;
 
-    public BookingSubForm(TripSubForm tripSubForm, SessionData sessionData, GeneralClassifierCache generalClassifierCache) {
-        super(sessionData, generalClassifierCache, "bookingDialog");
+    public BookingSubForm(TripSubForm tripSubForm, SessionData sessionData, GeneralCache generalCache) {
+        super(sessionData, generalCache, "bookingDialog");
         this.tripSubForm = tripSubForm;
     }
 
@@ -41,12 +38,12 @@ public class BookingSubForm extends BaseSubForm {
     @Override
     public void saveAction() {
         getCurrentEntity().put("TotalCost", getTotalCost());
-        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getBooking(), ((MainEntity) getCurrentEntity()));
+        getGeneralCache().saveMainEntity(MetaCategoryProvider.getBooking(), ((MainEntity) getCurrentEntity()));
         getParentForm().getCurrentEntity().put("AvailableTickets", getParentForm().getCurrentEntity().getInt("AvailableTickets")
                 - getCurrentEntity().getInt("TicketsCount") + (isNewMode() ? 0 : oldBookedTicketsCount));
         getParentForm().saveStayAction();
-        getGeneralClassifierCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getParentForm().getParentForm().getCurrentEntity()));
-        getParentForm().getParentForm().setCurrentEntity(getGeneralClassifierCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
+        getGeneralCache().saveMainEntity(MetaCategoryProvider.getLocation(), ((MainEntity) getParentForm().getParentForm().getCurrentEntity()));
+        getParentForm().getParentForm().setCurrentEntity(getGeneralCache().loadMainEntityById(MetaCategoryProvider.getLocation(),
                 getParentForm().getParentForm().getCurrentEntity().getId()));
         super.saveAction();
     }

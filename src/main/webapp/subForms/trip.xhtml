@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
     <p:dialog id="tripDialogId" widgetVar="tripDialog" width="1000px"
-              header="Tour" height="500px" dynamic="true" modal="true" resizable="false">
+              header="Tour" height="900px" dynamic="true" modal="true" resizable="false">
         <p:ajax event="close" listener="#{tripSubForm.closeAction}"/>
         <h:form id="tripSubFormId">
             <p:commandButton id="bookingButtonId"
@@ -150,6 +150,90 @@
 
             <h:panelGroup id="tripDiagramPanelGroupId" layout="block" styleClass="inline-grid">
                 <p:diagram value="#{tripSubForm.diagram}" style="height:300px" styleClass="ui-widget-content"/>
+            </h:panelGroup>
+
+            <div class="clear"/>
+
+            <h:panelGroup id="tripCommentsPanelGroupId" layout="block" styleClass="inline-grid">
+                <p:outputLabel id="tripCommentsLabelId" styleClass="label" value="Comments: "/>
+                <ui:repeat value="#{tripSubForm.currentEntity.locationTripComments}"
+                           var="locationTripComment">
+                    <h:outputText id="userNameId" styleClass="label"
+                                  value="#{tripSubForm.getUserName(locationTripComment.UserID)}"/>
+                    <h:panelGroup id="ratePanelGroupId">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{tripSubForm.renderRateStart(1, locationTripComment.Rate)}"
+                                        url="#{tripSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{tripSubForm.renderRateStart(2, locationTripComment.Rate)}"
+                                        url="#{tripSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{tripSubForm.renderRateStart(3, locationTripComment.Rate)}"
+                                        url="#{tripSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{tripSubForm.renderRateStart(4, locationTripComment.Rate)}"
+                                        url="#{tripSubForm.ratedStarImageUrl}"/>
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        rendered="#{tripSubForm.renderRateStart(5, locationTripComment.Rate)}"
+                                        url="#{tripSubForm.ratedStarImageUrl}"/>
+                    </h:panelGroup>
+                    <div class="clear"></div>
+                    <h:outputText styleClass="label" id="commentId" value="#{locationTripComment.Comment}"/>
+                    <div class="clear"></div>
+                </ui:repeat>
+            </h:panelGroup>
+
+            <h:panelGroup id="newTripCommnetPanelGroupId" rendered="#{not tripSubForm.editMode}" layout="block">
+                <p:inputTextarea id="tripCommentInputTextAreaId" styleClass="input-style h80"
+                                 value="#{tripSubForm.comment}"/>
+                <h:panelGroup id="ratingPanelGroupId">
+                    <p:commandLink id="oneStartCommandLinkId"
+                                   actionListener="#{tripSubForm.rate(1)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{tripSubForm.getStarImageUrl(1)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="twoStartCommandLinkId"
+                                   actionListener="#{tripSubForm.rate(2)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{tripSubForm.getStarImageUrl(2)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="threeStartCommandLinkId"
+                                   actionListener="#{tripSubForm.rate(3)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{tripSubForm.getStarImageUrl(3)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="fourStartCommandLinkId"
+                                   actionListener="#{tripSubForm.rate(4)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{tripSubForm.getStarImageUrl(4)}"/>
+                    </p:commandLink>
+                    <p:commandLink id="fiveStartCommandLinkId"
+                                   actionListener="#{tripSubForm.rate(5)}"
+                                   process="@this"
+                                   update="ratingPanelGroupId"
+                                   title="Rate">
+                        <p:graphicImage style="width:20px;height:20px;"
+                                        url="#{tripSubForm.getStarImageUrl(5)}"/>
+                    </p:commandLink>
+                </h:panelGroup>
+                <p:commandButton id="commentButtonId"
+                                 value="Comment"
+                                 process="@this tripCommentInputTextAreaId"
+                                 styleClass="button-style mrgl15"
+                                 update="@this tripCommentsPanelGroupId newTripCommnetPanelGroupId deFormId:allLocationsPanelGroupId"
+                                 actionListener="#{tripSubForm.addComment}"/>
             </h:panelGroup>
 
         </h:form>
