@@ -198,7 +198,7 @@ public class GeneralCache {
         return classifierCache.get(metaCategoryId);
     }
 
-    public void saveClassifier(MetaCategoryId metaCategoryId, @Nonnull Classifier classifier) {
+    public synchronized void saveClassifier(MetaCategoryId metaCategoryId, @Nonnull Classifier classifier) {
         Objects.requireNonNull(classifier);
         if (classifier.getId() <= 0) {
             insertClassifier(metaCategoryId, classifier);
@@ -232,7 +232,7 @@ public class GeneralCache {
         }
     }
 
-    public void saveMainEntity(MetaCategoryId metaCategoryId, @Nonnull MainEntity mainEntity) {
+    public synchronized void saveMainEntity(MetaCategoryId metaCategoryId, @Nonnull MainEntity mainEntity) {
         Objects.requireNonNull(mainEntity);
         if (mainEntity.isNew()) {
             insertMainEntity(metaCategoryId, mainEntity);
