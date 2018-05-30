@@ -181,7 +181,7 @@
                     </p:column>
                     <p:column id="startDateColumnId" headerText="Start Date">
                         <h:outputText id="startDateOutputLabelId" value="#{trip.StartDate}">
-                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm" timeZone="GMT+4"/>
                         </h:outputText>
                     </p:column>
                     <p:column id="availableTicketsColumnId" headerText="AvailableTickets">

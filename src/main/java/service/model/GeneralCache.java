@@ -7,10 +7,10 @@ import service.util.MetaCategoryType;
 import service.util.Util;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -435,6 +435,14 @@ public class GeneralCache {
                             preparedStatement.setNull(index++, Types.DATE);
                         } else {
                             preparedStatement.setDate(index++, Date.valueOf(entity.getDate(entry.getKey())));
+                        }
+                        break;
+                    }
+                    case DATE_TIME: {
+                        if (entity.getDateTime(entry.getKey()) == null) {
+                            preparedStatement.setNull(index++, Types.TIMESTAMP);
+                        } else {
+                            preparedStatement.setTimestamp(index++, Timestamp.valueOf(entity.getDateTime(entry.getKey())));
                         }
                         break;
                     }

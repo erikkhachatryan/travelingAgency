@@ -11,6 +11,7 @@ public enum MetaCategoryType {
     LONG,
     BOOLEAN,
     DATE,
+    DATE_TIME,
     CLASSIFIER,
     MAIN_ENTITY
 }

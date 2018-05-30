@@ -159,7 +159,7 @@ public class MetaCategoryProvider {
             columns.put("LocationID", MetaCategoryType.INTEGER);
             columns.put("Title", MetaCategoryType.STRING);
             columns.put("Details", MetaCategoryType.STRING);
-            columns.put("StartDate", MetaCategoryType.DATE);
+            columns.put("StartDate", MetaCategoryType.DATE_TIME);
             columns.put("TicketsCount", MetaCategoryType.INTEGER);
             columns.put("AvailableTickets", MetaCategoryType.INTEGER);
             columns.put("TicketCost", MetaCategoryType.INTEGER);

@@ -76,7 +76,16 @@ public class EntityImpl extends HashMap<String, Object> implements Entity {
 
     @Override
     public LocalDateTime getDateTime(String key) {
-        return (LocalDateTime) get(key);
+        if (get(key) == null) {
+            return null;
+        }
+        if (get(key) instanceof LocalDateTime) {
+            return (LocalDateTime) get(key);
+        } else if (get(key) instanceof java.util.Date) {
+            return ((java.util.Date) get(key)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        } else {
+            return ((java.sql.Date) get(key)).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
     }
 
     @Override

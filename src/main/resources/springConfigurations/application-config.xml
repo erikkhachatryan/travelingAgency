@@ -11,7 +11,7 @@
         <property name="locations" value="classpath:properties/application.properties"/>
     </bean>
 
-    <bean id="generalCache" class="service.model.GeneralCache" scope="session">
+    <bean id="generalCache" class="service.model.GeneralCache">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
