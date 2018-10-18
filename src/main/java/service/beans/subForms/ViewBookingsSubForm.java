@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by erik.khachatryan on 01-May-18.
+ * Created by levon.khachatryan on 01-May-18.
  */
 public class ViewBookingsSubForm extends BaseSubForm{
 

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Created by Erik on 10/22/2017.
+ * Created by Levon on 10/22/2017.
  */
 public class ClassifierImpl extends EditableEntityImpl implements Classifier {
 

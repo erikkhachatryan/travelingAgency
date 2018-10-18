@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Created by erik.khachatryan on 22-Apr-18.
+ * Created by levon.khachatryan on 22-Apr-18.
  */
 public class SightSeeingSubForm extends BaseSubForm {
 

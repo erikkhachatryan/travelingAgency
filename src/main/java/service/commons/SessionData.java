@@ -3,7 +3,7 @@ package service.commons;
 import service.model.Classifier;
 
 /**
- * Created by Erik on 10-Dec-17.
+ * Created by Levon on 10-Dec-17.
  */
 public class SessionData {
 

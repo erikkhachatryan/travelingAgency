@@ -1,7 +1,7 @@
 package service.util;
 
 /**
- * Created by Erik on 20-Dec-17.
+ * Created by Levon on 20-Dec-17.
  */
 public enum MetaCategoryType {
     IDENTITY,

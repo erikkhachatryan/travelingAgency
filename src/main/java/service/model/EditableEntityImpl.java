@@ -3,7 +3,7 @@ package service.model;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Erik on 05-Dec-17.
+ * Created by Levon on 05-Dec-17.
  */
 public class EditableEntityImpl extends EntityImpl implements EditableEntity {
 

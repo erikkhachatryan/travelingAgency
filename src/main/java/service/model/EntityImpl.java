@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Erik on 05-Dec-17.
+ * Created by Levon on 05-Dec-17.
  */
 public class EntityImpl extends HashMap<String, Object> implements Entity {
 

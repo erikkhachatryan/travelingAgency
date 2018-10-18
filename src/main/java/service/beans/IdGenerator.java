@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by Erik on 03-Dec-17.
+ * Created by Levon on 03-Dec-17.
  */
 public class IdGenerator {
     private Map<MetaCategoryId, AtomicInteger> ID_GENERATORS;

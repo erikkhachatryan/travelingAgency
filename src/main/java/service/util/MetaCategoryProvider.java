@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Erik on 20-Dec-17.
+ * Created by Levon on 20-Dec-17.
  */
 public class MetaCategoryProvider {
 

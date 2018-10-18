@@ -11,7 +11,7 @@ import javax.faces.convert.FacesConverter;
 import java.util.List;
 
 /**
- * Created by Erik on 10/22/2017.
+ * Created by Levon on 10/22/2017.
  */
 @FacesConverter(value = "baseJSFSelectItemConverter")
 public class BaseJSFSelectItemConverter implements Converter {

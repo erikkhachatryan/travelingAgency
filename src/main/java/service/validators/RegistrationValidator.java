@@ -11,7 +11,7 @@ import javax.faces.validator.ValidatorException;
 import java.util.List;
 
 /**
- * Created by Erik on 06-Dec-17.
+ * Created by Levon on 06-Dec-17.
  */
 @FacesValidator("registrationValidator")
 public class RegistrationValidator implements Validator {

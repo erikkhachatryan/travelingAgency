@@ -8,7 +8,7 @@ import service.util.Util;
 
 
 /**
- * Created by erik.khachatryan on 01-May-18.
+ * Created by levon.khachatryan on 01-May-18.
  */
 public class BookingSubForm extends BaseSubForm {
 

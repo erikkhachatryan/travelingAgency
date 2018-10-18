@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Created by Erik on 07-Dec-17.
+ * Created by Levon on 07-Dec-17.
  */
 public class DataSource {
 

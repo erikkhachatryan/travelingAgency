@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 
 /**
- * Created by Erik on 10/22/2017.
+ * Created by Levon on 10/22/2017.
  */
 public interface Classifier extends EditableEntity {
 

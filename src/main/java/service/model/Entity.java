@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Erik on 05-Dec-17.
+ * Created by Levon on 05-Dec-17.
  */
 public interface Entity extends Map<String, Object>{
     @Nonnull
